@@ -1,0 +1,83 @@
+.roundcontainer{};
+	
+.eventrounddetails{
+	margin-top:20px;
+	margin-bottom:20px;
+}
+
+.hiddenround{
+	display:none;
+}
+
+.eventheattitle{
+	background-color:#ccc;
+	font-size:9pt;
+	font-weight:900;
+	padding:7px;
+}
+
+.eventheatrow{
+	border-bottom:1px solid #ddd;
+}
+
+.eventsurfer{
+	font-weight:900;
+	text-align:left;
+	padding-left:10px;padding-right:0px;padding-top:13px;padding-bottom:13px;
+}
+
+.eventsurfershort{
+	font-weight:900;
+	padding-left:0px;padding-right:0px;padding-top:13px;padding-bottom:13px;
+	text-align:center;
+}
+
+.eventpicklist{
+	padding-left:0px;
+	padding-right:0px;
+	border-left:5px solid rgba(255, 255, 255, 0.3);
+}
+
+.eventpick{
+	padding:0px;
+	padding-top:15px;
+	height:50px;
+	font-weight:300;
+	text-align:center;
+	font-size:9pt;
+	border-right:1px solid rgba(255, 255, 255, 0.3);
+	overflow:hidden;
+}
+
+.heatwinner {color:rgba(0, 137, 114, 1);}
+.heatwinner .eventsurfer  {border-left:8px solid rgba(0, 137, 114, 1);}
+.heatwinner .eventsurfershort {border-left:8px solid rgba(0, 137, 114, 1);}
+
+.heatrelegated{color:rgba(242, 87, 45, 1);}
+.heatrelegated .eventsurfer {border-left:8px solid rgba(242, 87, 45, 1);}
+.heatrelegated .eventsurfershort {border-left:8px solid rgba(242, 87, 45, 1);}
+
+.rd2loser {color:rgba(50, 20, 51, 0.8);}
+.rd2loser .eventsurfer {border-left:8px solid rgba(50, 20, 51, 0.8);}
+.rd2loser .eventsurfershort {border-left:8px solid rgba(50, 20, 51, 0.8);}
+
+.rd3loser {color:rgba(50, 20, 51, 0.8);}
+.rd3loser .eventsurfer {border-left:8px solid rgba(50, 20, 51, 0.8);}
+.rd3loser .eventsurfershort {border-left:8px solid rgba(50, 20, 51, 0.8);}
+
+.rd5loser {color:rgba(50, 20, 51, 0.8);}
+.rd5loser .eventsurfer {border-left:8px solid rgba(50, 20, 51, 0.8);}
+.rd5loser .eventsurfershort {border-left:8px solid rgba(50, 20, 51, 0.8);}
+
+.rd6loser {color:rgba(50, 20, 51, 0.8);}
+.rd6loser .eventsurfer {border-left:8px solid rgba(50, 20, 51, 0.8);}
+.rd6loser .eventsurfershort {border-left:8px solid rgba(50, 20, 51, 0.8);}
+
+.rd7loser {color:rgba(50, 20, 51, 0.8);}
+.rd7loser .eventsurfer {border-left:8px solid rgba(50, 20, 51, 0.8);}
+.rd7loser .eventsurfershort {border-left:8px solid rgba(50, 20, 51, 0.8);}
+
+.rd8loser {color:rgba(50, 20, 51, 0.8);}
+.rd8loser .eventsurfer {border-left:8px solid rgba(50, 20, 51, 0.8);}
+.rd8loser .eventsurfershort {border-left:8px solid rgba(50, 20, 51, 0.8);}
+

@@ -1,0 +1,110 @@
+/*----------EVENT SELECT MENU----------*/
+
+.eventnav{
+	text-align:center;
+	background-color:black;
+	color:#ddd;
+}
+
+.eventnav:hover{
+	cursor:pointer;
+	color:yellow;
+}
+
+.eventselect:hover{
+	cursor:pointer;
+	color:yellow;
+}
+
+.eventnav .selected-event{
+	padding-top:6px;
+	padding-bottom:1px;
+}
+
+.eventnav-expanded{
+	display:none;
+	text-align:center;
+	background-color:black;
+	color:#ddd;
+}
+
+.eventnav-expanded .selected-event{
+	color:yellow;
+}
+
+.eventnav-expanded .eventselect{
+	padding-top:6px;
+	background-color:black;
+	border-bottom:1px solid #333;
+}
+
+/*----------ROUND SELECT MENU----------*/
+.roundnav{
+	height:40px;
+	font-size:13pt;
+	text-align:center;
+	background-color:#333;
+	color:#ccc;
+}
+
+.roundnav #roundback{
+	color:white;
+	float:right;
+	padding-top:7px;
+}
+
+.roundnav #roundnext{
+	color:white;
+	float:left;
+	padding-top:7px;
+}
+
+.roundselect{
+	display:none;
+}
+
+.selected-round{
+	display:inline;
+	padding-top:6px;
+}
+
+.enterleft{
+	display:inline;
+	transform: translateX(100%);
+	transition: transform 0.3s ease-in-out;
+}
+
+.exitright{
+	display:none;
+	transform: translateX(100%);
+	transition: transform 0.3s ease-in-out;
+}
+
+
+/*----------NON-EVENT NAV MENU----------*/
+.navmenu{
+	font-size:10pt;
+	padding:10px;
+	padding-left:0px;
+	padding-right:0px;
+	text-align:center;
+	display:none;
+}
+
+.navmenu .columns{
+	padding-bottom:5px;
+	border-bottom:2px solid #ddd;
+}
+
+.navmenu .columns:hover{
+	cursor:pointer;
+	border-bottom:2px solid orange;
+	color:orange;
+}
+
+.navmenu .selected{
+	font-weight:900;
+	border-bottom:2px solid black;
+}
+
+
