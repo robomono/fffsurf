@@ -107,4 +107,37 @@
 	border-bottom:2px solid black;
 }
 
+/*----------FILTER MENU----------*/
+.filter-menu{}
+	
+.filter-menu .cell{
+	text-align:center;
+	padding:9px;
+	background-color:#ddd;
+	border-bottom:1px solid white;
+	cursor:pointer;
+}
 
+.filter-menu .cell:hover{
+	background-color:#ccc;
+	-webkit-transition: background-color 0.5s ease-in-out;
+	    -moz-transition: background-color 0.5s ease-in-out;
+	    -ms-transition: background-color 0.5s ease-in-out;
+	    -o-transition: background-color 0.5s ease-in-out;
+}	
+	
+.heat-filter-select{
+	display:none;
+}
+
+#selectedfilter{
+}
+
+.highlighted{
+	background-color:rgba(255,255,26,0.2);
+	color:black;
+	-webkit-transition: background-color 1s ease-in-out;
+	    -moz-transition: background-color 1s ease-in-out;
+	    -ms-transition: background-color 1s ease-in-out;
+	    -o-transition: background-color 1s ease-in-out;
+}

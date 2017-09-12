@@ -34,8 +34,8 @@
 	 	</div>
 	</div>
 	
-	<div class="grid-x roundnav">
-		<div class="cell medium-2 medium-offset-3 small-2"><a href="#" id="roundback"><i class="material-icons">chevron_left</i></a></div>
+	<div class="grid-x align-center roundnav">
+		<div class="cell medium-2 small-2"><a href="#" id="roundback"><i class="material-icons">chevron_left</i></a></div>
 		
 		<div class="cell medium-2 small-8 roundselect selected-round" id="menu-round1">Round 1</div>
 		<div class="cell medium-2 small-8 roundselect" id="menu-round2">Round 2</div>
@@ -67,6 +67,8 @@
 	</div>	
 	
 	<!--ROUNDS-->
+	
+
 	
 	<div class="allrounds">
 		

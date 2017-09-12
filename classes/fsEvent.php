@@ -181,16 +181,35 @@ class FSEvent{
 		
 	}
 	
-	private function displayRounds($rounds,$surfers,$picks,$users,$headers){
+	private function buildFilterMenu($users){
+		
+		$filtermenu.='
+			<div class="grid-x align-center filter-menu">
+			<div class="large-10 medium-12 small-12 cell" id="selectedfilter">Showing: All <i class="material-icons">chevron_left</i> </div>';
+			
+			foreach($users as $uid=>$v){
+				
+				$filtermenu.='<div class="large-10 medium-12 small-12 cell heat-filter-select" id="select'.$uid.'">'.$v['short'].'</div>';
+			}	
+			
+			$filtermenu.='</div>';
+			
+			return $filtermenu;
+		
+	}
+	
+	private function displayRounds($rounds,$surfers,$picks,$users,$filtermenu,$headers){
+		
+		$toreturn.=$filtermenu;
 		
 		foreach($rounds as $round=>$v1){
 			$toreturn.= "<div class='roundcontainer hiddenround' id='r".$round."'>"; 
 			
 			foreach($v1 as $heat=>$v2){
 				
-				$toreturn.= "<div class='grid-x small-centered eventrounddetails ".$headers[$round][$heat]."' id='e1h".$heat."'>";
+				$toreturn.= "<div class='grid-x align-center eventrounddetails ".$headers[$round][$heat]."' id='e1h".$heat."'>";
 				$toreturn.= "<div class='large-10 medium-12 small-12 cell eventheattitle round".$round."complete'>Heat ".$heat."</div>";
-				$toreturn.= "<div class='large-10 medium-12 small-12 cell eventheatrow'>";
+				$toreturn.= "<div class='large-10 medium-12 small-12 cell'>";
 				
 				foreach($v2 as $player=>$v3){
 					
@@ -198,7 +217,7 @@ class FSEvent{
 					
 					if($v3['sco']==1){
 						
-						$toreturn.="<div class='grid-x heatwinner'>";
+						$toreturn.="<div class='grid-x heatwinner eventheatrow'>";
 						$toreturn.="<div class='large-3 medium-4 cell eventsurfer hide-for-small-only'>".$surfers[$sid]['name']."</div>
 									<div class='small-2 cell eventsurfershort show-for-small-only'>".$surfers[$sid]['aka']."</div>";
 						
@@ -213,7 +232,7 @@ class FSEvent{
 					}
 					elseif($round!=1 && $round!=4 && $v3['sco']==2){
 						//lost
-						$toreturn.="<div class='grid-x rd".$round."loser'>";
+						$toreturn.="<div class='grid-x rd".$round."loser eventheatrow'>";
 						$toreturn.="<div class='large-3 medium-4 cell eventsurfer hide-for-small-only'>".$surfers[$sid]['name']."</div>
 									<div class='small-2 cell eventsurfershort show-for-small-only'>".$surfers[$sid]['aka']."</div>";
 						
@@ -227,7 +246,7 @@ class FSEvent{
 					}
 					elseif(($round==1 || $round==4) && $v3['sco']==2){
 						//relegated second
-						$toreturn.="<div class='grid-x heatrelegated'>";
+						$toreturn.="<div class='grid-x heatrelegated eventheatrow'>";
 						$toreturn.="<div class='large-3 medium-4 cell eventsurfer hide-for-small-only'>".$surfers[$sid]['name']."</div>
 									<div class='small-2 cell eventsurfershort show-for-small-only'>".$surfers[$sid]['aka']."</div>";
 						
@@ -242,7 +261,7 @@ class FSEvent{
 					}
 					elseif($v3['sco']==3){
 						//relegated third
-						$toreturn.="<div class='grid-x heatrelegated'>";
+						$toreturn.="<div class='grid-x heatrelegated eventheatrow'>";
 						$toreturn.="<div class='large-3 medium-4 cell eventsurfer hide-for-small-only'>".$surfers[$sid]['name']."</div>
 									<div class='small-2 cell eventsurfershort show-for-small-only'>".$surfers[$sid]['aka']."</div>";
 						
@@ -285,9 +304,10 @@ class FSEvent{
 		
 		if($event_status==4){
 			
-			$surfers = $this->buildSurferPicks($surfers,$users,$picks);
-			$headers = $this->buildHeatHeaders($rounds,$picks);
-			$display = $this->displayRounds($rounds,$surfers,$picks,$users,$headers);
+			$filtermenu = $this->buildFilterMenu($users);
+			$surfers 	= $this->buildSurferPicks($surfers,$users,$picks);
+			$headers 	= $this->buildHeatHeaders($rounds,$picks);
+			$display 	= $this->displayRounds($rounds,$surfers,$picks,$users,$filtermenu,$headers);
 			
 		}
 		

@@ -11,11 +11,13 @@ $( document ).ready(function() {
 	
 });
 
+/*-----EVENT NAVIGATION-----*/
 
 $(".eventnav").click(function(){
 	$(".eventnav-expanded").slideDown("fast");
 	$(".eventnav").slideUp("fast");
 });
+
 
 $(".eventselect").click(function(){
 	$(".eventnav-expanded").slideUp("fast");
@@ -34,6 +36,8 @@ $(".eventselect").click(function(){
 	window.setTimeout(function(){window.location.href = eventid;}, 150);
 	
 });
+
+/*-----ROUND NAVIGATION-----*/
 
 $("#roundback").click(function(){
 	var round = parseInt($("#roundback").parent().siblings(".selected-round").attr("id").slice(10)) -1;
@@ -65,4 +69,35 @@ $("#roundnext").click(function(){
 		$('.allrounds').children('#r'+round).show(); 
 	}
 
+});
+
+/*-----FILTER MENU-----*/
+
+$(".allrounds").on( "click",".heat-filter-select", function() {
+	$(".highlighted").removeClass("highlighted");
+	
+	var uname = $(this).html();
+	
+	var uid = $(this).attr("id").slice(6);
+	var hasheat = ".has-" + uid;
+	var notheat = ":not(." + "has-" + uid +")";
+	var pick = "." + "is-" + uid;
+	
+	if(uid=="all"){
+		
+		$(".eventrounddetails").slideDown("fast");
+		$("#selectedfilter").html("Showing: All");
+		
+	}else{
+			
+			$(".roundcontainer").children(hasheat).slideDown("fast");
+			$(".roundcontainer").children(notheat).slideUp("fast");
+			$(pick).parents(".eventheatrow").addClass("highlighted");
+			
+			$("#selectedfilter").html("Showing: " + uname);
+	}
+});
+
+$(".allrounds").on( "click",".filter-menu", function() {
+	$(".heat-filter-select").slideToggle("fast");
 });
