@@ -73,7 +73,7 @@ $("#roundnext").click(function(){
 
 /*-----FILTER MENU-----*/
 
-$(".allrounds").on( "click",".heat-filter-select", function() {
+$(".eventmenu").on( "click",".heat-filter-select", function() {
 	$(".highlighted").removeClass("highlighted");
 	
 	var uname = $(this).html();
@@ -98,6 +98,6 @@ $(".allrounds").on( "click",".heat-filter-select", function() {
 	}
 });
 
-$(".allrounds").on( "click",".filter-menu", function() {
+$(".eventmenu").on( "click",".filter-menu", function() {
 	$(".heat-filter-select").slideToggle("fast");
 });

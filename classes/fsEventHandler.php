@@ -9,7 +9,8 @@ if (isset($_POST) && is_array($_POST)) {
 	if($action == "getEventRounds"){
 		$fsevent = new FSEvent();
 		$return = $fsevent->getAllRounds($event_id);
-		echo $return;
+
+		echo json_encode($return);
 	}
 	
 }

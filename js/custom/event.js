@@ -9,14 +9,16 @@ $( document ).ready(function() {
 	  //data: "getEventRounds",
 	  data: {action:"getEventRounds", eventid:eid},
 	  url: "classes/fsEventHandler.php",
-	  dataType: "html",
+	  dataType: "json",
 	  async: false,
 		success: function(data){
 			
 			//if(data=="setnameandteam"){
 				//$('.maincontent').load('views/userteamform.html');
 				//}else{
-				$('.allrounds').html(data);
+				
+				$('.eventmenu').html(data['menu']);
+				$('.allrounds').html(data['main']);
 				$(document).foundation();
 				//$('.isHidden').hide();
 				//}

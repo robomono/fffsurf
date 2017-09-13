@@ -185,7 +185,8 @@ class FSEvent{
 		
 		$filtermenu.='
 			<div class="grid-x align-center filter-menu">
-			<div class="large-10 medium-12 small-12 cell" id="selectedfilter">Showing: All <i class="material-icons">chevron_left</i> </div>';
+			<div class="large-10 medium-12 small-12 cell" id="selectedfilter">Showing: All <i class="material-icons">chevron_left</i> </div>
+			<div class="large-10 medium-12 small-12 cell heat-filter-select" id="selectall">All</div>';
 			
 			foreach($users as $uid=>$v){
 				
@@ -198,9 +199,7 @@ class FSEvent{
 		
 	}
 	
-	private function displayRounds($rounds,$surfers,$picks,$users,$filtermenu,$headers){
-		
-		$toreturn.=$filtermenu;
+	private function displayRounds($rounds,$surfers,$picks,$users,$headers){
 		
 		foreach($rounds as $round=>$v1){
 			$toreturn.= "<div class='roundcontainer hiddenround' id='r".$round."'>"; 
@@ -303,13 +302,35 @@ class FSEvent{
 		$rounds = 		$eventdata['rounds'];
 		
 		if($event_status==4){
-			
+			//finished event
 			$filtermenu = $this->buildFilterMenu($users);
 			$surfers 	= $this->buildSurferPicks($surfers,$users,$picks);
 			$headers 	= $this->buildHeatHeaders($rounds,$picks);
-			$display 	= $this->displayRounds($rounds,$surfers,$picks,$users,$filtermenu,$headers);
+			$rounds 	= $this->displayRounds($rounds,$surfers,$picks,$users,$headers);
+			
+			$display['menu'] = $filtermenu;
+			$display['main'] = $rounds;
 			
 		}
+		elseif($event_status==3){
+			//live event
+			
+		}
+		elseif($event_status==2){
+			//lineups open - free waivers
+			
+			
+		}
+		elseif($event_status==1){
+			//lineups open - waiver period
+			
+		}
+		elseif($event_status==0){
+			//upcoming event
+			
+		}
+		
+		//return $display;
 		
 		return $display;
 		

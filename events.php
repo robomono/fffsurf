@@ -30,7 +30,13 @@
 			<div class="cell small-12 eventselect" id="eid2"><h4>Drug Aware Margaret River Pro</h4></div>
 			<div class="cell small-12 eventselect" id="eid3"><h4>Rip Curl Bells Beach Pro</h4></div>
 			<div class="cell small-12 eventselect" id="eid4"><h4>Oi Rio Pro</h4></div>
-			<div class="cell small-12 eventselect" id="eid11"><h4>Outerknown Fiji Pro</h4></div>
+			<div class="cell small-12 eventselect" id="eid5"><h4>Outerknown Fiji Pro</h4></div>
+			<div class="cell small-12 eventselect" id="eid6"><h4>Corona Open J-Bay</h4></div>
+			<div class="cell small-12 eventselect" id="eid7"><h4>Billabong Pro Tahiti</h4></div>
+			<div class="cell small-12 eventselect" id="eid8"><h4>Hurley Pro at Trestles</h4></div>
+			<div class="cell small-12 eventselect" id="eid9"><h4>Quiksilver Pro France</h4></div>
+			<div class="cell small-12 eventselect" id="eid10"><h4>MEO Rip Curl Pro Portugal</h4></div>
+			<div class="cell small-12 eventselect" id="eid11"><h4>Billabong Pipe Masters</h4></div>
 	 	</div>
 	</div>
 	
@@ -49,19 +55,25 @@
 		<div class="cell medium-2 small-2"><a href="#" id="roundnext"><i class="material-icons">chevron_right</i></a></div>
 	</div>
 	
-	<div class="grid-x navmenu activeeventnav">
+	<div class="grid-x align-center navmenu activeeventnav">
 		<div class="cell large-4 small-4 selected">Live</div>
 		<div class="cell large-4 small-4">Team</div>
 		<div class="cell large-4 small-4">Standings</div>
 	</div>
 	
-	<div class="grid-x navmenu idleeventnav">
+	<div class="grid-x align-center navmenu finishedeventnav">
+		<div class="cell large-4 small-4 selected">Rounds</div>
+		<div class="cell large-4 small-4">Team</div>
+		<div class="cell large-4 small-4">Standings</div>
+	</div>
+	
+	<div class="grid-x align-center navmenu idleeventnav">
 		<div class="cell large-4 small-4 selected">Team</div>
 		<div class="cell large-4 small-4">Waivers</div>
 		<div class="cell large-4 small-4">Leaderboard</div>
 	</div>
 	
-	<div class="grid-x navmenu leaderboardnav">
+	<div class="grid-x align-center navmenu leaderboardnav">
 		<div class="cell large-6 small-6 selected">Fantasy League</div>
 		<div class="cell large-6 small-6">World Surf League</div>
 	</div>	
@@ -69,6 +81,9 @@
 	<!--ROUNDS-->
 	
 
+	<div class="eventmenu">
+		
+	</div>
 	
 	<div class="allrounds">
 		
