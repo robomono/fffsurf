@@ -17,8 +17,10 @@ $( document ).ready(function() {
 				//$('.maincontent').load('views/userteamform.html');
 				//}else{
 				
+				$('.navigation').html(data['nav']);
 				$('.eventmenu').html(data['menu']);
 				$('.allrounds').html(data['main']);
+								
 				$(document).foundation();
 				//$('.isHidden').hide();
 				//}

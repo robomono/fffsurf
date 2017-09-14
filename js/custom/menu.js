@@ -38,8 +38,7 @@ $(".eventselect").click(function(){
 });
 
 /*-----ROUND NAVIGATION-----*/
-
-$("#roundback").click(function(){
+$(".navigation").on( "click","#roundback", function() {
 	var round = parseInt($("#roundback").parent().siblings(".selected-round").attr("id").slice(10)) -1;
 	var nextround = round+1;
 	var prevround = "#menu-round" + round;
@@ -56,7 +55,7 @@ $("#roundback").click(function(){
 	
 });
 
-$("#roundnext").click(function(){
+$(".navigation").on( "click","#roundnext", function() {
 	var round = parseInt($("#roundnext").parent().siblings(".selected-round").attr("id").slice(10))+1;
 	var prevround = round-1;
 	var nextround =  "#menu-round" + round;

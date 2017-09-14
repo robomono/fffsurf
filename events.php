@@ -40,54 +40,12 @@
 	 	</div>
 	</div>
 	
-	<div class="grid-x align-center roundnav">
-		<div class="cell medium-2 small-2"><a href="#" id="roundback"><i class="material-icons">chevron_left</i></a></div>
-		
-		<div class="cell medium-2 small-8 roundselect selected-round" id="menu-round1">Round 1</div>
-		<div class="cell medium-2 small-8 roundselect" id="menu-round2">Round 2</div>
-		<div class="cell medium-2 small-8 roundselect" id="menu-round3">Round 3</div>
-		<div class="cell medium-2 small-8 roundselect" id="menu-round4">Round 4</div>
-		<div class="cell medium-2 small-8 roundselect" id="menu-round5">Round 5</div>
-		<div class="cell medium-2 small-8 roundselect" id="menu-round6">Quarterfinal</div>
-		<div class="cell medium-2 small-8 roundselect" id="menu-round7">Semifinal</div>
-		<div class="cell medium-2 small-8 roundselect" id="menu-round8">Final</div>
-		
-		<div class="cell medium-2 small-2"><a href="#" id="roundnext"><i class="material-icons">chevron_right</i></a></div>
-	</div>
-	
-	<div class="grid-x align-center navmenu activeeventnav">
-		<div class="cell large-4 small-4 selected">Live</div>
-		<div class="cell large-4 small-4">Team</div>
-		<div class="cell large-4 small-4">Standings</div>
-	</div>
-	
-	<div class="grid-x align-center navmenu finishedeventnav">
-		<div class="cell large-4 small-4 selected">Rounds</div>
-		<div class="cell large-4 small-4">Team</div>
-		<div class="cell large-4 small-4">Standings</div>
-	</div>
-	
-	<div class="grid-x align-center navmenu idleeventnav">
-		<div class="cell large-4 small-4 selected">Team</div>
-		<div class="cell large-4 small-4">Waivers</div>
-		<div class="cell large-4 small-4">Leaderboard</div>
-	</div>
-	
-	<div class="grid-x align-center navmenu leaderboardnav">
-		<div class="cell large-6 small-6 selected">Fantasy League</div>
-		<div class="cell large-6 small-6">World Surf League</div>
-	</div>	
-	
 	<!--ROUNDS-->
-	
+	<div class="navigation"> </div>
 
-	<div class="eventmenu">
-		
-	</div>
+	<div class="eventmenu"> </div>
 	
-	<div class="allrounds">
-		
-	</div>
+	<div class="allrounds"> </div>
 	
 
     <script src="js/vendor/jquery.js"></script>

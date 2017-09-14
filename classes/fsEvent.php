@@ -120,6 +120,94 @@ class FSEvent{
 		
 	}
 	
+	private function buildEventMenu($eventdata){
+		
+		$event_status = $eventdata['status'];
+		
+		if($event_status==0){
+			//upcoming event
+			$navmenu = '';
+			
+		}elseif($event_status==1){
+			//idle event, waiver request
+			$navmenu='
+				<div class="grid-x align-center navmenu idleeventnav">
+					<div class="cell large-4 small-4 selected">Team</div>
+					<div class="cell large-4 small-4">Waivers</div>
+					<div class="cell large-4 small-4">Leaderboard</div>
+				</div>
+			';
+			
+		}elseif($event_status==2){
+			//idle event, waiver open
+			$navmenu='
+				<div class="grid-x align-center navmenu idleeventnav">
+					<div class="cell large-4 small-4 selected">Team</div>
+					<div class="cell large-4 small-4">Waivers</div>
+					<div class="cell large-4 small-4">Leaderboard</div>
+				</div>
+			';
+			
+		}elseif($event_status==3){
+			//live event
+			$navmenu='
+				<div class="grid-x align-center navmenu activeeventnav">
+					<div class="cell large-4 small-4 selected">Live</div>
+					<div class="cell large-4 small-4">Team</div>
+					<div class="cell large-4 small-4">Standings</div>
+				</div>
+				
+				<div class="grid-x align-center roundnav">
+					<div class="cell medium-2 small-2"><a href="#" id="roundback"><i class="material-icons">chevron_left</i></a></div>
+		
+					<div class="cell medium-2 small-8 roundselect selected-round" id="menu-round1">Round 1</div>
+					<div class="cell medium-2 small-8 roundselect" id="menu-round2">Round 2</div>
+					<div class="cell medium-2 small-8 roundselect" id="menu-round3">Round 3</div>
+					<div class="cell medium-2 small-8 roundselect" id="menu-round4">Round 4</div>
+					<div class="cell medium-2 small-8 roundselect" id="menu-round5">Round 5</div>
+					<div class="cell medium-2 small-8 roundselect" id="menu-round6">Quarterfinal</div>
+					<div class="cell medium-2 small-8 roundselect" id="menu-round7">Semifinal</div>
+					<div class="cell medium-2 small-8 roundselect" id="menu-round8">Final</div>
+		
+					<div class="cell medium-2 small-2"><a href="#" id="roundnext"><i class="material-icons">chevron_right</i></a></div>
+				</div>
+				';
+			
+		}elseif($event_status==4){
+			//finished event
+			$navmenu='
+				<div class="grid-x align-center navmenu finishedeventnav">
+					<div class="cell large-4 small-4 selected">Rounds</div>
+					<div class="cell large-4 small-4">Team</div>
+					<div class="cell large-4 small-4">Standings</div>
+				</div>
+				
+				<div class="grid-x align-center navmenu leaderboardnav hidden">
+					<div class="cell large-6 small-6 selected">Fantasy League</div>
+					<div class="cell large-6 small-6">World Surf League</div>
+				</div>
+				
+				<div class="grid-x align-center roundnav">
+					<div class="cell medium-2 small-2"><a href="#" id="roundback"><i class="material-icons">chevron_left</i></a></div>
+		
+					<div class="cell medium-2 small-8 roundselect selected-round" id="menu-round1">Round 1</div>
+					<div class="cell medium-2 small-8 roundselect" id="menu-round2">Round 2</div>
+					<div class="cell medium-2 small-8 roundselect" id="menu-round3">Round 3</div>
+					<div class="cell medium-2 small-8 roundselect" id="menu-round4">Round 4</div>
+					<div class="cell medium-2 small-8 roundselect" id="menu-round5">Round 5</div>
+					<div class="cell medium-2 small-8 roundselect" id="menu-round6">Quarterfinal</div>
+					<div class="cell medium-2 small-8 roundselect" id="menu-round7">Semifinal</div>
+					<div class="cell medium-2 small-8 roundselect" id="menu-round8">Final</div>
+		
+					<div class="cell medium-2 small-2"><a href="#" id="roundnext"><i class="material-icons">chevron_right</i></a></div>
+				</div>
+			';
+		}
+		
+		return $navmenu;
+		
+	}
+	
 	private function buildHeatHeaders($rounds,$picks){
 		
 		foreach($rounds as $round=>$v1){
@@ -199,7 +287,7 @@ class FSEvent{
 		
 	}
 	
-	private function displayRounds($rounds,$surfers,$picks,$users,$headers){
+	private function displayFinishedRounds($rounds,$surfers,$picks,$users,$headers){
 		
 		foreach($rounds as $round=>$v1){
 			$toreturn.= "<div class='roundcontainer hiddenround' id='r".$round."'>"; 
@@ -305,20 +393,33 @@ class FSEvent{
 			//finished event
 			$filtermenu = $this->buildFilterMenu($users);
 			$surfers 	= $this->buildSurferPicks($surfers,$users,$picks);
-			$headers 	= $this->buildHeatHeaders($rounds,$picks);
-			$rounds 	= $this->displayRounds($rounds,$surfers,$picks,$users,$headers);
 			
+			$navmenu = $this->buildEventMenu($eventdata);
+			
+			$headers 	= $this->buildHeatHeaders($rounds,$picks);
+			$rounds 	= $this->displayFinishedRounds($rounds,$surfers,$picks,$users,$headers);
+			
+			$display['nav']	 = $navmenu;
 			$display['menu'] = $filtermenu;
 			$display['main'] = $rounds;
 			
 		}
 		elseif($event_status==3){
 			//live event
+			$navmenu = $this->buildEventMenu($eventdata);
+			
+			$filtermenu = $this->buildFilterMenu($users);
+			$headers 	= $this->buildHeatHeaders($rounds,$picks);
+			
+			$rounds 	= $this->displayFinishedRounds($rounds,$surfers,$picks,$users,$headers);
+			
+			$display['nav']	 = $navmenu;
+			$display['menu'] = $filtermenu;
+			$display['main'] = $rounds;
 			
 		}
 		elseif($event_status==2){
 			//lineups open - free waivers
-			
 			
 		}
 		elseif($event_status==1){
