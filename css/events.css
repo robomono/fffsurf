@@ -49,6 +49,28 @@
 	overflow:hidden;
 }
 
+/*--- HEAT TITLE COLOR ---*/
+.round1complete{background-color:#ccc;}
+.round2complete{background-color:#ccc;}
+.round3complete{background-color:#ccc;}
+.round4complete{background-color:#ccc;}
+.round5complete{background-color:#ccc;}
+.round6complete{background-color:#ccc;}
+.round7complete{background-color:#ccc;}
+.round8complete{background-color:#ccc;}
+	
+.round1unsurfed{background-color:#ddd;}
+.round2unsurfed{background-color:#ddd;}
+.round3unsurfed{background-color:#ddd;}
+.round4unsurfed{background-color:#ddd;}
+.round5unsurfed{background-color:#ddd;}
+.round6unsurfed{background-color:#ddd;}
+.round7unsurfed{background-color:#ddd;}
+.round8unsurfed{background-color:#ddd;}	
+
+
+/*--- SURFER BORDER DETAIL---*/
+
 .heatwinner {color:rgba(0, 137, 114, 1);}
 .heatwinner .eventsurfer  {border-left:8px solid rgba(0, 137, 114, 1);}
 .heatwinner .eventsurfershort {border-left:8px solid rgba(0, 137, 114, 1);}
@@ -81,3 +103,47 @@
 .rd8loser .eventsurfer {border-left:8px solid rgba(50, 20, 51, 0.8);}
 .rd8loser .eventsurfershort {border-left:8px solid rgba(50, 20, 51, 0.8);}
 
+.redjersey{}
+.redjersey .eventsurfer{border-left:8px solid rgba(242, 87, 45, 1);}
+.redjersey .eventsurfershort{border-left:8px solid rgba(242, 87, 45, 1);}
+	
+.bluejersey{}
+.bluejersey .eventsurfer{border-left:8px solid rgba(0, 103, 166, 1);}
+.bluejersey .eventsurfershort{border-left:8px solid rgba(0, 103, 166, 1);}
+	
+.whitejersey{}
+.whitejersey .eventsurfer{border-left:8px solid rgba(255, 255, 255, 1);}
+.whitejersey .eventsurfershort{border-left:8px solid rgba(255, 255, 255, 1);}
+	
+.yellowjersey{}
+.yellowjersey .eventsurfer{border-left:8px solid rgba(239, 192, 40, 1);}
+.yellowjersey .eventsurfershort{border-left:8px solid rgba(239, 192, 40, 1);}
+	
+.byellowjersey{}
+.byellowjersey .eventsurfer{}
+.byellowjersey .eventsurfershort{}
+	
+.wyellowjersey{}
+.wyellowjersey .eventsurfer{}
+.wyellowjersey .eventsurfershort{}
+	
+.bredjersey{}
+.bredjersey .eventsurfer{}
+.bredjersey .eventsurfershort{}
+	
+.bbluejersey{}
+.bbluejersey .eventsurfer{}
+.bbluejersey .eventsurfershort{}
+	
+.wbluejersey{}
+.wbluejersey .eventsurfer{}
+.wbluejersey .eventsurfershort{}
+	
+.wredjersey{}
+.wredjersey .eventsurfer{}
+.wredjersey .eventsurfershort{}
+	
+.nosetjersey{}
+.nosetjersey .eventsurfer{border-left:8px solid rgba(180, 180, 180, 1);}
+.nosetjersey .eventsurfershort{border-left:8px solid rgba(180, 180, 180, 1);}
+	

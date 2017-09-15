@@ -23,7 +23,7 @@ class FSEvent{
 		if (!$this->db_connection->connect_errno) {
 
 			//---GET ROUND
-			$sql = "SELECT e.name, e.status, h.round, h.heat, h.player, h.surfer_id, h.result
+			$sql = "SELECT e.name, e.status, h.round, h.heat, h.player, h.surfer_id, h.result, h.jersey
 					FROM events AS e
 					LEFT JOIN heats AS h
 					ON e.id = h.event_id
@@ -33,18 +33,18 @@ class FSEvent{
 			$result = $this->db_connection->query($sql);
 		
 			while($row = mysqli_fetch_array($result)){
-				$eventstauts = $row['status'];
+				$eventstatus = $row['status'];
 				$eventname = $row['name'];
 				
-				if($eventstauts==4 || $eventstatus==3){
-					$event[$row['round']][$row['heat']][$row['player']]['sid'] = $row['surfer_id'];
-					$event[$row['round']][$row['heat']][$row['player']]['sco'] = $row['result'];
-				}
+				$event[$row['round']][$row['heat']][$row['player']]['sid'] = $row['surfer_id'];
+				$event[$row['round']][$row['heat']][$row['player']]['sco'] = $row['result'];
+				$event[$row['round']][$row['heat']][$row['player']]['jer'] = $row['jersey'];
+				
 				
 			}
 			//---END GET ROUND
 			
-			$return['status'] = $eventstauts;
+			$return['status'] = $eventstatus;
 			$return['name'] = $eventname;
 			$return['rounds'] = $event;
 			
@@ -210,25 +210,67 @@ class FSEvent{
 	
 	private function buildHeatHeaders($rounds,$picks){
 		
+		//picks = 
+		//[surferid] => [0] => [userid]
+		//[surferid] => [1] => [userid]
+		//goes up to [4] bc a surfer can only fit in a 
+		
+		//first navigates $rounds: round -> heat -> player to get *surferid*
+		//then gets that *surferid* and uses $picks get *numberofusers* that have picked that surfer id
+		//runs that *numberofteams* on loop to get each of the *userid* that picked that *surferid* and inserts into *header* array
+		 
+		
 		foreach($rounds as $round=>$v1){
 			foreach($v1 as $heat=>$v2){
 				foreach($v2 as $player=>$v3){
-					if(!empty($picks[$v3['sid']][0])){
-						$headers[$round][$heat] .= " has-".$picks[$v3['sid']][0];
+					
+					//build "has" header for filtering rounds by username					
+					for($i=0;$i<sizeof($picks[$v3['sid']]);$i++){
+						$headers[$round][$heat]['has'] .= " has-".$picks[$v3['sid']][$i];
 					}
-					if(!empty($picks[$v3['sid']][1])){
-						$headers[$round][$heat] .= " has-".$picks[$v3['sid']][1];
+					
+					//build round header and row type for surfers that are scored
+					if($v3['sco']!=0){
+						
+						$headers[$round][$heat]['typ'] = "round".$round."complete";
+						
+						if($v3['sco']==1){
+							$headers[$round][$heat]['res'][$player] = "<div class='grid-x heatwinner eventheatrow'>";
+						}
+						elseif($round!=1 && $round!=4 && $v3['sco']==2){
+							$headers[$round][$heat]['res'][$player] = "<div class='grid-x rd".$round."loser eventheatrow'>";
+						}
+						elseif(($round==1 || $round==4) && $v3['sco']==2){
+							$headers[$round][$heat]['res'][$player] = "<div class='grid-x heatrelegated eventheatrow'>";
+						}
+						elseif($v3['sco']==3){
+							$headers[$round][$heat]['res'][$player] = "<div class='grid-x heatrelegated eventheatrow'>";
+						}
 					}
-					if(!empty($picks[$v3['sid']][2])){
-						$headers[$round][$heat] .= " has-".$picks[$v3['sid']][2];
+					
+					//build round header and row type (jersey) for surfers that aren't scored
+					else if($v3['sco']==0){
+						
+						$headers[$round][$heat]['typ'] = "round".$round."unsurfed";
+						
+						if($v3['jer']=="r"){$headers[$round][$heat]['res'][$player]		  = "<div class='grid-x redjersey eventheatrow'>";}
+						elseif($v3['jer']=="b"){  $headers[$round][$heat]['res'][$player] = "<div class='grid-x bluejersey eventheatrow'>";}
+						elseif($v3['jer']=="w"){  $headers[$round][$heat]['res'][$player] = "<div class='grid-x whitejersey eventheatrow'>";}
+						elseif($v3['jer']=="y"){  $headers[$round][$heat]['res'][$player] = "<div class='grid-x yellowjersey eventheatrow'>";}
+						elseif($v3['jer']=="wr"){ $headers[$round][$heat]['res'][$player] = "<div class='grid-x wredjersey eventheatrow'>";}
+						elseif($v3['jer']=="wb"){ $headers[$round][$heat]['res'][$player] = "<div class='grid-x wbluejersey eventheatrow'>";}
+						elseif($v3['jer']=="bb"){ $headers[$round][$heat]['res'][$player] = "<div class='grid-x bbluejersey eventheatrow'>";}
+						elseif($v3['jer']=="br"){ $headers[$round][$heat]['res'][$player] = "<div class='grid-x bredjersey eventheatrow'>";}
+						elseif($v3['jer']=="wy"){ $headers[$round][$heat]['res'][$player] = "<div class='grid-x wyellowjersey eventheatrow'>";}
+						elseif($v3['jer']=="by"){ $headers[$round][$heat]['res'][$player] = "<div class='grid-x byellowjersey eventheatrow'>";}
+						else{					  $headers[$round][$heat]['res'][$player] = "<div class='grid-x nosetjersey eventheatrow'>";}
+						
 					}
-					if(!empty($picks[$v3['sid']][3])){
-						$headers[$round][$heat] .= " has-".$picks[$v3['sid']][3];
-					}
+					
 				}
 			}
 		}
-		
+
 		return $headers;
 		
 	}
@@ -288,88 +330,38 @@ class FSEvent{
 	}
 	
 	private function displayFinishedRounds($rounds,$surfers,$picks,$users,$headers){
-		
+				
 		foreach($rounds as $round=>$v1){
 			$toreturn.= "<div class='roundcontainer hiddenround' id='r".$round."'>"; 
-			
+
 			foreach($v1 as $heat=>$v2){
-				
-				$toreturn.= "<div class='grid-x align-center eventrounddetails ".$headers[$round][$heat]."' id='e1h".$heat."'>";
-				$toreturn.= "<div class='large-10 medium-12 small-12 cell eventheattitle round".$round."complete'>Heat ".$heat."</div>";
+
+				$toreturn.= "<div class='grid-x align-center eventrounddetails ".$headers[$round][$heat]['has']."' id='e1h".$heat."'>";
+				$toreturn.= "<div class='large-10 medium-12 small-12 cell eventheattitle ".$headers[$round][$heat]['typ']."'>Heat ".$heat."</div>";
 				$toreturn.= "<div class='large-10 medium-12 small-12 cell'>";
-				
+
 				foreach($v2 as $player=>$v3){
-					
+
 					$sid = $v3['sid'];
-					
-					if($v3['sco']==1){
-						
-						$toreturn.="<div class='grid-x heatwinner eventheatrow'>";
-						$toreturn.="<div class='large-3 medium-4 cell eventsurfer hide-for-small-only'>".$surfers[$sid]['name']."</div>
-									<div class='small-2 cell eventsurfershort show-for-small-only'>".$surfers[$sid]['aka']."</div>";
-						
-						$toreturn.="<div class='large-9 medium-8 small-10 cell eventpicklist'>
-										<div class='grid-x is-collapse-child'>
-											".$surfers[$sid]['pickcell']."
-										</div>
-									</div>";
-						
-						$toreturn.="</div>";//ends grid-x row heatwinner
-						
-					}
-					elseif($round!=1 && $round!=4 && $v3['sco']==2){
-						//lost
-						$toreturn.="<div class='grid-x rd".$round."loser eventheatrow'>";
-						$toreturn.="<div class='large-3 medium-4 cell eventsurfer hide-for-small-only'>".$surfers[$sid]['name']."</div>
-									<div class='small-2 cell eventsurfershort show-for-small-only'>".$surfers[$sid]['aka']."</div>";
-						
-						$toreturn.="<div class='large-9 medium-8 small-10 cell eventpicklist'>
-										<div class='grid-x is-collapse-child'>
-											".$surfers[$sid]['pickcell']."
-										</div>
-									</div>";
-						
-						$toreturn.="</div>";//ends grid-x row heatloser
-					}
-					elseif(($round==1 || $round==4) && $v3['sco']==2){
-						//relegated second
-						$toreturn.="<div class='grid-x heatrelegated eventheatrow'>";
-						$toreturn.="<div class='large-3 medium-4 cell eventsurfer hide-for-small-only'>".$surfers[$sid]['name']."</div>
-									<div class='small-2 cell eventsurfershort show-for-small-only'>".$surfers[$sid]['aka']."</div>";
-						
-						$toreturn.="<div class='large-9 medium-8 small-10 cell eventpicklist'>
-										<div class='grid-x is-collapse-child'>
-											".$surfers[$sid]['pickcell']."
-										</div>
-									</div>";
-						
-						$toreturn.="</div>";//ends grid-x row heatloser
-						
-					}
-					elseif($v3['sco']==3){
-						//relegated third
-						$toreturn.="<div class='grid-x heatrelegated eventheatrow'>";
-						$toreturn.="<div class='large-3 medium-4 cell eventsurfer hide-for-small-only'>".$surfers[$sid]['name']."</div>
-									<div class='small-2 cell eventsurfershort show-for-small-only'>".$surfers[$sid]['aka']."</div>";
-						
-						$toreturn.="<div class='large-9 medium-8 small-10 cell eventpicklist'>
-										<div class='grid-x is-collapse-child'>
-											".$surfers[$sid]['pickcell']."
-										</div>
-									</div>";
-						
-						$toreturn.="</div>";//ends grid-x row heatloser
-						
-					}
+
+					$toreturn.= $headers[$round][$heat]['res'][$player];
+					$toreturn.="<div class='large-3 medium-4 cell eventsurfer hide-for-small-only'>".$surfers[$sid]['name']."</div>
+								<div class='small-2 cell eventsurfershort show-for-small-only'>".$surfers[$sid]['aka']."</div>";
+
+					$toreturn.="<div class='large-9 medium-8 small-10 cell eventpicklist'>
+									<div class='grid-x is-collapse-child'>".$surfers[$sid]['pickcell']."</div>
+								</div>";
+
+					$toreturn.="</div>";//ends grid-x row $headers[$round][$heat]['res'][$player]
 
 				}
-				
+
 				$toreturn .= "</div></div>";//ends row grid-x for each heat
 			}
-			
+
 			$toreturn.= "</div>";//ends round countainer
 		}
-		
+
 		return $toreturn;
 		
 	}
@@ -384,24 +376,25 @@ class FSEvent{
 		
 		$picks = $allpicks['picks'];
 		$users = $allpicks['users'];
+		
+		$surfers 	= $this->buildSurferPicks($surfers,$users,$picks);
 				
 		$event_name = 	$eventdata['name'];
 		$event_status = $eventdata['status'];
 		$rounds = 		$eventdata['rounds'];
-		
+
 		if($event_status==4){
 			//finished event
 			$filtermenu = $this->buildFilterMenu($users);
-			$surfers 	= $this->buildSurferPicks($surfers,$users,$picks);
 			
 			$navmenu = $this->buildEventMenu($eventdata);
 			
-			$headers 	= $this->buildHeatHeaders($rounds,$picks);
-			$rounds 	= $this->displayFinishedRounds($rounds,$surfers,$picks,$users,$headers);
+			$headers 		= $this->buildHeatHeaders($rounds,$picks);
+			$displayrounds 	= $this->displayFinishedRounds($rounds,$surfers,$picks,$users,$headers);
 			
 			$display['nav']	 = $navmenu;
 			$display['menu'] = $filtermenu;
-			$display['main'] = $rounds;
+			$display['main'] = $displayrounds;
 			
 		}
 		elseif($event_status==3){
@@ -416,7 +409,7 @@ class FSEvent{
 			$display['nav']	 = $navmenu;
 			$display['menu'] = $filtermenu;
 			$display['main'] = $rounds;
-			
+		
 		}
 		elseif($event_status==2){
 			//lineups open - free waivers

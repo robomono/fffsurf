@@ -11,21 +11,15 @@ $( document ).ready(function() {
 	  url: "classes/fsEventHandler.php",
 	  dataType: "json",
 	  async: false,
-		success: function(data){
-			
-			//if(data=="setnameandteam"){
-				//$('.maincontent').load('views/userteamform.html');
-				//}else{
+	  success: function(data){
 				
-				$('.navigation').html(data['nav']);
-				$('.eventmenu').html(data['menu']);
-				$('.allrounds').html(data['main']);
-								
-				$(document).foundation();
-				//$('.isHidden').hide();
-				//}
+		$('.navigation').html(data['nav']);
+		$('.eventmenu').html(data['menu']);
+		$('.allrounds').html(data['main']);
+		//$('.allrounds').html(data);				
+		$(document).foundation();
 						
-		}
+	  }
 	});
 	
 	$('.allrounds').children('#r1').show();

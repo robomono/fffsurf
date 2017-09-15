@@ -11,6 +11,7 @@ if (isset($_POST) && is_array($_POST)) {
 		$return = $fsevent->getAllRounds($event_id);
 
 		echo json_encode($return);
+		//print_r($return['main']);
 	}
 	
 }
