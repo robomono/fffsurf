@@ -5,7 +5,18 @@
 	margin-bottom:20px;
 }
 
+.emptypicks .cell{
+	font-weight:900;
+	color:#aaa;
+	text-align:center;
+	padding:20px;
+}
+
 .hiddenround{
+	display:none;
+}
+
+.hiddenheat{
 	display:none;
 }
 

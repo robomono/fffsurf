@@ -23,5 +23,5 @@ $( document ).ready(function() {
 	});
 	
 	$('.allrounds').children('#r1').show();
-	
+	$('.allrounds').children('.hiddenround').children('.emptypicks').hide();
 });

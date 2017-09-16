@@ -85,6 +85,8 @@ $(".eventmenu").on( "click",".heat-filter-select", function() {
 	if(uid=="all"){
 		
 		$(".eventrounddetails").slideDown("fast");
+		$('.emptypicks').hide();
+		
 		$("#selectedfilter").html("Showing: All");
 		
 	}else{

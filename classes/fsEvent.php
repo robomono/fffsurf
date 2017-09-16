@@ -208,25 +208,34 @@ class FSEvent{
 		
 	}
 	
-	private function buildHeatHeaders($rounds,$picks){
+	private function buildHeatHeaders($rounds,$picks,$users){
 		
 		//picks = 
 		//[surferid] => [0] => [userid]
 		//[surferid] => [1] => [userid]
 		//goes up to [4] bc a surfer can only fit in a 
 		
+		//create array with all users (to figure out if user has no picks in round)
+		foreach($users as $uid=>$v){
+			$userlist[$uid] = 0;
+		}
+		
 		//first navigates $rounds: round -> heat -> player to get *surferid*
 		//then gets that *surferid* and uses $picks get *numberofusers* that have picked that surfer id
 		//runs that *numberofteams* on loop to get each of the *userid* that picked that *surferid* and inserts into *header* array
-		 
 		
 		foreach($rounds as $round=>$v1){
+			
+			//get a new list of users every round to rule out users with no pick this round
+			$allusers = $userlist; 
+			
 			foreach($v1 as $heat=>$v2){
 				foreach($v2 as $player=>$v3){
 					
 					//build "has" header for filtering rounds by username					
 					for($i=0;$i<sizeof($picks[$v3['sid']]);$i++){
 						$headers[$round][$heat]['has'] .= " has-".$picks[$v3['sid']][$i];
+						$allusers[$picks[$v3['sid']][$i]]++;
 					}
 					
 					//build round header and row type for surfers that are scored
@@ -269,6 +278,17 @@ class FSEvent{
 					
 				}
 			}
+			
+			//goes through user counter to find out if users have no picks in this round
+			foreach($allusers as $uid=>$count){
+				
+				//0 count means no picks were counted for this user when generating headers in this round
+				if($count==0){
+					$headers[$round]['emp'] .= " has-$uid";
+				}
+				
+			}
+			
 		}
 
 		return $headers;
@@ -330,38 +350,739 @@ class FSEvent{
 	}
 	
 	private function displayFinishedRounds($rounds,$surfers,$picks,$users,$headers){
+		
+		for($i=1;$i<=8;$i++){
+			
+			$toreturn.= "<div class='roundcontainer hiddenround' id='r".$i."'>"; 
+			
+			//rounds that have data
+			if(!empty($rounds[$i])){
 				
-		foreach($rounds as $round=>$v1){
-			$toreturn.= "<div class='roundcontainer hiddenround' id='r".$round."'>"; 
+				//display all rounds
+				foreach($rounds[$i] as $heat=>$v2){
 
-			foreach($v1 as $heat=>$v2){
+					$toreturn.= "<div class='grid-x align-center eventrounddetails ".$headers[$i][$heat]['has']."' id='e1h".$heat."'>";
+					$toreturn.= "<div class='large-10 medium-12 small-12 cell eventheattitle ".$headers[$i][$heat]['typ']."'>Heat ".$heat."</div>";
+					$toreturn.= "<div class='large-10 medium-12 small-12 cell'>";
 
-				$toreturn.= "<div class='grid-x align-center eventrounddetails ".$headers[$round][$heat]['has']."' id='e1h".$heat."'>";
-				$toreturn.= "<div class='large-10 medium-12 small-12 cell eventheattitle ".$headers[$round][$heat]['typ']."'>Heat ".$heat."</div>";
-				$toreturn.= "<div class='large-10 medium-12 small-12 cell'>";
+					foreach($v2 as $player=>$v3){
 
-				foreach($v2 as $player=>$v3){
+						$sid = $v3['sid'];
 
-					$sid = $v3['sid'];
+						$toreturn.= $headers[$i][$heat]['res'][$player];
+						$toreturn.="<div class='large-3 medium-4 cell eventsurfer hide-for-small-only'>".$surfers[$sid]['name']."</div>
+									<div class='small-2 cell eventsurfershort show-for-small-only'>".$surfers[$sid]['aka']."</div>";
 
-					$toreturn.= $headers[$round][$heat]['res'][$player];
-					$toreturn.="<div class='large-3 medium-4 cell eventsurfer hide-for-small-only'>".$surfers[$sid]['name']."</div>
-								<div class='small-2 cell eventsurfershort show-for-small-only'>".$surfers[$sid]['aka']."</div>";
+						$toreturn.="<div class='large-9 medium-8 small-10 cell eventpicklist'>
+										<div class='grid-x is-collapse-child'>".$surfers[$sid]['pickcell']."</div>
+									</div>";
 
-					$toreturn.="<div class='large-9 medium-8 small-10 cell eventpicklist'>
-									<div class='grid-x is-collapse-child'>".$surfers[$sid]['pickcell']."</div>
-								</div>";
+						$toreturn.="</div>";//ends grid-x row $headers[$round][$heat]['res'][$player]
 
-					$toreturn.="</div>";//ends grid-x row $headers[$round][$heat]['res'][$player]
+					}
 
+					$toreturn .= "</div></div>";//ends row grid-x for each heat
 				}
-
-				$toreturn .= "</div></div>";//ends row grid-x for each heat
+				
+				//create container for users with no picks this round
+				if(!empty($headers[$i]['emp'])){
+					
+					$toreturn.='
+					
+						<div class="grid-x align-center eventrounddetails emptypicks '.$headers[$i]['emp'].'" id="e1h1">
+							<div class="large-10 medium-12 small-12 cell">No picks in this round</div>
+						</div>
+						
+					';
+					
+				}
+				
 			}
+			
+			//rounds with no data
+			elseif(empty($rounds[$i])){
+				
+				if($i==1){
+					
+					$toreturn.= '
+									<div class="grid-x align-center eventrounddetails" id="e1h1">
+										<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 1</div>
+										<div class="large-10 medium-12 small-12 cell">
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="grid-x align-center eventrounddetails" id="e1h1">
+										<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 2</div>
+										<div class="large-10 medium-12 small-12 cell">
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="grid-x align-center eventrounddetails" id="e1h1">
+										<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 3</div>
+										<div class="large-10 medium-12 small-12 cell">
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="grid-x align-center eventrounddetails" id="e1h1">
+										<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 4</div>
+										<div class="large-10 medium-12 small-12 cell">
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+										</div>
+									</div>
 
+									<div class="grid-x align-center eventrounddetails" id="e1h1">
+										<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 5</div>
+										<div class="large-10 medium-12 small-12 cell">
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="grid-x align-center eventrounddetails" id="e1h1">
+										<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 6</div>
+										<div class="large-10 medium-12 small-12 cell">
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="grid-x align-center eventrounddetails" id="e1h1">
+										<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 7</div>
+										<div class="large-10 medium-12 small-12 cell">
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="grid-x align-center eventrounddetails" id="e1h1">
+										<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 8</div>
+										<div class="large-10 medium-12 small-12 cell">
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="grid-x align-center eventrounddetails" id="e1h1">
+										<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 9</div>
+										<div class="large-10 medium-12 small-12 cell">
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="grid-x align-center eventrounddetails" id="e1h1">
+										<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 10</div>
+										<div class="large-10 medium-12 small-12 cell">
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="grid-x align-center eventrounddetails" id="e1h1">
+										<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 11</div>
+										<div class="large-10 medium-12 small-12 cell">
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="grid-x align-center eventrounddetails" id="e1h1">
+										<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 12</div>
+										<div class="large-10 medium-12 small-12 cell">
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+										</div>
+									</div>
+									
+									';
+					
+				}
+				
+				elseif($i==2 || $i==3){
+					
+					$toreturn.='
+						
+						<div class="grid-x align-center eventrounddetails" id="e1h1">
+							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 1</div>
+							<div class="large-10 medium-12 small-12 cell">
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="grid-x align-center eventrounddetails" id="e1h1">
+							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 2</div>
+							<div class="large-10 medium-12 small-12 cell">
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="grid-x align-center eventrounddetails" id="e1h1">
+							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 3</div>
+							<div class="large-10 medium-12 small-12 cell">
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="grid-x align-center eventrounddetails" id="e1h1">
+							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 4</div>
+							<div class="large-10 medium-12 small-12 cell">
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="grid-x align-center eventrounddetails" id="e1h1">
+							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 5</div>
+							<div class="large-10 medium-12 small-12 cell">
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="grid-x align-center eventrounddetails" id="e1h1">
+							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 6</div>
+							<div class="large-10 medium-12 small-12 cell">
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="grid-x align-center eventrounddetails" id="e1h1">
+							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 7</div>
+							<div class="large-10 medium-12 small-12 cell">
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="grid-x align-center eventrounddetails" id="e1h1">
+							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 8</div>
+							<div class="large-10 medium-12 small-12 cell">
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="grid-x align-center eventrounddetails" id="e1h1">
+							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 9</div>
+							<div class="large-10 medium-12 small-12 cell">
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="grid-x align-center eventrounddetails" id="e1h1">
+							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 10</div>
+							<div class="large-10 medium-12 small-12 cell">
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="grid-x align-center eventrounddetails" id="e1h1">
+							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 11</div>
+							<div class="large-10 medium-12 small-12 cell">
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="grid-x align-center eventrounddetails" id="e1h1">
+							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 12</div>
+							<div class="large-10 medium-12 small-12 cell">
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+							</div>
+						</div>
+						
+					';
+					
+				}
+				
+				elseif($i==4){
+					
+					$toreturn.= '
+									<div class="grid-x align-center eventrounddetails" id="e1h1">
+										<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 1</div>
+										<div class="large-10 medium-12 small-12 cell">
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="grid-x align-center eventrounddetails" id="e1h1">
+										<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 2</div>
+										<div class="large-10 medium-12 small-12 cell">
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="grid-x align-center eventrounddetails" id="e1h1">
+										<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 3</div>
+										<div class="large-10 medium-12 small-12 cell">
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="grid-x align-center eventrounddetails" id="e1h1">
+										<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 4</div>
+										<div class="large-10 medium-12 small-12 cell">
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+											<div class="grid-x nosetjersey eventheatrow">
+												<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+												<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+												<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+											</div>
+										</div>
+									</div>';
+				}
+				
+				elseif($i==5 || $i==6){
+					
+					$toreturn.= '
+						<div class="grid-x align-center eventrounddetails" id="e1h1">
+							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 1</div>
+							<div class="large-10 medium-12 small-12 cell">
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="grid-x align-center eventrounddetails" id="e1h1">
+							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 2</div>
+							<div class="large-10 medium-12 small-12 cell">
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="grid-x align-center eventrounddetails" id="e1h1">
+							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 3</div>
+							<div class="large-10 medium-12 small-12 cell">
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="grid-x align-center eventrounddetails" id="e1h1">
+							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 4</div>
+							<div class="large-10 medium-12 small-12 cell">
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+							</div>
+						</div>
+					';
+					
+				}
+				
+				elseif($i==7){
+					
+					$toreturn.='
+						<div class="grid-x align-center eventrounddetails" id="e1h1">
+							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 1</div>
+							<div class="large-10 medium-12 small-12 cell">
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="grid-x align-center eventrounddetails" id="e1h1">
+							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 2</div>
+							<div class="large-10 medium-12 small-12 cell">
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+							</div>
+						</div>
+					';
+					
+				}
+				
+				elseif($i==8){
+					
+					$toreturn.='<div class="grid-x align-center eventrounddetails" id="e1h1">
+							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 1</div>
+							<div class="large-10 medium-12 small-12 cell">
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+								<div class="grid-x nosetjersey eventheatrow">
+									<div class="large-3 medium-4 cell eventsurfer hide-for-small-only">TBD</div>
+									<div class="small-2 cell eventsurfershort show-for-small-only">TBD</div>
+									<div class="large-9 medium-8 small-10 cell eventpicklist"> </div>
+								</div>
+							</div>
+						</div>
+						';
+				}
+				
+			}
+			
 			$toreturn.= "</div>";//ends round countainer
 		}
-
+		
+		
 		return $toreturn;
 		
 	}
@@ -389,7 +1110,7 @@ class FSEvent{
 			
 			$navmenu = $this->buildEventMenu($eventdata);
 			
-			$headers 		= $this->buildHeatHeaders($rounds,$picks);
+			$headers 		= $this->buildHeatHeaders($rounds,$picks,$users);
 			$displayrounds 	= $this->displayFinishedRounds($rounds,$surfers,$picks,$users,$headers);
 			
 			$display['nav']	 = $navmenu;
@@ -402,7 +1123,7 @@ class FSEvent{
 			$navmenu = $this->buildEventMenu($eventdata);
 			
 			$filtermenu = $this->buildFilterMenu($users);
-			$headers 	= $this->buildHeatHeaders($rounds,$picks);
+			$headers 	= $this->buildHeatHeaders($rounds,$picks,$users);
 			
 			$rounds 	= $this->displayFinishedRounds($rounds,$surfers,$picks,$users,$headers);
 			
