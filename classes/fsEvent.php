@@ -31,7 +31,9 @@ class FSEvent{
 					ORDER BY h.round,h.heat,h.result,h.player";
 
 			$result = $this->db_connection->query($sql);
-		
+			
+			$liveflag=0;
+			
 			while($row = mysqli_fetch_array($result)){
 				$eventstatus = $row['status'];
 				$eventname = $row['name'];
@@ -39,8 +41,7 @@ class FSEvent{
 				$event[$row['round']][$row['heat']][$row['player']]['sid'] = $row['surfer_id'];
 				$event[$row['round']][$row['heat']][$row['player']]['sco'] = $row['result'];
 				$event[$row['round']][$row['heat']][$row['player']]['jer'] = $row['jersey'];
-				
-				
+
 			}
 			//---END GET ROUND
 			
@@ -126,7 +127,11 @@ class FSEvent{
 		
 		if($event_status==0){
 			//upcoming event
-			$navmenu = '';
+			$navmenu = '<div class="grid-x align-center navmenu idleeventnav">
+							<div class="cell large-4 small-4 selected">Team</div>
+							<div class="cell large-4 small-4">Waivers</div>
+							<div class="cell large-4 small-4">Leaderboard</div>
+						</div>';
 			
 		}elseif($event_status==1){
 			//idle event, waiver request
@@ -218,6 +223,7 @@ class FSEvent{
 		//create array with all users (to figure out if user has no picks in round)
 		foreach($users as $uid=>$v){
 			$userlist[$uid] = 0;
+			$headers[100] .= " has-$uid"; //a list of all users for rounds that havent been filled yet
 		}
 		
 		//first navigates $rounds: round -> heat -> player to get *surferid*
@@ -405,7 +411,7 @@ class FSEvent{
 				if($i==1){
 					
 					$toreturn.= '
-									<div class="grid-x align-center eventrounddetails" id="e1h1">
+									<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 										<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 1</div>
 										<div class="large-10 medium-12 small-12 cell">
 											<div class="grid-x nosetjersey eventheatrow">
@@ -426,7 +432,7 @@ class FSEvent{
 										</div>
 									</div>
 									
-									<div class="grid-x align-center eventrounddetails" id="e1h1">
+									<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 										<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 2</div>
 										<div class="large-10 medium-12 small-12 cell">
 											<div class="grid-x nosetjersey eventheatrow">
@@ -447,7 +453,7 @@ class FSEvent{
 										</div>
 									</div>
 									
-									<div class="grid-x align-center eventrounddetails" id="e1h1">
+									<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 										<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 3</div>
 										<div class="large-10 medium-12 small-12 cell">
 											<div class="grid-x nosetjersey eventheatrow">
@@ -468,7 +474,7 @@ class FSEvent{
 										</div>
 									</div>
 									
-									<div class="grid-x align-center eventrounddetails" id="e1h1">
+									<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 										<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 4</div>
 										<div class="large-10 medium-12 small-12 cell">
 											<div class="grid-x nosetjersey eventheatrow">
@@ -489,7 +495,7 @@ class FSEvent{
 										</div>
 									</div>
 
-									<div class="grid-x align-center eventrounddetails" id="e1h1">
+									<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 										<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 5</div>
 										<div class="large-10 medium-12 small-12 cell">
 											<div class="grid-x nosetjersey eventheatrow">
@@ -510,7 +516,7 @@ class FSEvent{
 										</div>
 									</div>
 									
-									<div class="grid-x align-center eventrounddetails" id="e1h1">
+									<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 										<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 6</div>
 										<div class="large-10 medium-12 small-12 cell">
 											<div class="grid-x nosetjersey eventheatrow">
@@ -531,7 +537,7 @@ class FSEvent{
 										</div>
 									</div>
 									
-									<div class="grid-x align-center eventrounddetails" id="e1h1">
+									<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 										<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 7</div>
 										<div class="large-10 medium-12 small-12 cell">
 											<div class="grid-x nosetjersey eventheatrow">
@@ -552,7 +558,7 @@ class FSEvent{
 										</div>
 									</div>
 									
-									<div class="grid-x align-center eventrounddetails" id="e1h1">
+									<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 										<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 8</div>
 										<div class="large-10 medium-12 small-12 cell">
 											<div class="grid-x nosetjersey eventheatrow">
@@ -573,7 +579,7 @@ class FSEvent{
 										</div>
 									</div>
 									
-									<div class="grid-x align-center eventrounddetails" id="e1h1">
+									<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 										<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 9</div>
 										<div class="large-10 medium-12 small-12 cell">
 											<div class="grid-x nosetjersey eventheatrow">
@@ -594,7 +600,7 @@ class FSEvent{
 										</div>
 									</div>
 									
-									<div class="grid-x align-center eventrounddetails" id="e1h1">
+									<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 										<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 10</div>
 										<div class="large-10 medium-12 small-12 cell">
 											<div class="grid-x nosetjersey eventheatrow">
@@ -615,7 +621,7 @@ class FSEvent{
 										</div>
 									</div>
 									
-									<div class="grid-x align-center eventrounddetails" id="e1h1">
+									<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 										<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 11</div>
 										<div class="large-10 medium-12 small-12 cell">
 											<div class="grid-x nosetjersey eventheatrow">
@@ -636,7 +642,7 @@ class FSEvent{
 										</div>
 									</div>
 									
-									<div class="grid-x align-center eventrounddetails" id="e1h1">
+									<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 										<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 12</div>
 										<div class="large-10 medium-12 small-12 cell">
 											<div class="grid-x nosetjersey eventheatrow">
@@ -665,7 +671,7 @@ class FSEvent{
 					
 					$toreturn.='
 						
-						<div class="grid-x align-center eventrounddetails" id="e1h1">
+						<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 1</div>
 							<div class="large-10 medium-12 small-12 cell">
 								<div class="grid-x nosetjersey eventheatrow">
@@ -681,7 +687,7 @@ class FSEvent{
 							</div>
 						</div>
 						
-						<div class="grid-x align-center eventrounddetails" id="e1h1">
+						<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 2</div>
 							<div class="large-10 medium-12 small-12 cell">
 								<div class="grid-x nosetjersey eventheatrow">
@@ -697,7 +703,7 @@ class FSEvent{
 							</div>
 						</div>
 						
-						<div class="grid-x align-center eventrounddetails" id="e1h1">
+						<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 3</div>
 							<div class="large-10 medium-12 small-12 cell">
 								<div class="grid-x nosetjersey eventheatrow">
@@ -713,7 +719,7 @@ class FSEvent{
 							</div>
 						</div>
 						
-						<div class="grid-x align-center eventrounddetails" id="e1h1">
+						<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 4</div>
 							<div class="large-10 medium-12 small-12 cell">
 								<div class="grid-x nosetjersey eventheatrow">
@@ -729,7 +735,7 @@ class FSEvent{
 							</div>
 						</div>
 						
-						<div class="grid-x align-center eventrounddetails" id="e1h1">
+						<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 5</div>
 							<div class="large-10 medium-12 small-12 cell">
 								<div class="grid-x nosetjersey eventheatrow">
@@ -745,7 +751,7 @@ class FSEvent{
 							</div>
 						</div>
 						
-						<div class="grid-x align-center eventrounddetails" id="e1h1">
+						<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 6</div>
 							<div class="large-10 medium-12 small-12 cell">
 								<div class="grid-x nosetjersey eventheatrow">
@@ -761,7 +767,7 @@ class FSEvent{
 							</div>
 						</div>
 						
-						<div class="grid-x align-center eventrounddetails" id="e1h1">
+						<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 7</div>
 							<div class="large-10 medium-12 small-12 cell">
 								<div class="grid-x nosetjersey eventheatrow">
@@ -777,7 +783,7 @@ class FSEvent{
 							</div>
 						</div>
 						
-						<div class="grid-x align-center eventrounddetails" id="e1h1">
+						<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 8</div>
 							<div class="large-10 medium-12 small-12 cell">
 								<div class="grid-x nosetjersey eventheatrow">
@@ -793,7 +799,7 @@ class FSEvent{
 							</div>
 						</div>
 						
-						<div class="grid-x align-center eventrounddetails" id="e1h1">
+						<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 9</div>
 							<div class="large-10 medium-12 small-12 cell">
 								<div class="grid-x nosetjersey eventheatrow">
@@ -809,7 +815,7 @@ class FSEvent{
 							</div>
 						</div>
 						
-						<div class="grid-x align-center eventrounddetails" id="e1h1">
+						<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 10</div>
 							<div class="large-10 medium-12 small-12 cell">
 								<div class="grid-x nosetjersey eventheatrow">
@@ -825,7 +831,7 @@ class FSEvent{
 							</div>
 						</div>
 						
-						<div class="grid-x align-center eventrounddetails" id="e1h1">
+						<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 11</div>
 							<div class="large-10 medium-12 small-12 cell">
 								<div class="grid-x nosetjersey eventheatrow">
@@ -841,7 +847,7 @@ class FSEvent{
 							</div>
 						</div>
 						
-						<div class="grid-x align-center eventrounddetails" id="e1h1">
+						<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 12</div>
 							<div class="large-10 medium-12 small-12 cell">
 								<div class="grid-x nosetjersey eventheatrow">
@@ -864,7 +870,7 @@ class FSEvent{
 				elseif($i==4){
 					
 					$toreturn.= '
-									<div class="grid-x align-center eventrounddetails" id="e1h1">
+									<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 										<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 1</div>
 										<div class="large-10 medium-12 small-12 cell">
 											<div class="grid-x nosetjersey eventheatrow">
@@ -885,7 +891,7 @@ class FSEvent{
 										</div>
 									</div>
 									
-									<div class="grid-x align-center eventrounddetails" id="e1h1">
+									<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 										<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 2</div>
 										<div class="large-10 medium-12 small-12 cell">
 											<div class="grid-x nosetjersey eventheatrow">
@@ -906,7 +912,7 @@ class FSEvent{
 										</div>
 									</div>
 									
-									<div class="grid-x align-center eventrounddetails" id="e1h1">
+									<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 										<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 3</div>
 										<div class="large-10 medium-12 small-12 cell">
 											<div class="grid-x nosetjersey eventheatrow">
@@ -927,7 +933,7 @@ class FSEvent{
 										</div>
 									</div>
 									
-									<div class="grid-x align-center eventrounddetails" id="e1h1">
+									<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 										<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 4</div>
 										<div class="large-10 medium-12 small-12 cell">
 											<div class="grid-x nosetjersey eventheatrow">
@@ -952,7 +958,7 @@ class FSEvent{
 				elseif($i==5 || $i==6){
 					
 					$toreturn.= '
-						<div class="grid-x align-center eventrounddetails" id="e1h1">
+						<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 1</div>
 							<div class="large-10 medium-12 small-12 cell">
 								<div class="grid-x nosetjersey eventheatrow">
@@ -968,7 +974,7 @@ class FSEvent{
 							</div>
 						</div>
 						
-						<div class="grid-x align-center eventrounddetails" id="e1h1">
+						<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 2</div>
 							<div class="large-10 medium-12 small-12 cell">
 								<div class="grid-x nosetjersey eventheatrow">
@@ -984,7 +990,7 @@ class FSEvent{
 							</div>
 						</div>
 						
-						<div class="grid-x align-center eventrounddetails" id="e1h1">
+						<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 3</div>
 							<div class="large-10 medium-12 small-12 cell">
 								<div class="grid-x nosetjersey eventheatrow">
@@ -1000,7 +1006,7 @@ class FSEvent{
 							</div>
 						</div>
 						
-						<div class="grid-x align-center eventrounddetails" id="e1h1">
+						<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 4</div>
 							<div class="large-10 medium-12 small-12 cell">
 								<div class="grid-x nosetjersey eventheatrow">
@@ -1022,7 +1028,7 @@ class FSEvent{
 				elseif($i==7){
 					
 					$toreturn.='
-						<div class="grid-x align-center eventrounddetails" id="e1h1">
+						<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 1</div>
 							<div class="large-10 medium-12 small-12 cell">
 								<div class="grid-x nosetjersey eventheatrow">
@@ -1038,7 +1044,7 @@ class FSEvent{
 							</div>
 						</div>
 						
-						<div class="grid-x align-center eventrounddetails" id="e1h1">
+						<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 2</div>
 							<div class="large-10 medium-12 small-12 cell">
 								<div class="grid-x nosetjersey eventheatrow">
@@ -1059,7 +1065,7 @@ class FSEvent{
 				
 				elseif($i==8){
 					
-					$toreturn.='<div class="grid-x align-center eventrounddetails" id="e1h1">
+					$toreturn.='<div class="grid-x align-center eventrounddetails'.$headers[100].'" id="e1h1">
 							<div class="large-10 medium-12 small-12 cell eventheattitle round4unsurfed">Heat 1</div>
 							<div class="large-10 medium-12 small-12 cell">
 								<div class="grid-x nosetjersey eventheatrow">
@@ -1134,15 +1140,22 @@ class FSEvent{
 		}
 		elseif($event_status==2){
 			//lineups open - free waivers
+			$navmenu = $this->buildEventMenu($eventdata);
+			
+			$display['nav']	 = $navmenu;
 			
 		}
 		elseif($event_status==1){
 			//lineups open - waiver period
+			$navmenu = $this->buildEventMenu($eventdata);
 			
+			$display['nav']	 = $navmenu;
 		}
 		elseif($event_status==0){
 			//upcoming event
+			$navmenu = $this->buildEventMenu($eventdata);
 			
+			$display['nav']	 = $navmenu;
 		}
 		
 		//return $display;
