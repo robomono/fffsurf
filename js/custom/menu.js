@@ -23,17 +23,23 @@ $(".eventselect").click(function(){
 	$(".eventnav-expanded").slideUp("fast");
 	$(".eventnav").slideDown("fast");
 	
+	var searchParams = new URLSearchParams(window.location.search); //gets all the php search parameters e.g. ?id=3
+	var currentLocation = window.location.pathname;//e.g. teams.php or events.php
+	
+	var uid = searchParams.get("uid"); //gets the user id from url
+	var eid = this.id.substring(3);//gets the event id from div id
+	
 	$(this).parent().children(".selected-event").removeClass("selected-event");
 	$(this).addClass("selected-event");
 	
-	var eventid = "events.php?eid=" + ((this).id).substring(3);
-	
 	var thisevent = $(this).children("h4").text();
-	
 	$(".eventnav").children(".selected-event").children("h4").text(thisevent);
 	
+	if (currentLocation == "/fffsurf/events.php"){var redirect = currentLocation + "?eid=" + eid;}
+	else if (currentLocation == "/fffsurf/teams.php"){var redirect = currentLocation + "?uid=" + uid + "&eid=" + eid;}
+	
 	//send to event page after 1.5 seconds (gives time for the menu to collapse)
-	window.setTimeout(function(){window.location.href = eventid;}, 150);
+	window.setTimeout(function(){window.location.href = redirect;}, 150);
 	
 });
 
