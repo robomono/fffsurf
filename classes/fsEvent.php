@@ -1,6 +1,7 @@
 <?php
 
-//NEXT STEP ADD PICK HEADERS
+//NEED NEW TABLE TO REGISTER INJURIES AND OUTS
+//NEED NEW TABLE TO REGISTER SURFER RANK AT THE BEGGINING OF AN EVENT
 	
 class FSEvent{
 	
@@ -12,7 +13,7 @@ class FSEvent{
 		
 	}
 	
-	private function getEventStatus($event_id){
+	public function getEventStatus($event_id){
 		
 		$this->db_connection = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
@@ -55,7 +56,7 @@ class FSEvent{
 		
 	}
 	
-	private function getSurfers(){
+	public function getSurfers(){
 		
 		$this->db_connection = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
@@ -74,6 +75,7 @@ class FSEvent{
 				$surfers[$row['id']]['name'] = $row['name'];
 				$surfers[$row['id']]['aka'] = $row['aka'];
 				$surfers[$row['id']]['img'] = $row['img'];
+				
 			}
 			//---END GET ROUND
 		}
@@ -82,7 +84,7 @@ class FSEvent{
 		
 	}
 	
-	private function getPicks($event_id,$league_id){
+	public function getPicks($event_id,$league_id){
 		
 		$this->db_connection = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
@@ -1095,7 +1097,7 @@ class FSEvent{
 	
 	public function getAllRounds($event_id){
 		
-		$league_id = 1;
+		$league_id = 1;//<------------------------------CHANGE LEAGUE ID
 		
 		$eventdata = $this->getEventStatus($event_id);
 		$surfers = $this->getSurfers();

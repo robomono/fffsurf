@@ -1,6 +1,7 @@
 <?php
 
 //NEXT STEP ADD PICK HEADERS
+//GET AVILABLES FOR THAT SPECIFIC EVENT (& WILDCARDS) AND FACTOR INTO BEST POSSIBLE SCORE
 	
 class FSTeam{
 	
@@ -10,11 +11,209 @@ class FSTeam{
 		//include_once(fsbasics.php);
 		require_once("../config/db.php");
 		
+		include "fsEvent.php";
+	}
+	
+	
+	
+	private function getPicksByUser($user_id,$event_id,$league_id){
+		
+		$this->db_connection = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
+		if (!$this->db_connection->set_charset("utf8")) {
+			$this->errors[] = $this->db_connection->error;
+		}
+
+		if (!$this->db_connection->connect_errno) {
+
+			//---GET ROUND
+			$sql = "SELECT p.user_id,p.pick_id,p.status,p.active,p.wc,u.user_name,u.user_team 
+					FROM league_picks p
+					LEFT JOIN users AS u
+					ON p.user_id = u.id
+					WHERE p.event=$event_id AND p.league_id=$league_id AND u.id =$user_id
+					ORDER BY p.active";
+
+			$result = $this->db_connection->query($sql);
+			
+			while($row = mysqli_fetch_array($result)){
+				$picks[$row['user_id']][$row['active']] = $row['pick_id'];
+				
+				$users[$row['user_id']]['name'] = $row['user_name'];
+				$users[$row['user_id']]['short'] = explode(" ",$row['user_name'])[0];
+				$users[$row['user_id']]['team'] = $row['user_team'];
+			}
+			//---END GET ROUND
+		}
+		
+		$toreturn['picks'] = $picks;
+		$toreturn['users'] = $users;
+		
+		return $toreturn;
+		
+	}
+	
+	private function getScoresByEvent($event_id){
+		
+		$this->db_connection = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
+		if (!$this->db_connection->set_charset("utf8")) {
+			$this->errors[] = $this->db_connection->error;
+		}
+
+		if (!$this->db_connection->connect_errno) {
+
+			//---GET ROUND
+			$sql = "SELECT surfer_id,position,points
+					FROM surfer_scores
+					WHERE event=$event_id";
+
+			$result = $this->db_connection->query($sql);
+			
+			while($row = mysqli_fetch_array($result)){
+				$scores[$row['surfer_id']]['sco'] = $row['points'];
+				$scores[$row['surfer_id']]['pos'] = $row['position'];
+			}
+			//---END GET ROUND
+		}
+		
+		return $scores;
+		
+	}
+	
+	private function calculateTeam($user_id,$eventdata,$surfers,$pickdata,$scores){
+		
+		$userpicks = $pickdata['picks'];
+		
+		//create arrays with starting, main and out to organize by score
+		foreach($userpicks as $uid=>$v){
+			foreach($v as $k=>$sid){
+				$allpicks[$sid] = $scores[$sid]['sco'];
+				if($k<=7){$startingpicks[$sid] = $scores[$sid]['sco'];$startingscore += $scores[$sid]['sco'];}
+				elseif($k>7 && $k<99){$benchpicks[$sid] = $scores[$sid]['sco'];}
+				elseif($k>=100){$outpicks[$sid] = $outpicks[$sid]['sco'];}
+			}
+		}
+		
+		//sort arrays by highest score
+		arsort($allpicks);
+		arsort($startingpicks);
+		arsort($benchpicks);
+		arsort($outpicks);
+		
+		//calculate highest possible score
+		$i = 0;
+		foreach($allpicks as $sid=>$sco){
+			if($i<7){
+				$bestscore += $sco;
+				$topscorer[$sid] = 1;
+				$i++;
+			}			
+		}
+		
+		//display lineups
+		$toreturn.= "<div class='grid-x align-center teamheader'>
+						
+						<div class='small-12 cell teamname'>".$pickdata['users'][$user_id]['team']."</div>
+						<div class='small-12 cell teamuser'>".$pickdata['users'][$user_id]['name']."</div>
+						
+					</div>";
+		
+		
+		foreach($startingpicks as $sid=>$sco){
+			
+			$pos = $scores[$sid]['pos'];
+			
+			if($topscorer[$sid]==1){$toreturn.= "<div class='grid-x align-center startingsurfer bestscorer pos$pos is-$sid'>";	}
+			else{$toreturn.= "<div class='grid-x align-center startingsurfer pos$pos is-$sid'>";}
+			
+			$toreturn .= "
+					
+					<div class='large-3 medium-5 cell hide-for-small-only teamsurfername'>".$surfers[$sid]['name']."</div>
+					<div class='small-2 cell show-for-small-only teamsurfername'>".$surfers[$sid]['aka']."</div>
+					
+					<div class='large-2 medium-2 small-2 cell teamsurferpos'>$pos</div>
+					
+					<div class='large-2 medium-2 small-2 cell teamsurferscore'>".$scores[$sid]['sco']."</div>
+					
+				</div>
+			";
+			
+		}
+		
+		$toreturn.= "<div class='grid-x align-center startingscore'><div class='small-12 cell'>$startingscore</div></div>";
+		
+		foreach($benchpicks as $sid=>$sco){
+			$pos = $scores[$sid]['pos'];
+			
+			if($topscorer[$sid]==1){$toreturn.= "<div class='grid-x align-center benchedsurfer bestscorer pos$pos is-$sid'>";	}
+			else{$toreturn.= "<div class='grid-x align-center benchedsurfer pos$pos is-$sid'>";}
+			
+			$toreturn .= "
+					
+					<div class='large-3 medium-5 cell hide-for-small-only teamsurfername'>".$surfers[$sid]['name']."</div>
+					<div class='small-2 cell show-for-small-only teamsurfername'>".$surfers[$sid]['aka']."</div>
+					
+					<div class='large-2 medium-2 small-2 cell teamsurferpos'>$pos</div>
+					
+					<div class='large-2 medium-2 small-2 cell teamsurferscore'>".$scores[$sid]['sco']."</div>
+					
+				</div>
+			";
+		}
+		
+		foreach($outpicks as $sid=>$sco){
+			$pos = $scores[$sid]['pos'];
+			
+			if($topscorer[$sid]==1){$toreturn.= "<div class='grid-x align-center outsurfer bestscorer pos$pos is-$sid'>";	}
+			else{$toreturn.= "<div class='grid-x align-center outsurfer pos$pos is-$sid'>";}
+			
+			$toreturn .= "
+					
+					<div class='large-3 medium-5 cell hide-for-small-only teamsurfername'>".$surfers[$sid]['name']."</div>
+					<div class='small-2 cell show-for-small-only teamsurfername'>".$surfers[$sid]['aka']."</div>
+					
+					<div class='large-2 medium-2 small-2 cell teamsurferpos'>$pos</div>
+					
+					<div class='large-2 medium-2 small-2 cell teamsurferscore'>".$scores[$sid]['sco']."</div>
+					
+				</div>
+			";
+		}
+		
+		$toreturn.= "<div class='grid-x align-center bestscore'><div class='small-12 cell'>$bestscore</div></div>";
+		
+		return $toreturn;
 	}
 	
 	public function getTeam($event_id,$user_id){
+		
+		$league_id = 1; //<------------------------------CHANGE LEAGUE ID
+		
+		$fsevent = new FSEvent();
+		$eventdata = $fsevent->getEventStatus($event_id);
+		$surfers = 	 $fsevent->getSurfers();
+		
+		$event_name = 	$eventdata['name'];
+		$event_status = $eventdata['status'];
+		$rounds = 		$eventdata['rounds'];
+		
+		if($event_status == 4){
 			
-		return "Event: $event_id, User: $user_id";
+			//event is over
+			$pickdata = $this->getPicksByUser($user_id,$event_id,$league_id);
+			$scores = $this->getScoresByEvent($event_id);
+			
+			$display = $this->calculateTeam($user_id,$eventdata,$surfers,$pickdata,$scores);
+			
+			
+			return $display;
+			
+		}
+		
+		
+		
+		//return "Data: $toreturn";
 		
 		//find event status
 		//display accordingly
