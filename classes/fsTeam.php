@@ -15,6 +15,66 @@ class FSTeam{
 	}
 	
 	
+	private function getAvailableScorers($user_id,$event_id,$league_id,$scores){
+		
+		$this->db_connection = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
+		if (!$this->db_connection->set_charset("utf8")) {
+			$this->errors[] = $this->db_connection->error;
+		}
+
+		if (!$this->db_connection->connect_errno) {
+
+			//---GET ALL SURFERS IN ROUND 1 AKA ALL SURFERS IN EVENT
+			$sql = "SELECT surfer_id FROM heats WHERE event_id=$event_id AND round=1 ORDER BY surfer_id";
+
+			$result = $this->db_connection->query($sql);
+			
+			while($row = mysqli_fetch_array($result)){
+				$allsurfers[$row['surfer_id']] = 0;
+			}
+			//---END GET ROUND 1
+			
+			//---ADD ALL TEAM PICJS INTO ALL SURFERS ARRAY
+			$sql = "SELECT pick_id FROM league_picks WHERE league_id=$league_id AND event=$event_id";
+
+			$result = $this->db_connection->query($sql);
+			
+			while($row = mysqli_fetch_array($result)){
+				$thissurfer = $row['pick_id'];
+				if(isset($allsurfers[$thissurfer])){$allsurfers[$thissurfer]++;}
+				
+			}
+			//---END ADD UP SURFERS
+			
+		}
+		
+		
+		foreach($allsurfers as $sid=>$count){
+			//AVAILABILITY STANDARDS SET BELOW
+
+			if($sid<=1005 && $count<2){
+				$availables[$sid] = $scores[$sid]['sco'];
+				
+			}
+			
+			if($sid>1015 && $count<4){
+				$availables[$sid] = $scores[$sid]['sco'];
+				
+			}
+			
+			if(($sid>1005 && $sid<1015) && $count<3){
+				$availables[$sid] = $scores[$sid]['sco'];
+				
+			}
+			
+			
+		}
+		
+		arsort($availables);
+		return $availables;
+		
+	}
 	
 	private function getPicksByUser($user_id,$event_id,$league_id){
 		
@@ -204,6 +264,8 @@ class FSTeam{
 			$pickdata = $this->getPicksByUser($user_id,$event_id,$league_id);
 			$scores = $this->getScoresByEvent($event_id);
 			
+			$availscores = $this->getAvailableScorers($user_id,$event_id,$league_id,$scores);
+			print_r($availscores);
 			$display = $this->calculateTeam($user_id,$eventdata,$surfers,$pickdata,$scores);
 			
 			
