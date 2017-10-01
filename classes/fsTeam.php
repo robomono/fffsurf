@@ -141,7 +141,7 @@ class FSTeam{
 		
 	}
 	
-	private function calculateTeam($user_id,$eventdata,$surfers,$pickdata,$scores){
+	private function calculateTeam($user_id,$eventdata,$surfers,$pickdata,$scores,$availscores){
 		
 		$userpicks = $pickdata['picks'];
 		
@@ -164,12 +164,45 @@ class FSTeam{
 		//calculate highest possible score
 		$i = 0;
 		foreach($allpicks as $sid=>$sco){
-			if($i<7){
+			if($i<8){ //stops when the 7 highest scores have been registered
 				$bestscore += $sco;
 				$topscorer[$sid] = 1;
 				$i++;
 			}			
 		}
+		
+		$i = 0;
+		foreach($allpicks as $sid=>$sco){
+			if($i<8){//stop when a top 8 has been registered
+						
+				foreach($availscores as $sid2=>$sco2){
+					//go through each available score and compare to the current team member score
+
+					if($sco2>$sco){
+						//available surfer score is higher than current team meber score, add to array
+
+						$availscorer[$sid2] = $sco2;
+						$availtotal+=$sco2;
+						unset($availscores[$sid2]);//deletes this top avail score since its already been registered
+
+						$i++;
+						
+					}else{
+						
+						//no scores beat this team member score, register team member score and move on to next member
+						$availscorer[$sid] = $sco;
+						$availtotal+=$sco;
+						$i++;
+						break;
+						
+					}
+				}
+				
+			}
+			
+			
+		}
+		
 		
 		//display lineups
 		$toreturn.= "<div class='grid-x align-center teamheader'>
@@ -184,7 +217,10 @@ class FSTeam{
 			
 			$pos = $scores[$sid]['pos'];
 			
-			if($topscorer[$sid]==1){$toreturn.= "<div class='grid-x align-center startingsurfer bestscorer pos$pos is-$sid'>";	}
+			if($topscorer[$sid]==1 && isset($availscorer[$sid])){
+				$toreturn.= "<div class='grid-x align-center startingsurfer bestscorer bestavailscorer pos$pos is-$sid'>";
+			}
+			else if($topscorer[$sid]==1){$toreturn.= "<div class='grid-x align-center startingsurfer bestscorer pos$pos is-$sid'>";}
 			else{$toreturn.= "<div class='grid-x align-center startingsurfer pos$pos is-$sid'>";}
 			
 			$toreturn .= "
@@ -205,8 +241,8 @@ class FSTeam{
 		
 		foreach($benchpicks as $sid=>$sco){
 			$pos = $scores[$sid]['pos'];
-			
-			if($topscorer[$sid]==1){$toreturn.= "<div class='grid-x align-center benchedsurfer bestscorer pos$pos is-$sid'>";	}
+			if($topscorer[$sid]==1 && isset($availscorer[$sid])){$toreturn.= "<div class='grid-x align-center benchedsurfer bestscorer bestavailscorer pos$pos is-$sid'>";}
+			else if($topscorer[$sid]==1){$toreturn.= "<div class='grid-x align-center benchedsurfer bestscorer pos$pos is-$sid'>";	}
 			else{$toreturn.= "<div class='grid-x align-center benchedsurfer pos$pos is-$sid'>";}
 			
 			$toreturn .= "
@@ -243,6 +279,29 @@ class FSTeam{
 		
 		$toreturn.= "<div class='grid-x align-center bestscore'><div class='small-12 cell'>$bestscore</div></div>";
 		
+		foreach($availscores as $sid=>$sco){
+			
+				$pos = $scores[$sid]['pos'];
+				
+				if(isset($availscorer[$sid])){$toreturn.= "<div class='grid-x align-center availsurfer bestavailscorer pos$pos is-$sid'>";}
+				else{$toreturn.= "<div class='grid-x align-center availsurfer pos$pos is-$sid'>";}
+			
+				$toreturn .= "
+					
+						<div class='large-3 medium-5 cell hide-for-small-only availsurfername'>".$surfers[$sid]['name']."</div>
+						<div class='small-2 cell show-for-small-only availsurfername'>".$surfers[$sid]['aka']."</div>
+					
+						<div class='large-2 medium-2 small-2 cell availsurferpos'>$pos</div>
+					
+						<div class='large-2 medium-2 small-2 cell availsurferscore'>".$scores[$sid]['sco']."</div>
+					
+					</div>
+				";
+			
+		}
+		print_r($availscorer);
+		$toreturn.= "<div class='grid-x align-center bestavailscore'><div class='small-12 cell'>$availtotal</div></div>";
+		
 		return $toreturn;
 	}
 	
@@ -265,8 +324,8 @@ class FSTeam{
 			$scores = $this->getScoresByEvent($event_id);
 			
 			$availscores = $this->getAvailableScorers($user_id,$event_id,$league_id,$scores);
-			print_r($availscores);
-			$display = $this->calculateTeam($user_id,$eventdata,$surfers,$pickdata,$scores);
+			
+			$display = $this->calculateTeam($user_id,$eventdata,$surfers,$pickdata,$scores,$availscores);
 			
 			
 			return $display;

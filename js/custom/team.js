@@ -24,3 +24,17 @@ $( document ).ready(function() {
 	});
 	
 });
+
+$(".allrounds").on( "mouseover",".bestscore", function() {
+	
+	$(".bestscorer").css("background-color","#ccc");
+
+	
+});
+
+$(".allrounds").on( "mouseover",".bestavailscore", function() {
+	
+	$(".bestavailscorer").css("background-color","red");
+
+	
+});
