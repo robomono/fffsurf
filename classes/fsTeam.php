@@ -216,7 +216,7 @@ class FSTeam{
 		foreach($startingpicks as $sid=>$sco){
 			
 			$pos = $scores[$sid]['pos'];
-			
+						
 			if($topscorer[$sid]==1 && isset($availscorer[$sid])){
 				$toreturn.= "<div class='grid-x align-center startingsurfer bestscorer bestavailscorer pos$pos is-$sid'>";
 			}
@@ -225,10 +225,10 @@ class FSTeam{
 			
 			$toreturn .= "
 					
+					<div class='large-1 medium-2 small-2 cell teamsurferpos'>$pos</div>
+					
 					<div class='large-3 medium-5 cell hide-for-small-only teamsurfername'>".$surfers[$sid]['name']."</div>
 					<div class='small-2 cell show-for-small-only teamsurfername'>".$surfers[$sid]['aka']."</div>
-					
-					<div class='large-2 medium-2 small-2 cell teamsurferpos'>$pos</div>
 					
 					<div class='large-2 medium-2 small-2 cell teamsurferscore'>".$scores[$sid]['sco']."</div>
 					
@@ -237,7 +237,10 @@ class FSTeam{
 			
 		}
 		
-		$toreturn.= "<div class='grid-x align-center startingscore'><div class='small-12 cell'>$startingscore</div></div>";
+		$toreturn.= "<div class='grid-x align-center startingscore'>
+									<div class='large-4 medium-7 small-4 cell' style='text-align:right;padding-right:20px;'>Total</div>
+									<div class='small-2 cell'>$startingscore</div>
+								</div>";
 		
 		foreach($benchpicks as $sid=>$sco){
 			$pos = $scores[$sid]['pos'];
@@ -247,10 +250,10 @@ class FSTeam{
 			
 			$toreturn .= "
 					
+					<div class='large-1 medium-2 small-2 cell teamsurferpos'>$pos</div>
+					
 					<div class='large-3 medium-5 cell hide-for-small-only teamsurfername'>".$surfers[$sid]['name']."</div>
 					<div class='small-2 cell show-for-small-only teamsurfername'>".$surfers[$sid]['aka']."</div>
-					
-					<div class='large-2 medium-2 small-2 cell teamsurferpos'>$pos</div>
 					
 					<div class='large-2 medium-2 small-2 cell teamsurferscore'>".$scores[$sid]['sco']."</div>
 					
@@ -266,10 +269,10 @@ class FSTeam{
 			
 			$toreturn .= "
 					
+					<div class='large-1 medium-2 small-2 cell teamsurferpos'> -- </div>
+					
 					<div class='large-3 medium-5 cell hide-for-small-only teamsurfername'>".$surfers[$sid]['name']."</div>
 					<div class='small-2 cell show-for-small-only teamsurfername'>".$surfers[$sid]['aka']."</div>
-					
-					<div class='large-2 medium-2 small-2 cell teamsurferpos'>$pos</div>
 					
 					<div class='large-2 medium-2 small-2 cell teamsurferscore'>".$scores[$sid]['sco']."</div>
 					
@@ -277,7 +280,17 @@ class FSTeam{
 			";
 		}
 		
-		$toreturn.= "<div class='grid-x align-center bestscore'><div class='small-12 cell'>$bestscore</div></div>";
+		$toreturn.= "<div class='grid-x align-center bestscore'>
+									<div class='large-4 medium-7 small-4 cell' style='text-align:right;padding-right:20px;border-left:3px solid #ffd699;'>Team Best</div>
+									<div class='small-2 cell'>$bestscore</div>
+								</div>
+								
+								<div class='grid-x align-center availablestitle'>
+									<div class='large-5 medium-7 small-5 cell'>Available Surfers</div>
+								</div>
+								
+								";
+								
 		
 		foreach($availscores as $sid=>$sco){
 			
@@ -288,19 +301,22 @@ class FSTeam{
 			
 				$toreturn .= "
 					
-						<div class='large-3 medium-5 cell hide-for-small-only availsurfername'>".$surfers[$sid]['name']."</div>
-						<div class='small-2 cell show-for-small-only availsurfername'>".$surfers[$sid]['aka']."</div>
+						<div class='large-1 medium-2 small-2 cell teamsurferpos'>$pos</div>
 					
-						<div class='large-2 medium-2 small-2 cell availsurferpos'>$pos</div>
+						<div class='large-3 medium-5 cell hide-for-small-only teamsurfername'>".$surfers[$sid]['name']."</div>
+						<div class='small-2 cell show-for-small-only teamsurfername'>".$surfers[$sid]['aka']."</div>
 					
-						<div class='large-2 medium-2 small-2 cell availsurferscore'>".$scores[$sid]['sco']."</div>
+						<div class='large-2 medium-2 small-2 cell teamsurferscore'>".$scores[$sid]['sco']."</div>
 					
 					</div>
 				";
 			
 		}
-		print_r($availscorer);
-		$toreturn.= "<div class='grid-x align-center bestavailscore'><div class='small-12 cell'>$availtotal</div></div>";
+		//print_r($availscorer);
+		$toreturn.= "<div class='grid-x align-center bestavailscore'>
+			<div class='large-4 medium-7 small-4 cell' style='text-align:right;padding-right:20px;'>Avail Best</div>
+			<div class='small-2 cell'>$availtotal</div>
+		</div>";
 		
 		return $toreturn;
 	}

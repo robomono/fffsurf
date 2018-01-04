@@ -41,7 +41,9 @@
 	</div>
 	
 	<!--ROUNDS-->
-	<div class="navigation"> </div>
+	<div class="navigation">
+		
+	</div>
 
 	<div class="eventmenu"> </div>
 	

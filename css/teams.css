@@ -12,6 +12,10 @@
 }
 
 .benchedsurfer{
+	margin-bottom: 1px;
+}
+
+.benchedsurfer .cell{
 	
 }
 
@@ -19,32 +23,69 @@
 	
 }
 
-.bestscorer{
+.outsurfer .cell{
 	
 }
 
-.bestavailscorer{
+.bestscorer .teamsurferpos{
+	border-left:3px solid #ffd699;
+}
 
+.bestavailscorer{
+	
 }
 
 .teamsurfername{
 	font-weight:900;
 	text-align:left;
 	padding-left:10px;padding-right:0px;padding-top:13px;padding-bottom:13px;
+	border-bottom: 1px solid #d9d9d9;
 }
 
 .teamsurferpos{
+	font-weight:900;
+	text-align:center;
+	font-size:8pt;
+	padding-top:17px;padding-bottom:13px;
+	border-bottom: 1px solid #d9d9d9;
 }
 
 .teamsurferscore{
+	font-weight:300;
+	padding-top:13px;padding-bottom:13px;
+	border-bottom: 1px solid #d9d9d9;
 }
 
-.startingscore{
-	
+.startingscore .cell{
+	font-weight:900;
+	text-align:left;
+	padding-left:0px;padding-right:0px;padding-top:17px;padding-bottom:17px;
+	margin-bottom:15px;	
+	background-color:#f2f2f2;	
 }
 
-.bestscore{
-	
+.availablestitle{
+	font-weight:900;
+	font-size:10pt;
+	text-align:left;
+	padding-left:0px;padding-right:0px;padding-top:17px;padding-bottom:17px;
+	border-top: 3px solid #f2f2f2;	
+}
+
+.bestscore .cell{
+	font-weight:900;
+	text-align:left;
+	padding-left:0px;padding-right:0px;padding-top:17px;padding-bottom:17px;
+	margin-bottom:15px;	
+	background-color:#f2f2f2;	
+}
+
+.bestavailscore .cell{
+	font-weight:900;
+	text-align:left;
+	padding-left:0px;padding-right:0px;padding-top:17px;padding-bottom:17px;
+	margin-bottom:15px;	
+	background-color:#f2f2f2;	
 }
 
 .pos1{}

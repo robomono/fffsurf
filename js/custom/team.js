@@ -27,7 +27,7 @@ $( document ).ready(function() {
 
 $(".allrounds").on( "mouseover",".bestscore", function() {
 	
-	$(".bestscorer").css("background-color","#ccc");
+	//$(".bestscorer").css("background-color","#ccc");
 
 	
 });
