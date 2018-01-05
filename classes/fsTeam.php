@@ -321,6 +321,61 @@ class FSTeam{
 		return $toreturn;
 	}
 	
+	private function getNavMenu($user_id,$event_id,$event_status){
+		
+		if($event_status==0){
+			//upcoming event
+			$navmenu = '<div class="grid-x align-center navmenu idleeventnav">
+							<div class="cell large-4 small-4 selected">Team</div>
+							<div class="cell large-4 small-4">Waivers</div>
+							<div class="cell large-4 small-4">Leaderboard</div>
+						</div>';
+			
+		}elseif($event_status==1){
+			//idle event, waiver request
+			$navmenu='
+				<div class="grid-x align-center navmenu idleeventnav">
+					<div class="cell large-4 small-4 selected">Team</div>
+					<div class="cell large-4 small-4">Waivers</div>
+					<div class="cell large-4 small-4">Leaderboard</div>
+				</div>
+			';
+			
+		}elseif($event_status==2){
+			//idle event, waiver open
+			$navmenu='
+				<div class="grid-x align-center navmenu idleeventnav">
+					<div class="cell large-4 small-4 selected">Team</div>
+					<div class="cell large-4 small-4">Waivers</div>
+					<div class="cell large-4 small-4">Leaderboard</div>
+				</div>
+			';
+			
+		}elseif($event_status==3){
+			//live event
+			$navmenu='
+				<div class="grid-x align-center navmenu activeeventnav">
+					<div class="cell large-4 small-4"><a href="events.php?eid='.$event_id.'&uid='.$user_id.'">Live</a></div>
+					<div class="cell large-4 small-4 selected">Team</div>
+					<div class="cell large-4 small-4"><a href="standings.php?eid='.$event_id.'&uid='.$user_id.'">Standings</a></div>
+				</div>
+				';
+			
+		}elseif($event_status==4){
+			//finished event
+			$navmenu='
+				<div class="grid-x align-center navmenu finishedeventnav">
+					<div class="cell large-4 small-4"><a href="events.php?eid='.$event_id.'&uid='.$user_id.'">Rounds</a></div>
+					<div class="cell large-4 small-4 selected">Team</div>
+					<div class="cell large-4 small-4"><a href="standings.php?eid='.$event_id.'&uid='.$user_id.'">Standings</a></div>
+				</div>
+			';
+		}
+		
+		return $navmenu;
+		
+	}
+	
 	public function getTeam($event_id,$user_id){
 		
 		$league_id = 1; //<------------------------------CHANGE LEAGUE ID
@@ -341,25 +396,28 @@ class FSTeam{
 			
 			$availscores = $this->getAvailableScorers($user_id,$event_id,$league_id,$scores);
 			
-			$display = $this->calculateTeam($user_id,$eventdata,$surfers,$pickdata,$scores,$availscores);
+			$thisteam = $this->calculateTeam($user_id,$eventdata,$surfers,$pickdata,$scores,$availscores);
 			
+			$navmenu = $this->getNavMenu($user_id,$event_id,$event_status);
 			
-			return $display;
+			$display['team'] = $thisteam;
+			$display['nav'] = $navmenu;
+ 			
 			
 		}
 		
 		
 		
-		//return "Data: $toreturn";
+		//TO DO return "Data: $toreturn";
 		
-		//find event status
-		//display accordingly
-		//if past -> display results & analysis
-		//if current -> display results & analysis
-		//if future -> display lineup
+		//TO DO find event status
+		//TO DO display accordingly
+		//TO DO if past -> display results & analysis
+		//TO DO if current -> display results & analysis
+		//TO DO if future -> display lineup
 		
-		//analysis = full team stats, surfers per round, most successful combo, points
-		
+		//TO DO analysis = full team stats, surfers per round, most successful combo, points
+		return $display;
 	}
 	
 	

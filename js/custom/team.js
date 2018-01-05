@@ -10,14 +10,14 @@ $( document ).ready(function() {
 	  //data: "getUserTeam",
 	  data: {action:"getUserTeam", userid:uid, eventid:eid},
 	  url: "classes/fsTeamHandler.php",
-	  dataType: "html",
+	  dataType: "json",
 	  async: false,
 	  success: function(data){
 				
-		//$('.navigation').html(data['nav']);
+		$('.navigation').html(data['nav']);
 		//$('.eventmenu').html(data['menu']);
 		//$('.allrounds').html(data['main']);
-		$('.allrounds').html(data);				
+		$('.allrounds').html(data['team']);				
 		$(document).foundation();
 						
 	  }

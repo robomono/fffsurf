@@ -35,7 +35,7 @@ $(".eventselect").click(function(){
 	var thisevent = $(this).children("h4").text();
 	$(".eventnav").children(".selected-event").children("h4").text(thisevent);
 	
-	if (currentLocation == "/fffsurf/events.php"){var redirect = currentLocation + "?eid=" + eid;}
+	if (currentLocation == "/fffsurf/events.php"){var redirect = currentLocation + "?uid=" + uid + "&eid=" + eid;}
 	else if (currentLocation == "/fffsurf/teams.php"){var redirect = currentLocation + "?uid=" + uid + "&eid=" + eid;}
 	
 	//send to event page after 1.5 seconds (gives time for the menu to collapse)

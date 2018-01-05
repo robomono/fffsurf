@@ -3,11 +3,12 @@ $( document ).ready(function() {
 	//get the url parameter for event id and string it - e.g. "eid1" - THIS COULD CONFLICT WITH URL REWRITE
 	var searchParams = new URLSearchParams(window.location.search); //?anything=123
 	var eid = searchParams.get("eid"); //123
+	var uid = searchParams.get("uid"); //123
 	
 	$.ajax({
 	  type: "POST",
 	  //data: "getEventRounds",
-	  data: {action:"getEventRounds", eventid:eid},
+	  data: {action:"getEventRounds", eventid:eid, userid:uid},
 	  url: "classes/fsEventHandler.php",
 	  dataType: "json",
 	  async: false,

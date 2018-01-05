@@ -123,7 +123,7 @@ class FSEvent{
 		
 	}
 	
-	private function buildEventMenu($eventdata){
+	private function buildEventMenu($eventdata,$event_id,$user_id){
 		
 		$event_status = $eventdata['status'];
 		
@@ -185,7 +185,7 @@ class FSEvent{
 			$navmenu='
 				<div class="grid-x align-center navmenu finishedeventnav">
 					<div class="cell large-4 small-4 selected">Rounds</div>
-					<div class="cell large-4 small-4">Team</div>
+					<div class="cell large-4 small-4"><a href="teams.php?eid='.$event_id.'&uid='.$user_id.'">Team</a></div>
 					<div class="cell large-4 small-4">Standings</div>
 				</div>
 				
@@ -1095,7 +1095,7 @@ class FSEvent{
 		
 	}
 	
-	public function getAllRounds($event_id){
+	public function getAllRounds($event_id,$user_id){
 		
 		$league_id = 1;//<------------------------------CHANGE LEAGUE ID
 		
@@ -1116,7 +1116,7 @@ class FSEvent{
 			//finished event
 			$filtermenu = $this->buildFilterMenu($users);
 			
-			$navmenu = $this->buildEventMenu($eventdata);
+			$navmenu = $this->buildEventMenu($eventdata,$event_id,$user_id);
 			
 			$headers 		= $this->buildHeatHeaders($rounds,$picks,$users);
 			$displayrounds 	= $this->displayFinishedRounds($rounds,$surfers,$picks,$users,$headers);
@@ -1128,7 +1128,7 @@ class FSEvent{
 		}
 		elseif($event_status==3){
 			//live event
-			$navmenu = $this->buildEventMenu($eventdata);
+			$navmenu = $this->buildEventMenu($eventdata,$event_id,$user_id);
 			
 			$filtermenu = $this->buildFilterMenu($users);
 			$headers 	= $this->buildHeatHeaders($rounds,$picks,$users);
@@ -1142,20 +1142,20 @@ class FSEvent{
 		}
 		elseif($event_status==2){
 			//lineups open - free waivers
-			$navmenu = $this->buildEventMenu($eventdata);
+			$navmenu = $this->buildEventMenu($eventdata,$event_id,$user_id);
 			
 			$display['nav']	 = $navmenu;
 			
 		}
 		elseif($event_status==1){
 			//lineups open - waiver period
-			$navmenu = $this->buildEventMenu($eventdata);
+			$navmenu = $this->buildEventMenu($eventdata,$event_id,$user_id);
 			
 			$display['nav']	 = $navmenu;
 		}
 		elseif($event_status==0){
 			//upcoming event
-			$navmenu = $this->buildEventMenu($eventdata);
+			$navmenu = $this->buildEventMenu($eventdata,$event_id,$user_id);
 			
 			$display['nav']	 = $navmenu;
 		}
