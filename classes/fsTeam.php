@@ -2,7 +2,8 @@
 
 //NEXT STEP ADD PICK HEADERS
 //GET AVILABLES FOR THAT SPECIFIC EVENT (& WILDCARDS) AND FACTOR INTO BEST POSSIBLE SCORE
-	
+
+
 class FSTeam{
 	
 	public function __construct(){
@@ -321,7 +322,7 @@ class FSTeam{
 		return $toreturn;
 	}
 	
-	private function getNavMenu($user_id,$event_id,$event_status){
+	private function getNavMenu($event_id,$event_status){
 		
 		if($event_status==0){
 			//upcoming event
@@ -355,9 +356,9 @@ class FSTeam{
 			//live event
 			$navmenu='
 				<div class="grid-x align-center navmenu activeeventnav">
-					<div class="cell large-4 small-4"><a href="events.php?eid='.$event_id.'&uid='.$user_id.'">Live</a></div>
+					<div class="cell large-4 small-4"><a href="events.php?eid='.$event_id.'">Live</a></div>
 					<div class="cell large-4 small-4 selected">Team</div>
-					<div class="cell large-4 small-4"><a href="standings.php?eid='.$event_id.'&uid='.$user_id.'">Standings</a></div>
+					<div class="cell large-4 small-4"><a href="standings.php?eid='.$event_id.'">Standings</a></div>
 				</div>
 				';
 			
@@ -365,9 +366,9 @@ class FSTeam{
 			//finished event
 			$navmenu='
 				<div class="grid-x align-center navmenu finishedeventnav">
-					<div class="cell large-4 small-4"><a href="events.php?eid='.$event_id.'&uid='.$user_id.'">Rounds</a></div>
+					<div class="cell large-4 small-4"><a href="events.php?eid='.$event_id.'">Rounds</a></div>
 					<div class="cell large-4 small-4 selected">Team</div>
-					<div class="cell large-4 small-4"><a href="standings.php?eid='.$event_id.'&uid='.$user_id.'">Standings</a></div>
+					<div class="cell large-4 small-4"><a href="standings.php?eid='.$event_id.'">Standings</a></div>
 				</div>
 			';
 		}
@@ -378,6 +379,7 @@ class FSTeam{
 	
 	public function getTeam($event_id,$user_id){
 		
+		$user_id = 104; //<------------------------------eventually remove and use session id
 		$league_id = 1; //<------------------------------CHANGE LEAGUE ID
 		
 		$fsevent = new FSEvent();
@@ -398,7 +400,7 @@ class FSTeam{
 			
 			$thisteam = $this->calculateTeam($user_id,$eventdata,$surfers,$pickdata,$scores,$availscores);
 			
-			$navmenu = $this->getNavMenu($user_id,$event_id,$event_status);
+			$navmenu = $this->getNavMenu($event_id,$event_status);
 			
 			$display['team'] = $thisteam;
 			$display['nav'] = $navmenu;

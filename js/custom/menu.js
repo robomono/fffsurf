@@ -20,6 +20,7 @@ $(".eventnav").click(function(){
 
 
 $(".eventselect").click(function(){
+	
 	$(".eventnav-expanded").slideUp("fast");
 	$(".eventnav").slideDown("fast");
 	
@@ -37,6 +38,7 @@ $(".eventselect").click(function(){
 	
 	if (currentLocation == "/fffsurf/events.php"){var redirect = currentLocation + "?uid=" + uid + "&eid=" + eid;}
 	else if (currentLocation == "/fffsurf/teams.php"){var redirect = currentLocation + "?uid=" + uid + "&eid=" + eid;}
+	else if (currentLocation == "/fffsurf/standings.php"){var redirect = currentLocation + "?uid=" + uid + "&eid=" + eid;}
 	
 	//send to event page after 1.5 seconds (gives time for the menu to collapse)
 	window.setTimeout(function(){window.location.href = redirect;}, 150);

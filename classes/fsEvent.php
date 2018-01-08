@@ -185,8 +185,8 @@ class FSEvent{
 			$navmenu='
 				<div class="grid-x align-center navmenu finishedeventnav">
 					<div class="cell large-4 small-4 selected">Rounds</div>
-					<div class="cell large-4 small-4"><a href="teams.php?eid='.$event_id.'&uid='.$user_id.'">Team</a></div>
-					<div class="cell large-4 small-4">Standings</div>
+					<div class="cell large-4 small-4"><a href="teams.php?eid='.$event_id.'">Team</a></div>
+					<div class="cell large-4 small-4"><a href="standings.php?eid='.$event_id.'">Standings</a></div>
 				</div>
 				
 				<div class="grid-x align-center navmenu leaderboardnav hidden">
@@ -1097,8 +1097,9 @@ class FSEvent{
 	
 	public function getAllRounds($event_id,$user_id){
 		
+		$user_id = 104; //<------------------------------eventually remove and use session id
 		$league_id = 1;//<------------------------------CHANGE LEAGUE ID
-		
+			
 		$eventdata = $this->getEventStatus($event_id);
 		$surfers = $this->getSurfers();
 		$allpicks = $this->getPicks($event_id,$league_id);
