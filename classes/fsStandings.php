@@ -211,11 +211,25 @@ class FSStandings{
 		
 	}
 	
-	private function displayLeagueStandings($event_id,$standings,$changes){
+	private function displayLeagueStandings($event_id,$surfers,$users,$standings,$changes){
 		
 		//display event leaderboard header
-		$display.= "<div class='grid-x align-center eventleaderboardheader'><div class='small-12 cell'>LEADERBOARD</div></div>";
+		$display.= "<div class='grid-x align-center leaguestandingsheader'><div class='small-12 cell'>LEADERBOARD</div></div>";
 		//end of event leaderboard header
+		
+		$display.= "<div class='grid-x align-center leaguestanding'>";
+		
+		$display.= "<div class='grid-x align-center leaguestanding'>";
+		
+		foreach($standings as $eid=>$v1){
+			if($eid == $event_id){
+				foreach($v1 as $uid=>$v2){
+					$display.="[".$changes[$uid]."]  ".$users[$uid]['name']." - "  .$v2['pts']. " </br>";
+				}
+			}
+		}
+		
+		$display.= "</div>";
 		
 		return $display;
 		
@@ -251,7 +265,7 @@ class FSStandings{
 			//get standings from this event/last event
 			$overall = $this->getOverallStandings($event_id, $league_id);
 			
-			$standings  = $overall['standings'];
+			$standings  = $overall['ranking'];
 			$users	 	= $overall['users'];
 			
 			
@@ -262,7 +276,7 @@ class FSStandings{
 			$display = $this->displayEventStandings($event_id,$surfers,$users,$sortedpicks,$totals);
 			
 			//produce league leaderboard
-			$display .= $this->displayLeagueStandings($event_id,$surfers,$standings,$changes);
+			$display .= $this->displayLeagueStandings($event_id,$surfers,$users,$standings,$changes);
 			
 		}
 		
