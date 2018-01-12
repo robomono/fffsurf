@@ -146,14 +146,61 @@ class FSStandings{
 		
 		foreach($picks as $uid=>$v1){
 			foreach($v1 as $pos=>$v2){
-				if($pos<=8){
+				if($pos<8){
 					$newarray[$uid][$v2['sid']] = $v2['pts'];
 				}
 			}
-			arsort($newarray[$uid]);
+			asort($newarray[$uid]);
 		}
 		
 		return $newarray;
+		
+	}
+	
+	private function getLeaderboardChanges($event_id, $league_id){
+		
+		$lastevt = $event_id - 1;
+		
+		foreach($standings as $evt=>$v1){
+			foreach($v1 as $uid=>$v2){	
+				if($evt==$event_id){
+					$chng[$uid] = $standings[$lastevt][$uid]['rnk'] - $v2['rnk'];
+				}
+			}
+		}
+		
+		return $chng;
+		
+	}
+	
+	private function displayEventStandings($event_id,$picks,$totals){
+		
+		//display event leaderboard header
+		$display.= "<div class='grid-x align-center eventleaderboardheader'><div class='small-12 cell'>EVENT RESULTS</div></div>";
+		//end of event leaderboard header
+		
+		$display.= "<div class='grid-x align-center eventleaderboard'>";
+		
+		foreach($picks as $uid=>$v1){
+			foreach($v1 as $k2=>$v2){
+				$display.= "$uid - $k2 - $v2</br>";
+			}
+			$display.= "break</br>";
+		}
+		
+		$display.= "</div>";
+		
+		return $display;
+		
+	}
+	
+	private function displayLeagueStandings($event_id,$standings,$changes){
+		
+		//display event leaderboard header
+		$display.= "<div class='grid-x align-center eventleaderboardheader'><div class='small-12 cell'>LEADERBOARD</div></div>";
+		//end of event leaderboard header
+		
+		return $display;
 		
 	}
 	
@@ -188,31 +235,19 @@ class FSStandings{
 			//get standings from this event/last event
 			$standings = $this->getOverallStandings($event_id, $league_id);
 			
+			//get leaderboard changes
+			$changes = $this->getLeaderboardChanges($event_id,$standings);
 			
+			//produce displayable standings
+			$display = $this->displayEventStandings($event_id,$sortedpicks,$totals);
 			
-			
-		}
-		
-		
-		$lastevt = $event_id - 1;
-		
-		foreach($standings as $evt=>$v1){
-			
-			foreach($v1 as $uid=>$v2){
-				
-				if($evt==$event_id){
-					
-					$chng = $standings[$lastevt][$uid]['rnk'] - $v2['rnk'];
-					
-					$toreturn.= "[$chng] " .$v2['rnk'] ." - $uid - " .$v2['pts'] ."</br>";
-					
-				}
-				
-				
-				
-			}
+			//produce league leaderboard
+			$display .= $this->displayLeagueStandings($event_id,$standings,$changes);
 			
 		}
+		
+		
+		
 		
 		
 		
@@ -245,7 +280,7 @@ class FSStandings{
 		$navigation = $this->getNav($event_id,$event_status);
 		
 		$return['nav'] = $navigation;
-		$return['standings'] = $toreturn;
+		$return['standings'] = $display;
 		
 		return $return;
 		
