@@ -1,6 +1,9 @@
 <?php
 
 //MAKE TABLE FOR CURRENT OVERALL STANDINGS (SINCE LAST EVENT)
+//UPDATE ALL FUNCTIONS TO GET USER AND TEAM NAME FROM LEAGUE CONTROL
+//
+
 
 class FSStandings{
 	
@@ -68,9 +71,13 @@ class FSStandings{
 		if (!$this->db_connection->connect_errno) {
 
 			//---GET ALL PICKS PER USER IN EVENT
-			$sql = "SELECT user_id,after_event,agg_total,rank FROM league_totals
-					WHERE league_id=$league_id AND after_event=$event_id OR after_event=$last_event
-					ORDER BY after_event,agg_total DESC";
+			$sql = "SELECT t.user_id,t.after_event,t.agg_total,t.rank,l.name,l.team
+					FROM league_totals t
+					LEFT JOIN league_control AS l 
+					ON t.user_id = l.user_id
+					WHERE t.league_id=$league_id AND l.league_id=$league_id 
+						AND (t.after_event=$event_id OR t.after_event=$last_event)
+					ORDER BY t.after_event,t.agg_total DESC";
 			
 			$result = $this->db_connection->query($sql);
 			
@@ -78,11 +85,16 @@ class FSStandings{
 				
 				$ranking[$row['after_event']][$row['user_id']]['rnk'] = $row['rank'];
 				$ranking[$row['after_event']][$row['user_id']]['pts'] = $row['agg_total'];
+				$users[$row['user_id']]['name'] = $row['name'];
+				$users[$row['user_id']]['team'] = $row['team'];
 				
 			}
 		}
 		
-		return $ranking;
+		$return['ranking'] = $ranking;
+		$return['users'] = $users;
+		
+		return $return;
 		
 	}
 	
@@ -173,7 +185,7 @@ class FSStandings{
 		
 	}
 	
-	private function displayEventStandings($event_id,$picks,$totals){
+	private function displayEventStandings($event_id,$surfers,$users,$picks,$totals){
 		
 		//display event leaderboard header
 		$display.= "<div class='grid-x align-center eventleaderboardheader'><div class='small-12 cell'>EVENT RESULTS</div></div>";
@@ -181,12 +193,17 @@ class FSStandings{
 		
 		$display.= "<div class='grid-x align-center eventleaderboard'>";
 		
-		foreach($picks as $uid=>$v1){
-			foreach($v1 as $k2=>$v2){
-				$display.= "$uid - $k2 - $v2</br>";
+		foreach($totals as $uid=>$total){
+			$display.= $users[$uid]['team'] ."</br>";
+			
+			foreach($picks[$uid] as $sid=>$pts){
+				$display.= $surfers[$sid]['aka']. " - $pts</br>";
 			}
-			$display.= "break</br>";
+			
+			$display.= "$total </br>";
 		}
+		
+		
 		
 		$display.= "</div>";
 		
@@ -208,14 +225,13 @@ class FSStandings{
 		
 		$league_id = 1;
 		
-		$fsevent = new FSEvent();
-		$eventdata = $fsevent->getEventStatus($event_id);
-		$surfers = 	 $fsevent->getSurfers();
+		$fsevent 	= new FSEvent();
+		$eventdata 	= $fsevent->getEventStatus($event_id);
+		$surfers 	= $fsevent->getSurfers();
 		
-		$event_name = 	$eventdata['name'];
-		$event_status = $eventdata['status'];
-		$rounds = 		$eventdata['rounds'];
-		
+		$event_name 	= $eventdata['name'];
+		$event_status 	= $eventdata['status'];
+		$rounds 		= $eventdata['rounds'];
 		
 		
 		if($event_status==4){
@@ -233,16 +249,20 @@ class FSStandings{
 			$sortedpicks = $this->sortPicks($picks);
 			
 			//get standings from this event/last event
-			$standings = $this->getOverallStandings($event_id, $league_id);
+			$overall = $this->getOverallStandings($event_id, $league_id);
+			
+			$standings  = $overall['standings'];
+			$users	 	= $overall['users'];
+			
 			
 			//get leaderboard changes
 			$changes = $this->getLeaderboardChanges($event_id,$standings);
 			
 			//produce displayable standings
-			$display = $this->displayEventStandings($event_id,$sortedpicks,$totals);
+			$display = $this->displayEventStandings($event_id,$surfers,$users,$sortedpicks,$totals);
 			
 			//produce league leaderboard
-			$display .= $this->displayLeagueStandings($event_id,$standings,$changes);
+			$display .= $this->displayLeagueStandings($event_id,$surfers,$standings,$changes);
 			
 		}
 		
