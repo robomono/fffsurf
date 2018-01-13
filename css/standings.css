@@ -1,0 +1,83 @@
+.standingstable{
+	text-align:center;
+}
+
+.standingsrow{
+	
+}
+
+.standingsrow .cell{
+	padding:0px;
+	height:55px;
+}
+
+.standingsuser{
+	line-height:55px;
+	border:1px solid #ccc;
+}
+
+.smallstandingsresults{
+	padding:0px;
+	line-height:55px;
+	font-size:9pt;
+	font-weight:900;
+}
+
+.standingsresults{
+	padding:0px;
+}
+
+.standingssurfer{
+	background-color:#ddd;
+}	
+
+.standingssurfer span{
+	margin-top:15px;
+}
+
+.standingswin{background-color:#d4f9a7;color:#36402B;}
+.standingsact{background-color:#ddd;color:#404040;}
+.standingsrel{background-color:#C5D2FF;color:#313440;}
+.pts500{background-color:#f45b41;color:#401811;}
+.pts1750{background-color:#f47a42;color:#402011;}
+.pts4000{background-color:#f49541;color:#402711;}
+.pts5200{background-color:#f4b541;color:#402F11;}
+.pts6500{background-color:#f4b841;color:#403011;}
+.pts8000{background-color:#f4d041;color:#403611;}
+.pts10000{background-color:#f4d041;}/*won the event*/
+.standingsinj{background-color:black;color:#404040;}/*injured*/
+
+.smallstandingsresults .totalwins{background-color:#d4f9a7;color:#36402B;}
+.smallstandingsresults .notsurfed{background-color:#ddd;color:#404040;}
+.smallstandingsresults .totalrel{background-color:#C5D2FF;color:#313440;}
+.smallstandingsresults .totalloss{background-color:#f45b41;color:#401811;}
+
+.outsurfer{
+	margin-top:-5px;
+	font-size:11pt;
+}
+
+.outpoints{
+	font-size:6pt;
+}
+
+.potentialscores{
+	font-size:9pt;
+	background-color:#ccc;
+}
+
+.currentscore{
+	font-weight:900;
+}
+
+.show-for-large .potentialbest{
+	margin-top:10px;
+}
+
+.show-for-large .potentialworst{
+}
+
+.standingsscores{
+	line-height:55px;
+	background-color:#ddd;
+}

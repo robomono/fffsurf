@@ -191,21 +191,39 @@ class FSStandings{
 		$display.= "<div class='grid-x align-center eventleaderboardheader'><div class='small-12 cell'>EVENT RESULTS</div></div>";
 		//end of event leaderboard header
 		
-		$display.= "<div class='grid-x align-center eventleaderboard'>";
+		$display.= "<div class='grid-container standingstable'>";
 		
 		foreach($totals as $uid=>$total){
-			$display.= $users[$uid]['team'] ."</br>";
+			$display.= "<div class='grid-x standingsrow'>"; //start row
+			$display.= "<div class='cell large-2 medium-2 small-3 standingsuser'>" .$users[$uid]['team'] ."</div>"; //team name
 			
+			//build small points here
+			//end build small points
+			
+			//----------------build big display results
+			$display.= "<div class='cell large-10 medium-10 hide-for-small-only standingsresults'>";
+			$display.= "<div class='grid-x'>";
 			foreach($picks[$uid] as $sid=>$pts){
-				$display.= $surfers[$sid]['aka']. " - $pts</br>";
-			}
+				$display.= "<div class='cell large-auto medium-auto standingssurfer pts$pts'>
+											<div class='outsurfer'>
+												<span data-tooltip aria-haspopup='true' class='has-tip' title='".$surfers[$sid]['name']."'>
+													" .$surfers[$sid]['aka'] ."
+												</span>
+											</div>
+											<div class='outpoints'>$pts</div>
+										</div>";
 			
-			$display.= "$total </br>";
+			}
+			$display.= "<div class='cell large-auto medium-auto standingsscores'>$total</div>";
+			$display.= "</div></div>";//ends grid-x	 //ends standingsresults
+			//----------------end build big display results
+
+			$display.= "</div>";//ends standings row
 		}
 		
 		
 		
-		$display.= "</div>";
+		$display.= "</div>";//ends grid-container standingstable
 		
 		return $display;
 		
