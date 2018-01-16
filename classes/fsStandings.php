@@ -25,31 +25,57 @@ class FSStandings{
 			$this->errors[] = $this->db_connection->error;
 		}
 		
-		//get all picks and scores for this event
+		//get all picks for thie event and events before
 		if (!$this->db_connection->connect_errno) {
 
 			//---GET ALL PICKS PER USER IN EVENT
-			$sql = "SELECT p.user_id,p.pick_id,p.active,s.surfer_id,s.position,s.points FROM league_picks AS p
-					LEFT JOIN surfer_scores AS s
-					ON p.pick_id = s.surfer_id
-					WHERE p.event=$event_id AND p.league_id=$league_id AND s.event=$event_id
-					ORDER BY p.user_id,p.active";
+			$sql = "SELECT user_id,event,pick_id,active 
+					FROM league_picks WHERE league_id=$league_id AND event>0 AND event<=$event_id
+					ORDER BY user_id,event,active";
 			
 			$result = $this->db_connection->query($sql);
 			
 			while($row = mysqli_fetch_array($result)){
-				$picks[$row['user_id']][$row['active']]['sid'] = $row['surfer_id'];
-				$picks[$row['user_id']][$row['active']]['res'] = $row['position'];
-				$picks[$row['user_id']][$row['active']]['pts'] = $row['points'];
 				
-				if($row['active']<=7){
-					$totals[$row['user_id']] += $row['points'];
-				}
-				
+				$picks[$row['user_id']][$row['event']][$row['active']]['sid'] = $row['pick_id'];
 			}
 		}
+		//end get all picks
+		
+		//get surfer scores
+		if (!$this->db_connection->connect_errno) {
+
+			//---GET ALL PICKS PER USER IN EVENT
+			$sql = "SELECT surfer_id,event,position,points FROM surfer_scores WHERE event>0 AND event<=$event_id";
+			
+			$result = $this->db_connection->query($sql);
+			
+			while($row = mysqli_fetch_array($result)){
+				
+				$scores[$row['surfer_id']][$row['event']]['res'] = $row['position'];
+				$scores[$row['surfer_id']][$row['event']]['pts'] = $row['points'];
+			}
+		}
+		//end get surfer scores
+		
+		//apply scores into picks grid and then sort total scores higest to lowest
+		foreach($picks as $uid=>$v1){
+			foreach($v1 as $eid=>$v2){
+				foreach ($v2 as $pos=>$v3){
+					$sid = $v3['sid'];
+					$picks[$uid][$eid][$pos]['pts'] = $scores[$sid][$event_id]['pts'];
+					$picks[$uid][$eid][$pos]['res'] = $scores[$sid][$event_id]['res'];
+					
+					if($eid==$event_id && $pos<=7){
+						$totals[$uid]+= $scores[$sid][$event_id]['pts'];
+					}
+					
+				}
+			}
+		}		
 		
 		arsort($totals);
+		//end apply scores to picks and sort
 
 		$toreturn['picks'] = $picks;
 		$toreturn['totals'] = $totals;
@@ -156,29 +182,40 @@ class FSStandings{
 		
 		//sorts pick by top scorer
 		
-		foreach($picks as $uid=>$v1){
-			foreach($v1 as $pos=>$v2){
-				if($pos<8){
-					$newarray[$uid][$v2['sid']] = $v2['pts'];
+			foreach($picks as $uid=>$v1){
+				foreach($v1 as $eid=>$v2){
+					foreach($v2 as $pos=>$v3){
+						if($pos<8){
+							$ascarray[$uid][$eid][$v3['sid']] = $v3['pts'];
+							$descarray[$uid][$eid][$v3['sid']] = $v3['pts'];
+						}	
+					}
+					arsort($descarray[$uid][$eid]);
+					asort($ascarray[$uid][$eid]);
 				}
 			}
-			asort($newarray[$uid]);
-		}
+			
+			$newarray['asc'] = $ascarray;
+			$newarray['desc'] = $descarray;
 		
 		return $newarray;
 		
 	}
 	
-	private function getLeaderboardChanges($event_id, $league_id){
+	private function getLeaderboardChanges($event_id,$standings){
 		
-		$lastevt = $event_id - 1;
-		
-		foreach($standings as $evt=>$v1){
-			foreach($v1 as $uid=>$v2){	
-				if($evt==$event_id){
-					$chng[$uid] = $standings[$lastevt][$uid]['rnk'] - $v2['rnk'];
-				}
+		if($event_id>1){
+			
+			$last_event = $event_id-1;
+			
+			foreach($standings[$event_id] as $uid=>$v1){
+				$chng[$uid] = $standings[$last_event][$uid]['rnk'] - $standings[$event_id][$uid]['rnk'];
 			}
+			
+		}else{
+			
+			foreach($standings[$event_id] as $uid=>$v1){$chng[$uid] = 0;}
+			
 		}
 		
 		return $chng;
@@ -203,7 +240,7 @@ class FSStandings{
 			//----------------build big display results
 			$display.= "<div class='cell large-10 medium-10 hide-for-small-only standingsresults'>";
 			$display.= "<div class='grid-x'>";
-			foreach($picks[$uid] as $sid=>$pts){
+			foreach($picks[$uid][$event_id] as $sid=>$pts){
 				$display.= "<div class='cell large-auto medium-auto standingssurfer pts$pts'>
 											<div class='outsurfer'>
 												<span data-tooltip aria-haspopup='true' class='has-tip' title='".$surfers[$sid]['name']."'>
@@ -275,7 +312,7 @@ class FSStandings{
 			
 			$picks = $scoresdata['picks'];
 			$totals = $scoresdata['totals'];
-			$lasttotals = $scoresdata['lasttotals'];
+			
 			
 			//sort scores by points descending
 			$sortedpicks = $this->sortPicks($picks);
@@ -284,14 +321,13 @@ class FSStandings{
 			$overall = $this->getOverallStandings($event_id, $league_id);
 			
 			$standings  = $overall['ranking'];
-			$users	 	= $overall['users'];
-			
+			$users	 	= $overall['users'];	
 			
 			//get leaderboard changes
-			$changes = $this->getLeaderboardChanges($event_id,$standings);
+			$changes = $this->getLeaderboardChanges($event_id,$standings);					
 			
 			//produce displayable standings
-			$display = $this->displayEventStandings($event_id,$surfers,$users,$sortedpicks,$totals);
+			$display .= $this->displayEventStandings($event_id,$surfers,$users,$sortedpicks['asc'],$totals);
 			
 			//produce league leaderboard
 			$display .= $this->displayLeagueStandings($event_id,$surfers,$users,$standings,$changes);
