@@ -51,7 +51,6 @@ class FSStandings{
 			$result = $this->db_connection->query($sql);
 			
 			while($row = mysqli_fetch_array($result)){
-				
 				$scores[$row['surfer_id']][$row['event']]['res'] = $row['position'];
 				$scores[$row['surfer_id']][$row['event']]['pts'] = $row['points'];
 			}
@@ -63,8 +62,8 @@ class FSStandings{
 			foreach($v1 as $eid=>$v2){
 				foreach ($v2 as $pos=>$v3){
 					$sid = $v3['sid'];
-					$picks[$uid][$eid][$pos]['pts'] = $scores[$sid][$event_id]['pts'];
-					$picks[$uid][$eid][$pos]['res'] = $scores[$sid][$event_id]['res'];
+					$picks[$uid][$eid][$pos]['pts'] = $scores[$sid][$eid]['pts'];
+					$picks[$uid][$eid][$pos]['res'] = $scores[$sid][$eid]['res'];
 					
 					if($eid==$event_id && $pos<=7){
 						$totals[$uid]+= $scores[$sid][$event_id]['pts'];
@@ -97,12 +96,11 @@ class FSStandings{
 		if (!$this->db_connection->connect_errno) {
 
 			//---GET ALL PICKS PER USER IN EVENT
-			$sql = "SELECT t.user_id,t.after_event,t.agg_total,t.rank,l.name,l.team
+			$sql = "SELECT t.user_id,t.after_event,t.event_total,t.agg_total,t.rank,l.name,l.team
 					FROM league_totals t
 					LEFT JOIN league_control AS l 
 					ON t.user_id = l.user_id
 					WHERE t.league_id=$league_id AND l.league_id=$league_id 
-						AND (t.after_event=$event_id OR t.after_event=$last_event)
 					ORDER BY t.after_event,t.agg_total DESC";
 			
 			$result = $this->db_connection->query($sql);
@@ -111,6 +109,7 @@ class FSStandings{
 				
 				$ranking[$row['after_event']][$row['user_id']]['rnk'] = $row['rank'];
 				$ranking[$row['after_event']][$row['user_id']]['pts'] = $row['agg_total'];
+				$ranking[$row['after_event']][$row['user_id']]['evt'] = $row['event_total'];
 				$users[$row['user_id']]['name'] = $row['name'];
 				$users[$row['user_id']]['team'] = $row['team'];
 				
@@ -272,69 +271,43 @@ class FSStandings{
 		$display.= "<div class='grid-x align-center leaguestandingsheader'><div class='small-12 cell'>LEADERBOARD</div></div>";
 		//end of event leaderboard header
 		
-//		$display.= "<div class='grid-x align-center leaguestanding'>";
-		
-//		$display.= "<div class='grid-x align-center leaguestanding'>";
-		
-//		foreach($standings as $eid=>$v1){
-//			if($eid == $event_id){
-//				foreach($v1 as $uid=>$v2){
-//					$display.="[".$changes[$uid]."]  ".$users[$uid]['name']." - "  .$v2['pts']. " </br>";
-//				}
-//			}
-//		}
-
-
-//		foreach($picks as $uid=>$v1){
-//			$display.="</br>[".$changes[$uid]."]  ".$users[$uid]['name']."</br>";
-//			foreach($v1 as $eid=>$v2){
-//				foreach($v2 as $sid=>$pts){
-//					$display.= "$uid - $eid -  $sid - $pts </br>";
-//				}
-//			}
-//			$display.= $standings[$event_id][$uid]['pts'] ."</br></br>";
-//		}
-
-		
-			foreach($standings[$event_id] as $uid=>$v1){
+		$display.= "<div class='grid-container leaguetable'>";
+			
+			foreach($standings[$event_id] as $uid=>$v1){ //goes through leaguestandings for this event to start with highest scoring user
 				
-				$display.= "<b>" .$users[$uid]['name'] ." - " .$v1['pts'] ."</b></br>";
+				$display.= "<div class='grid-x leaguerow'>"; //starts a new row for league standings table
 				
-				foreach($picks[$uid] as $eid=>$v2){
+				//display name and ranking change
+				$display.= "<div class='cell medium-2 leaderboard-username' id='lbu".$uid."n' style='border:1px solid black;'>
+								<div class='ranking'>".$changes[$uid]."</div>
+								<div class=''>".$users[$uid]['name']."</div>
+							</div>";
+				
+				//start section for event scores
+				$display.= "<div class='cell medium-8 leaderboard-user-results' id='lbu".$uid."n'>
+							<div class='grid-x'>";
+				
+				for($e=1;$e<=12;$e++){
 					
-					$display.= $standings[$eid][$uid]['pts'] ."</br>";
-					
-					foreach($v2 as $sid=>$pts){
-						
-						$display.= "$eid - $sid - ".$surfers[$sid]['name']." - $pts</br>";
-						
+					if(!empty($standings[$e][$uid]['evt'])){
+						$display.= "<div class='cell large-auto medium-auto leaderboard-result noselect' id='matchu".$uid."e".$e."'>".$standings[$e][$uid]['evt']."</div>";
+					}else{
+						$display.= "<div class='cell large-auto medium-auto leaderboard-result noselect' id='matchu".$uid."e".$e."'>---</div>";
 					}
 					
-					
-					
-				}
+				}	
 				
-				$display.= $v1['pts'] ."</br></br>";
+				$display.= "</div></div>";//end section for event scores
 				
-			}
+				//display total aggregated score
+				$display.= "<div class='medium-2 columns leaderboard-total' id='lbu".$uid."s'>".$v1['pts']."</div>";
+				
+				$display.= "</div>"; //ends leaguerow, end of user
 			
-			
-			
-			
-			
+			}//end foreach standings, going from highest ranked user to lowest
 		
-//		foreach($picks as $uid=>$v1){
-//			$display.="</br>[".$changes[$uid]."]  ".$users[$uid]['name']."</br>";
-//			foreach($v1 as $eid=>$v2){
-//				foreach($v2 as $sid=>$pts){
-//					$display.= "$uid - $eid -  $sid - $pts</br>";
-//				}
-//			}
-//			$display.= $standings[$event_id][$uid]['pts'] ."</br></br>";
-//		}
+		$display.= "</div>";//end grid container leaguetable
 		
-		
-		$display.= "</div>";
 		
 		return $display;
 		
@@ -363,7 +336,6 @@ class FSStandings{
 			$picks = $scoresdata['picks'];
 			$totals = $scoresdata['totals'];
 			
-			
 			//sort scores by points descending
 			$sortedpicks = $this->sortPicks($picks);
 			
@@ -372,7 +344,7 @@ class FSStandings{
 			
 			$standings  = $overall['ranking'];
 			$users	 	= $overall['users'];	
-			
+						
 			//get leaderboard changes
 			$changes = $this->getLeaderboardChanges($event_id,$standings);					
 			
@@ -381,6 +353,8 @@ class FSStandings{
 			
 			//produce league leaderboard
 			$display .= $this->displayLeagueStandings($event_id,$surfers,$users,$standings,$sortedpicks['desc'],$changes);
+			
+			
 			
 		}
 		
