@@ -266,23 +266,73 @@ class FSStandings{
 		
 	}
 	
-	private function displayLeagueStandings($event_id,$surfers,$users,$standings,$changes){
+	private function displayLeagueStandings($event_id,$surfers,$users,$standings,$picks,$changes){
 		
 		//display event leaderboard header
 		$display.= "<div class='grid-x align-center leaguestandingsheader'><div class='small-12 cell'>LEADERBOARD</div></div>";
 		//end of event leaderboard header
 		
-		$display.= "<div class='grid-x align-center leaguestanding'>";
+//		$display.= "<div class='grid-x align-center leaguestanding'>";
 		
-		$display.= "<div class='grid-x align-center leaguestanding'>";
+//		$display.= "<div class='grid-x align-center leaguestanding'>";
 		
-		foreach($standings as $eid=>$v1){
-			if($eid == $event_id){
-				foreach($v1 as $uid=>$v2){
-					$display.="[".$changes[$uid]."]  ".$users[$uid]['name']." - "  .$v2['pts']. " </br>";
+//		foreach($standings as $eid=>$v1){
+//			if($eid == $event_id){
+//				foreach($v1 as $uid=>$v2){
+//					$display.="[".$changes[$uid]."]  ".$users[$uid]['name']." - "  .$v2['pts']. " </br>";
+//				}
+//			}
+//		}
+
+
+//		foreach($picks as $uid=>$v1){
+//			$display.="</br>[".$changes[$uid]."]  ".$users[$uid]['name']."</br>";
+//			foreach($v1 as $eid=>$v2){
+//				foreach($v2 as $sid=>$pts){
+//					$display.= "$uid - $eid -  $sid - $pts </br>";
+//				}
+//			}
+//			$display.= $standings[$event_id][$uid]['pts'] ."</br></br>";
+//		}
+
+		
+			foreach($standings[$event_id] as $uid=>$v1){
+				
+				$display.= "<b>" .$users[$uid]['name'] ." - " .$v1['pts'] ."</b></br>";
+				
+				foreach($picks[$uid] as $eid=>$v2){
+					
+					$display.= $standings[$eid][$uid]['pts'] ."</br>";
+					
+					foreach($v2 as $sid=>$pts){
+						
+						$display.= "$eid - $sid - ".$surfers[$sid]['name']." - $pts</br>";
+						
+					}
+					
+					
+					
 				}
+				
+				$display.= $v1['pts'] ."</br></br>";
+				
 			}
-		}
+			
+			
+			
+			
+			
+		
+//		foreach($picks as $uid=>$v1){
+//			$display.="</br>[".$changes[$uid]."]  ".$users[$uid]['name']."</br>";
+//			foreach($v1 as $eid=>$v2){
+//				foreach($v2 as $sid=>$pts){
+//					$display.= "$uid - $eid -  $sid - $pts</br>";
+//				}
+//			}
+//			$display.= $standings[$event_id][$uid]['pts'] ."</br></br>";
+//		}
+		
 		
 		$display.= "</div>";
 		
@@ -330,7 +380,7 @@ class FSStandings{
 			$display .= $this->displayEventStandings($event_id,$surfers,$users,$sortedpicks['asc'],$totals);
 			
 			//produce league leaderboard
-			$display .= $this->displayLeagueStandings($event_id,$surfers,$users,$standings,$changes);
+			$display .= $this->displayLeagueStandings($event_id,$surfers,$users,$standings,$sortedpicks['desc'],$changes);
 			
 		}
 		
