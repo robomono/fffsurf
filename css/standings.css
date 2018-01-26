@@ -81,3 +81,69 @@
 	line-height:55px;
 	background-color:#ddd;
 }
+
+/*-------------------EVENT LEADERBOARD----------------------*/
+.eventleaderboardheader{
+	font-size:12pt;
+	text-align:center;
+	border:1px solid #ccc;
+	padding-top:15px;
+	padding-bottom:15px;
+}
+
+
+/*-------------------OVERALL LEADERBOARD--------------------*/
+
+/*title of the leaderboard*/
+.leaguestandingsheader{
+	font-size:12pt;
+	text-align:center;
+	border:1px solid #ccc;
+	padding-top:15px;
+	padding-bottom:15px;
+}
+
+/*contains the overall leaderboard*/
+.leaguetable{
+	border:1px solid blue;
+}
+
+/*leaderboard table headers*/
+.league-title-row{border:1px solid black;}
+.leaderboard-title-username{border:1px solid red;}
+.leaderboard-title-results{border:1px solid green;}
+.leaderboard-title-result{border:1px solid blue;text-align:center;}
+.leaderboard-title-total{border:1px solid yellow;text-align:center;}
+
+/*leaderboard content*/
+.leaguerow{
+	
+}
+	
+.leaderboard-username{
+	
+}
+	
+.ranking{
+	text-align:center;
+	width:10px;
+	border:1px solid black;
+	float:left;
+	margin-top:5px;
+	font-size:6pt;
+}
+	
+.leaderboard-user-results{
+	
+}
+	
+.leaderboard-result{
+	text-align:center;
+}
+	
+.leaderboard-total{
+	text-align:center;
+}
+	
+
+	

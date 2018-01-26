@@ -217,7 +217,21 @@ class FSStandings{
 			
 		}
 		
-		return $chng;
+		foreach($chng as $uid=>$factor){
+			
+			if($factor==0){
+				$changes[$uid] = " ";
+			}
+			else if($factor>0){
+				$changes[$uid] = "+" .$factor;
+			}
+			else if($factor<0){
+				$changes[$uid] = $factor;
+			}
+			
+		}
+		
+		return $changes;
 		
 	}
 	
@@ -273,9 +287,30 @@ class FSStandings{
 		
 		$display.= "<div class='grid-container leaguetable'>";
 			
+		$display.= "<div class='grid-x align-center league-title-row'>
+									<div class='cell large-2 medium-2 leaderboard-title-username'>User</div>
+									<div class='cell medium-8 medium-8 leaderboard-title-results'>
+										<div class='grid-x'>
+											<div class='cell large-auto medium-auto leaderboard-title-result noselect'> 1 </div>
+											<div class='cell large-auto medium-auto leaderboard-title-result noselect'> 2 </div>
+											<div class='cell large-auto medium-auto leaderboard-title-result noselect'> 3 </div>
+											<div class='cell large-auto medium-auto leaderboard-title-result noselect'> 4 </div>
+											<div class='cell large-auto medium-auto leaderboard-title-result noselect'> 5 </div>
+											<div class='cell large-auto medium-auto leaderboard-title-result noselect'> 6 </div>
+											<div class='cell large-auto medium-auto leaderboard-title-result noselect'> 7 </div>
+											<div class='cell large-auto medium-auto leaderboard-title-result noselect'> 8 </div>
+											<div class='cell large-auto medium-auto leaderboard-title-result noselect'> 9 </div>
+											<div class='cell large-auto medium-auto leaderboard-title-result noselect'> 10 </div>
+											<div class='cell large-auto medium-auto leaderboard-title-result noselect'> 11 </div>
+											<div class='cell large-auto medium-auto leaderboard-title-result noselect'> 12 </div>
+										</div>
+									</div>
+									<div class='large-2 medium-2 columns leaderboard-title-total'>Total</div>
+								</div>";
+			
 			foreach($standings[$event_id] as $uid=>$v1){ //goes through leaguestandings for this event to start with highest scoring user
 				
-				$display.= "<div class='grid-x leaguerow'>"; //starts a new row for league standings table
+				$display.= "<div class='grid-x align-center leaguerow'>"; //starts a new row for league standings table
 				
 				//display name and ranking change
 				$display.= "<div class='cell medium-2 leaderboard-username' id='lbu".$uid."n' style='border:1px solid black;'>
