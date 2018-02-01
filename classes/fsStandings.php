@@ -291,18 +291,17 @@ class FSStandings{
 									<div class='cell large-2 medium-2 leaderboard-title-username'>User</div>
 									<div class='cell medium-8 medium-8 leaderboard-title-results'>
 										<div class='grid-x'>
-											<div class='cell large-auto medium-auto leaderboard-title-result noselect'> 1 </div>
-											<div class='cell large-auto medium-auto leaderboard-title-result noselect'> 2 </div>
-											<div class='cell large-auto medium-auto leaderboard-title-result noselect'> 3 </div>
-											<div class='cell large-auto medium-auto leaderboard-title-result noselect'> 4 </div>
-											<div class='cell large-auto medium-auto leaderboard-title-result noselect'> 5 </div>
-											<div class='cell large-auto medium-auto leaderboard-title-result noselect'> 6 </div>
-											<div class='cell large-auto medium-auto leaderboard-title-result noselect'> 7 </div>
-											<div class='cell large-auto medium-auto leaderboard-title-result noselect'> 8 </div>
-											<div class='cell large-auto medium-auto leaderboard-title-result noselect'> 9 </div>
-											<div class='cell large-auto medium-auto leaderboard-title-result noselect'> 10 </div>
-											<div class='cell large-auto medium-auto leaderboard-title-result noselect'> 11 </div>
-											<div class='cell large-auto medium-auto leaderboard-title-result noselect'> 12 </div>
+											<div class='leaderboard-title-result' id='tite1'> 1 </div>
+											<div class='leaderboard-title-result' id='tite2'> 2 </div>
+											<div class='leaderboard-title-result' id='tite3'> 3 </div>
+											<div class='leaderboard-title-result' id='tite4'> 4 </div>
+											<div class='leaderboard-title-result' id='tite5'> 5 </div>
+											<div class='leaderboard-title-result' id='tite6'> 6 </div>
+											<div class='leaderboard-title-result' id='tite7'> 7 </div>
+											<div class='leaderboard-title-result' id='tite8'> 8 </div>
+											<div class='leaderboard-title-result' id='tite9'> 9 </div>
+											<div class='leaderboard-title-result' id='tite10'> 10 </div>
+											<div class='leaderboard-title-result' id='tite11'> 11 </div>
 										</div>
 									</div>
 									<div class='large-2 medium-2 columns leaderboard-title-total'>Total</div>
@@ -327,7 +326,7 @@ class FSStandings{
 					if(!empty($standings[$e][$uid]['evt'])){
 						$display.= "<div class='cell large-auto medium-auto leaderboard-result noselect' id='matchu".$uid."e".$e."'>".$standings[$e][$uid]['evt']."</div>";
 					}else{
-						$display.= "<div class='cell large-auto medium-auto leaderboard-result noselect' id='matchu".$uid."e".$e."'>---</div>";
+						$display.= "<div class='leaderboard-result noselect' id='matchu".$uid."e".$e."'>---</div>";
 					}
 					
 				}	
