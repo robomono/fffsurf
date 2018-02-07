@@ -110,9 +110,23 @@
 
 /*leaderboard table headers*/
 .league-title-row{border:1px solid black;}
+
 .leaderboard-title-username{border:1px solid red;}
+
 .leaderboard-title-results{border:1px solid green;}
-.leaderboard-title-result{border:1px solid blue;text-align:center;}
+
+.leaderboard-title-result{
+	border:1px solid blue;
+	text-align:center;
+	width:8%;
+	cursor:pointer;
+}
+
+.title-expanded{
+	border:1px solid red;
+	width:20%;
+}
+
 .leaderboard-title-total{border:1px solid yellow;text-align:center;}
 
 /*leaderboard content*/
@@ -139,6 +153,14 @@
 	
 .leaderboard-result{
 	text-align:center;
+	border:1px solid red;
+	width:8%;
+	cursor:pointer;
+}
+
+.result-expanded{
+	width:20%;
+	border:1px solid red;
 }
 	
 .leaderboard-total{

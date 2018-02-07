@@ -23,3 +23,27 @@ $( document ).ready(function() {
 	});
 	
 });
+
+
+$( document ).ready(function() {
+
+	$('.leaderboard-result').hover(function(){				
+		
+		var thisevent = ($(this).attr('id').split('e'))[1];
+		
+		var resultclass = ".resulte" + thisevent;
+		var resulttitle = "#title" + thisevent;
+		
+		$(".result-expanded").removeClass("result-expanded");
+		$(resultclass).addClass("result-expanded");
+		
+		$(".title-expanded").removeClass("title-expanded");
+		$(resulttitle).addClass("title-expanded");
+		
+		
+//		$(this).addClass("result-expanded");
+//		$(this).siblings(".result-expanded").removeClass("result-expanded");
+
+	});
+
+});

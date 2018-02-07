@@ -290,18 +290,17 @@ class FSStandings{
 		$display.= "<div class='grid-x align-center league-title-row'>
 									<div class='cell large-2 medium-2 leaderboard-title-username'>User</div>
 									<div class='cell medium-8 medium-8 leaderboard-title-results'>
-										<div class='grid-x'>
-											<div class='leaderboard-title-result' id='tite1'> 1 </div>
-											<div class='leaderboard-title-result' id='tite2'> 2 </div>
-											<div class='leaderboard-title-result' id='tite3'> 3 </div>
-											<div class='leaderboard-title-result' id='tite4'> 4 </div>
-											<div class='leaderboard-title-result' id='tite5'> 5 </div>
-											<div class='leaderboard-title-result' id='tite6'> 6 </div>
-											<div class='leaderboard-title-result' id='tite7'> 7 </div>
-											<div class='leaderboard-title-result' id='tite8'> 8 </div>
-											<div class='leaderboard-title-result' id='tite9'> 9 </div>
-											<div class='leaderboard-title-result' id='tite10'> 10 </div>
-											<div class='leaderboard-title-result' id='tite11'> 11 </div>
+										<div class='grid-x'>";
+		
+										for($e=1;$e<=11;$e++){//build title cell for each event
+											if($e==$event_id){	//current event loads up expanded
+												$display.="<div class='leaderboard-title-result title-expanded' id='title".$e."'>".$e."</div>";
+											}else{//not current event loads up collapsed
+												$display.="<div class='leaderboard-title-result' id='title".$e."'>".$e."</div>";
+											}
+										}
+		
+		$display.= "							
 										</div>
 									</div>
 									<div class='large-2 medium-2 columns leaderboard-title-total'>Total</div>
@@ -321,10 +320,17 @@ class FSStandings{
 				$display.= "<div class='cell medium-8 leaderboard-user-results' id='lbu".$uid."n'>
 							<div class='grid-x'>";
 				
-				for($e=1;$e<=12;$e++){
+				for($e=1;$e<=11;$e++){
 					
 					if(!empty($standings[$e][$uid]['evt'])){
-						$display.= "<div class='cell large-auto medium-auto leaderboard-result noselect' id='matchu".$uid."e".$e."'>".$standings[$e][$uid]['evt']."</div>";
+						
+						if($e==$event_id){
+							$display.= "<div class='leaderboard-result resulte".$e." result-expanded' id='matchu".$uid."e".$e."'>".number_format($standings[$e][$uid]['evt'])."</div>";
+						}else{
+							$display.= "<div class='leaderboard-result resulte".$e."' id='matchu".$uid."e".$e."'>".number_format($standings[$e][$uid]['evt'])."</div>";
+						}
+						
+						
 					}else{
 						$display.= "<div class='leaderboard-result noselect' id='matchu".$uid."e".$e."'>---</div>";
 					}
@@ -334,7 +340,7 @@ class FSStandings{
 				$display.= "</div></div>";//end section for event scores
 				
 				//display total aggregated score
-				$display.= "<div class='medium-2 columns leaderboard-total' id='lbu".$uid."s'>".$v1['pts']."</div>";
+				$display.= "<div class='medium-2 columns leaderboard-total' id='lbu".$uid."s'>".number_format($v1['pts'])."</div>";
 				
 				$display.= "</div>"; //ends leaguerow, end of user
 			
