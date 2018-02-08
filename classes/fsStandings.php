@@ -294,9 +294,9 @@ class FSStandings{
 		
 										for($e=1;$e<=11;$e++){//build title cell for each event
 											if($e==$event_id){	//current event loads up expanded
-												$display.="<div class='leaderboard-title-result title-expanded' id='title".$e."'>".$e."</div>";
+												$display.="<div class='leaderboard-title title-expanded' id='title".$e."'>".$e."</div>";
 											}else{//not current event loads up collapsed
-												$display.="<div class='leaderboard-title-result' id='title".$e."'>".$e."</div>";
+												$display.="<div class='leaderboard-title' id='title".$e."'>".$e."</div>";
 											}
 										}
 		
@@ -305,16 +305,26 @@ class FSStandings{
 									</div>
 									<div class='large-2 medium-2 columns leaderboard-title-total'>Total</div>
 								</div>";
+		
+			$oddcount = 0; //keeps count of odd/even rows for color display purposes					
 			
 			foreach($standings[$event_id] as $uid=>$v1){ //goes through leaguestandings for this event to start with highest scoring user
 				
-				$display.= "<div class='grid-x align-center leaguerow'>"; //starts a new row for league standings table
+				if($oddcount==0){
+					$display.= "<div class='grid-x align-center align-middle leaguerow'>"; //starts a new row for league standings table
+					$oddcount = 1;
+				}else{
+					$display.= "<div class='grid-x align-center align-middle leaguerow odd'>"; //starts a new ODD row for leaguestandings table
+					$oddcount = 0;
+				}
 				
 				//display name and ranking change
-				$display.= "<div class='cell medium-2 leaderboard-username' id='lbu".$uid."n' style='border:1px solid black;'>
-								<div class='ranking'>".$changes[$uid]."</div>
-								<div class=''>".$users[$uid]['name']."</div>
-							</div>";
+				$display.= "<div class='cell medium-2 leaderboard-username' id='lbu".$uid."n'>
+											<div class='grid-x align-center align-middle'>
+												<div class='cell large-1 medium-2 ranking'>".$changes[$uid]."</div>
+												<div class='cell large-11 medium-10'>".$users[$uid]['name']."</div>
+											</div>
+										</div>";
 				
 				//start section for event scores
 				$display.= "<div class='cell medium-8 leaderboard-user-results' id='lbu".$uid."n'>
@@ -332,7 +342,7 @@ class FSStandings{
 						
 						
 					}else{
-						$display.= "<div class='leaderboard-result noselect' id='matchu".$uid."e".$e."'>---</div>";
+						$display.= "<div class='leaderboard-result resulte".$e."' id='matchu".$uid."e".$e."'>---</div>";
 					}
 					
 				}	

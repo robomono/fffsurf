@@ -105,33 +105,37 @@
 
 /*contains the overall leaderboard*/
 .leaguetable{
-	border:1px solid blue;
+	
 }
 
 /*leaderboard table headers*/
-.league-title-row{border:1px solid black;}
+.league-title-row{}
 
-.leaderboard-title-username{border:1px solid red;}
+.leaderboard-title-username{}
 
-.leaderboard-title-results{border:1px solid green;}
+.leaderboard-title-results{}
 
-.leaderboard-title-result{
-	border:1px solid blue;
+.leaderboard-title{
 	text-align:center;
 	width:8%;
 	cursor:pointer;
+	overflow:hidden;
 }
 
 .title-expanded{
-	border:1px solid red;
 	width:20%;
 }
 
-.leaderboard-title-total{border:1px solid yellow;text-align:center;}
+.leaderboard-title-total{text-align:center;}
 
 /*leaderboard content*/
 .leaguerow{
-	
+	height:50px;
+	background-color:#f2f2f2;
+}
+
+.odd{
+	background-color:#d9d9d9;
 }
 	
 .leaderboard-username{
@@ -139,28 +143,48 @@
 }
 	
 .ranking{
-	text-align:center;
-	width:10px;
-	border:1px solid black;
-	float:left;
-	margin-top:5px;
-	font-size:6pt;
+	padding-right:2px;
+	font-size:8pt;
 }
 	
 .leaderboard-user-results{
 	
 }
-	
+
 .leaderboard-result{
+	height:50px;
+	padding-top:13px;
 	text-align:center;
-	border:1px solid red;
 	width:8%;
 	cursor:pointer;
+	overflow:hidden;
+	border-left:1px solid #ccc;
+	padding-left:4px;
+	border-right:4px solid #f2f2f2;
 }
+
+.odd .leaderboard-result{
+	border-right:4px solid #d9d9d9;
+}
+
+.leaderboard-result:hover{
+	background-color:yellow;
+	border:0px;
+}
+
 
 .result-expanded{
 	width:20%;
-	border:1px solid red;
+	border:0px;
+}
+
+.column-highlighted{
+	background-color:yellow;
+	border:0px;
+}
+
+.odd .column-highlighted{
+	border:0px;
 }
 	
 .leaderboard-total{
