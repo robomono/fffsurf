@@ -244,7 +244,7 @@ class FSStandings{
 		$display.= "<div class='grid-container standingstable'>";
 		
 		foreach($totals as $uid=>$total){
-			$display.= "<div class='grid-x standingsrow'>"; //start row
+			$display.= "<div class='grid-x standingsrow eventrowu".$uid."'>"; //start row
 			$display.= "<div class='cell large-2 medium-2 small-3 standingsuser'>" .$users[$uid]['team'] ."</div>"; //team name
 			
 			//build small points here
@@ -293,11 +293,24 @@ class FSStandings{
 										<div class='grid-x'>";
 		
 										for($e=1;$e<=11;$e++){//build title cell for each event
-											if($e==$event_id){	//current event loads up expanded
-												$display.="<div class='leaderboard-title title-expanded' id='title".$e."'>".$e."</div>";
-											}else{//not current event loads up collapsed
-												$display.="<div class='leaderboard-title' id='title".$e."'>".$e."</div>";
+											
+											if($e<=$event_id){
+												
+												//non-empty result
+												if($e==$event_id){	//current event loads up expanded
+													$display.="<div class='leaderboard-title title-expanded' id='title".$e."'>".$e."</div>";
+												}else{//not current event loads up collapsed
+													$display.="<div class='leaderboard-title' id='title".$e."'>".$e."</div>";
+												}
+												
+											}else{
+												
+												//empty result
+												$display.="<div class='leaderboard-title emptyresult' id='title".$e."'>".$e."</div>";
+												
 											}
+											
+											
 										}
 		
 		$display.= "							
@@ -305,21 +318,22 @@ class FSStandings{
 									</div>
 									<div class='large-2 medium-2 columns leaderboard-title-total'>Total</div>
 								</div>";
-		
+
+
+//>->->-BUILD USER ROW WITH EVENT TOTALS	
+	
 			$oddcount = 0; //keeps count of odd/even rows for color display purposes					
 			
 			foreach($standings[$event_id] as $uid=>$v1){ //goes through leaguestandings for this event to start with highest scoring user
 				
 				if($oddcount==0){
-					$display.= "<div class='grid-x align-center align-middle leaguerow'>"; //starts a new row for league standings table
-					$oddcount = 1;
+					$display.= "<div class='grid-x align-center align-middle leaguerow rowu".$uid."'>"; //starts a new row for league standings table
 				}else{
-					$display.= "<div class='grid-x align-center align-middle leaguerow odd'>"; //starts a new ODD row for leaguestandings table
-					$oddcount = 0;
+					$display.= "<div class='grid-x align-center align-middle leaguerow odd rowu".$uid."'>"; //starts a new ODD row for leaguestandings table
 				}
 				
 				//display name and ranking change
-				$display.= "<div class='cell medium-2 leaderboard-username' id='lbu".$uid."n'>
+				$display.= "<div class='cell medium-2 leaderboard-username' id='lbnu".$uid."'>
 											<div class='grid-x align-center align-middle'>
 												<div class='cell large-1 medium-2 ranking'>".$changes[$uid]."</div>
 												<div class='cell large-11 medium-10'>".$users[$uid]['name']."</div>
@@ -332,17 +346,17 @@ class FSStandings{
 				
 				for($e=1;$e<=11;$e++){
 					
-					if(!empty($standings[$e][$uid]['evt'])){
+					if(!empty($standings[$e][$uid]['evt'] && $e<=$event_id)){
 						
 						if($e==$event_id){
-							$display.= "<div class='leaderboard-result resulte".$e." result-expanded' id='matchu".$uid."e".$e."'>".number_format($standings[$e][$uid]['evt'])."</div>";
+							$display.= "<div class='leaderboard-result cellu".$uid." resulte".$e." result-expanded' id='matchu".$uid."e".$e."'>".number_format($standings[$e][$uid]['evt'])."</div>";
 						}else{
-							$display.= "<div class='leaderboard-result resulte".$e."' id='matchu".$uid."e".$e."'>".number_format($standings[$e][$uid]['evt'])."</div>";
+							$display.= "<div class='leaderboard-result cellu".$uid." resulte".$e."' id='matchu".$uid."e".$e."'>".number_format($standings[$e][$uid]['evt'])."</div>";
 						}
 						
 						
 					}else{
-						$display.= "<div class='leaderboard-result resulte".$e."' id='matchu".$uid."e".$e."'>---</div>";
+						$display.= "<div class='leaderboard-result emptyresult cellu".$uid." resulte".$e."' id='matchu".$uid."e".$e."'>---</div>";
 					}
 					
 				}	
@@ -350,15 +364,70 @@ class FSStandings{
 				$display.= "</div></div>";//end section for event scores
 				
 				//display total aggregated score
-				$display.= "<div class='medium-2 columns leaderboard-total' id='lbu".$uid."s'>".number_format($v1['pts'])."</div>";
+				$display.= "<div class='cell medium-2 leaderboard-total' id='lbsu".$uid."'>".number_format($v1['pts'])."</div>";
 				
-				$display.= "</div>"; //ends leaguerow, end of user
-			
+				$display.= "</div>"; //ends leaguerow, end of user totals
+//<-<-<-END BUILD USER ROW WITH EVENT TOTALS
+				
+//->->->BUILD EVENT-BY-EVENT TEAM SCORES
+								
+				
+				for($e=1;$e<=11;$e++){
+					
+					$display.= "<div class='grid-x scoresrow detu".$uid."e".$e." teamscore-hidden'>";
+					
+					$display.= "<div class='cell large-6 medium-6 team-comtainer'><div class='grid-x'>";
+					
+					$columncount = 1;
+					
+					foreach($picks[$uid][$e] as $sid=>$sco){
+						
+						if($columncount<4){
+							
+							$display.= "<div class='cell large-5 medium-3 team-surfer-fill'> </div>";
+							$display.= "<div class='cell large-4 medium-6 team-surfer-name'>".$surfers[$sid]['name']."</div>";
+							$display.= "<div class='cell large-2 medium-2 team-surfer-score'>".number_format($sco)."</div>";
+							$display.= "<div class='cell large-1 medium-1 team-surfer-fill'> </div>";
+							
+							$columncount++;
+						
+						}else if($columncount==4){
+							
+							$display.= "<div class='cell large-5 medium-3 team-surfer-fill'> </div>";
+							$display.= "<div class='cell large-4 medium-6 team-surfer-name'>".$surfers[$sid]['name']."</div>";
+							$display.= "<div class='cell large-2 medium-2 team-surfer-score'>".number_format($sco)."</div>";
+							$display.= "<div class='cell large-1 medium-1 team-surfer-fill'> </div>";
+							$display.= "</div></div>";
+							$display.= "<div class='cell medium-6 team-comtainer'><div class='grid-x'>";
+							
+							$columncount++;
+							
+						}else if($columncount>4){
+							
+							$display.= "<div class='cell large-4 medium-6 team-surfer-name'>".$surfers[$sid]['name']."</div>";
+							$display.= "<div class='cell large-2 medium-2 team-surfer-score'>".number_format($sco)."</div>";
+							$display.= "<div class='cell large-6 medium-4 team-surfer-fill'> </div>";
+							
+							$columncount++;
+							
+						}
+						
+						
+						
+					}
+					
+					$display.= "</div></div></div>";
+					
+				}
+//<-<-<-END BUILD EVENT-BY-EVENT TEAM SCORES
+				
+			if($oddcount==0){$oddcount = 1;}else{$oddcount = 0;}
+				
 			}//end foreach standings, going from highest ranked user to lowest
 		
 		$display.= "</div>";//end grid container leaguetable
 		
-		
+				
 		return $display;
 		
 	}

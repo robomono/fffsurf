@@ -91,6 +91,10 @@
 	padding-bottom:15px;
 }
 
+.highlighted-eventrow{
+	border:3px solid black;
+}
+
 
 /*-------------------OVERALL LEADERBOARD--------------------*/
 
@@ -167,29 +171,92 @@
 	border-right:4px solid #d9d9d9;
 }
 
-.leaderboard-result:hover{
-	background-color:yellow;
-	border:0px;
-}
-
 
 .result-expanded{
 	width:20%;
 	border:0px;
+	border-left:1px solid #ccc;
 }
 
 .column-highlighted{
-	background-color:yellow;
+	background-color:#ffffcc;
 	border:0px;
+	border-left:1px solid #ccc;
 }
 
 .odd .column-highlighted{
+	background-color:#ffffe6;
 	border:0px;
+	border-left:1px solid #ccc;
 }
-	
+
+.row-highlighted{
+	background-color:#ffffcc;
+}
+
+.row-highlighted .leaderboard-result{
+	border-right:0px solid black;
+}
+
+.odd .row-highlighted{
+	background-color:#ffffe6;
+}
+
+.cell-highlighted{
+	background-color:yellow;
+}
+
+.odd .cell-highlighted{
+	background-color:yellow;
+}
+
 .leaderboard-total{
+	height:50px;
+	padding-top:13px;
 	text-align:center;
+	border-left:1px solid #ccc;
 }
+
+.result-clicked{
+	border-bottom:3px solid black;
+}
+
+.odd .result-clicked{
+	border-bottom:3px solid black;
+}
+
+.teamscore-hidden{
 	
+}
+
+.teamscore-visible{
+
+}
+
+.scoresrow{
+	background-color:black;
+	color:#ccc;
+	padding:10px;
+	padding-bottom:20px;
+}
+
+
+.team-surfer-name{
+	height:40px;
+	border-bottom:1px solid #ccc;
+	padding-top:7px;
+	padding-left:5px;
+	
+}
+
+.team-surfer-score{
+	height:40px;
+	padding-top:7px;
+	padding-left:5px;
+	border-bottom:1px solid #ccc;
+	padding-top:7px;
+	padding-left:5px;
+	text-align:right;
+}
 
 	
