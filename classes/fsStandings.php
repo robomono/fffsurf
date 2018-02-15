@@ -241,6 +241,7 @@ class FSStandings{
 		$display.= "<div class='grid-x align-center eventleaderboardheader'><div class='small-12 cell'>EVENT RESULTS</div></div>";
 		//end of event leaderboard header
 		
+		
 		$display.= "<div class='grid-container standingstable'>";
 		
 		foreach($totals as $uid=>$total){
@@ -281,11 +282,47 @@ class FSStandings{
 	
 	private function displayLeagueStandings($event_id,$surfers,$users,$standings,$picks,$changes){
 		
+		$events[1]['name']  = "Quiksilver Pro Gold Coast";
+		$events[1]['flag']  = "australia1.png";
+		
+		$events[2]['name']  = "Rip Curl Pro Bells Beach";
+		$events[2]['flag']  = "australia2.png";
+		
+		$events[3]['name']  = "Margaret River Pro";
+		$events[3]['flag']  = "australia3.png";
+		
+		$events[4]['name']  = "Oi Rio Pro";
+		$events[4]['flag']  = "brazil.png";
+		
+		$events[5]['name']  = "Bali Pro Keramas";
+		$events[5]['flag']  = "indonesia.png";
+		
+		$events[6]['name']  = "Corona Open J-Bay";
+		$events[6]['flag']  = "southafrica.png";
+		
+		$events[7]['name']  = "Tahiti Pro Teahupoo";
+		$events[7]['flag']  = "tahiti.png";
+		
+		$events[8]['name']  = "Surf Ranch Open";
+		$events[8]['flag']  = "usa.png";
+		
+		$events[9]['name']  = "Quiksilver Pro France";
+		$events[9]['flag']  = "france.png";
+		
+		$events[10]['name'] = "MEO Rip Curl Pro Portugal";
+		$events[10]['flag'] = "portugal.png";
+		
+		$events[11]['name'] = "Billabong Pipe Masters";
+		$events[11]['flag'] = "hawaii.png";
+		
 		//display event leaderboard header
 		$display.= "<div class='grid-x align-center leaguestandingsheader'><div class='small-12 cell'>LEADERBOARD</div></div>";
 		//end of event leaderboard header
+
+
+//----------------------START LARGE AND MEDIUM LEADERBOARD
 		
-		$display.= "<div class='grid-container leaguetable'>";
+		$display.= "<div class='grid-container leaguetable hide-for-small-only'>";
 			
 		$display.= "<div class='grid-x align-center league-title-row'>
 									<div class='cell large-2 medium-2 leaderboard-title-username'>User</div>
@@ -320,17 +357,13 @@ class FSStandings{
 								</div>";
 
 
-//>->->-BUILD USER ROW WITH EVENT TOTALS	
+			//>->->-BUILD USER ROW WITH EVENT TOTALS	
 	
 			$oddcount = 0; //keeps count of odd/even rows for color display purposes					
 			
 			foreach($standings[$event_id] as $uid=>$v1){ //goes through leaguestandings for this event to start with highest scoring user
 				
-				if($oddcount==0){
-					$display.= "<div class='grid-x align-center align-middle leaguerow rowu".$uid."'>"; //starts a new row for league standings table
-				}else{
-					$display.= "<div class='grid-x align-center align-middle leaguerow odd rowu".$uid."'>"; //starts a new ODD row for leaguestandings table
-				}
+				$display.= "<div class='grid-x align-center align-middle leaguerow odd".$oddcount." rowu".$uid."'>"; //starts a new row for leaguestandings table, if its even then class is odd0, if its odd then class is odd1
 				
 				//display name and ranking change
 				$display.= "<div class='cell medium-2 leaderboard-username' id='lbnu".$uid."'>
@@ -367,9 +400,9 @@ class FSStandings{
 				$display.= "<div class='cell medium-2 leaderboard-total' id='lbsu".$uid."'>".number_format($v1['pts'])."</div>";
 				
 				$display.= "</div>"; //ends leaguerow, end of user totals
-//<-<-<-END BUILD USER ROW WITH EVENT TOTALS
+				//<-<-<-END BUILD USER ROW WITH EVENT TOTALS
 				
-//->->->BUILD EVENT-BY-EVENT TEAM SCORES
+				//->->->BUILD EVENT-BY-EVENT TEAM SCORES
 								
 				
 				for($e=1;$e<=11;$e++){
@@ -415,17 +448,64 @@ class FSStandings{
 						
 						
 					}
+					$display.= "</div></div></div>";//ends grid-x, ends team-container #2, ends scoresrow
 					
-					$display.= "</div></div></div>";
 					
 				}
-//<-<-<-END BUILD EVENT-BY-EVENT TEAM SCORES
+				//<-<-<-END BUILD EVENT-BY-EVENT TEAM SCORES
 				
-			if($oddcount==0){$oddcount = 1;}else{$oddcount = 0;}
+			if($oddcount==0){$oddcount = 1;}else{$oddcount = 0;}//reset odd counter to populate next row
 				
 			}//end foreach standings, going from highest ranked user to lowest
 		
 		$display.= "</div>";//end grid container leaguetable
+		
+		//----------------------END LARGE AND MEDIUM LEADERBOARD	
+		
+		//---------------------START SMALL LEADERBOARD
+		$display.= "<div class='grid-container sm-leaguetable show-for-small-only'>";
+		
+		
+		foreach($standings[$event_id] as $uid=>$v1){ 
+			
+			$display.= "<div class='grid-x sm-lb-row'>
+										<div class='cell small-1 sm-lb-chng'>".		$changes[$uid]						."</div>
+										<div class='cell small-6 sm-lb-username'>".$users[$uid]['name']			."</div>
+										<div class='cell small-4 sm-lb-total'>".		number_format($v1['pts'])	."</div>
+										<div class='cell small-1 sm-lb-expanduser'>			+														</div>
+									</div>
+									";
+			
+			for($e=1;$e<=11;$e++){
+				if($e<=$event_id){
+					
+					$display.= "<div class='grid-x sm-lb-event-row'>
+												<div class='cell small-8 sm-lb-eventname'>".$events[$e]['name']."</div>
+												<div class='cell small-3 sm-lb-eventscore'>".number_format($standings[$e][$uid]['evt'])."</div>
+												<div class='cell small-1 sm-lb-expandevent'> + </div>
+											</div>";
+				
+					foreach($picks[$uid][$e] as $sid=>$sco){
+							
+						$display.= "<div class='grid-x sm-lb-surfers-row'>
+													<div class='cell small-8 sm-lb-surfer'>".$surfers[$sid]['name']."</div>
+													<div class='cell small-3 sm-lb-score'>".number_format($sco)."</div>
+													<div class='cell small-1'> </div>
+												</div>";
+							
+					}
+					
+				}
+			}
+			
+									
+		}
+		
+		
+		
+		
+		$display.= "</div>";//ends small leaguetable contianer
+		//----------------------END SMALL LEADERBOARD
 		
 				
 		return $display;

@@ -269,9 +269,10 @@ $( document ).ready(function() {
 });
 
 
-//SHOWING SCORES DETAILS
+//SMALL SCREEN LEADERBOARD NAVIGATION
 $( document ).ready(function() {
 	
-	
+	$(".sm-lb-event-row").hide();
+	$(".sm-lb-surfers-row").hide();
 	
 });	

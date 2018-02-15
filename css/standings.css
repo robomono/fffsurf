@@ -138,7 +138,7 @@
 	background-color:#f2f2f2;
 }
 
-.odd{
+.odd1{
 	background-color:#d9d9d9;
 }
 	
@@ -167,7 +167,7 @@
 	border-right:4px solid #f2f2f2;
 }
 
-.odd .leaderboard-result{
+.odd1 .leaderboard-result{
 	border-right:4px solid #d9d9d9;
 }
 
@@ -184,7 +184,7 @@
 	border-left:1px solid #ccc;
 }
 
-.odd .column-highlighted{
+.odd1 .column-highlighted{
 	background-color:#ffffe6;
 	border:0px;
 	border-left:1px solid #ccc;
@@ -198,7 +198,7 @@
 	border-right:0px solid black;
 }
 
-.odd .row-highlighted{
+.odd1 .row-highlighted{
 	background-color:#ffffe6;
 }
 
@@ -206,7 +206,7 @@
 	background-color:yellow;
 }
 
-.odd .cell-highlighted{
+.odd1 .cell-highlighted{
 	background-color:yellow;
 }
 
@@ -221,7 +221,7 @@
 	border-bottom:3px solid black;
 }
 
-.odd .result-clicked{
+.odd1 .result-clicked{
 	border-bottom:3px solid black;
 }
 
@@ -258,5 +258,90 @@
 	padding-left:5px;
 	text-align:right;
 }
+
+/*-----SMALL SCREEN---*/
+
+.sm-lb-row{
+	border:1px solid red;
+}
+
+.sm-lb-chng{
+	height:50px;
+	padding-top:18px;
+	padding-right:2px;
+	font-size:8pt;
+	text-align:center;
+	border:1px solid #ccc;
+}
+
+.sm-lb-username{
+	height:50px;
+	padding-top:13px;
+	border:1px solid #ccc;
+}
+
+.sm-lb-total{
+	height:50px;
+	padding-top:13px;
+	padding-right:15px;
+	text-align:right;
+	border:1px solid #ccc;
+}
+
+.sm-lb-expanduser{
+	height:50px;
+	padding-top:12px;
+	text-align:center;
+	border:1px solid #ccc;
+}
+
+.sm-lb-event-row{
+	border:3px solid #eee;
+}
+	
+.sm-lb-eventname{
+	height:50px;
+	border:1px solid #eee;
+	padding-left:15px;
+	padding-top:12px;
+}
+	
+.sm-lb-eventscore{
+	height:50px;
+	border:1px solid #eee;
+	padding-top:12px;
+	text-align:right;
+}
+	
+.sm-lb-expandevent{
+	height:50px;
+	border:1px solid #eee;
+	padding-top:12px;
+	text-align:center;
+}
+
+.sm-lb-surfers-row{
+	border:1px solid blue;
+	
+}
+
+.sm-lb-surfer{
+	height:50px;
+	border:1px solid #ccc;
+	padding-right:10px;
+	padding-top:12px;
+	text-align:right;
+}
+	
+.sm-lb-score{
+	height:50px;
+	border:1px solid #ccc;
+	padding-top:12px;
+	text-align:right;
+}
+
+
+
+
 
 	
