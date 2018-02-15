@@ -275,4 +275,47 @@ $( document ).ready(function() {
 	$(".sm-lb-event-row").hide();
 	$(".sm-lb-surfers-row").hide();
 	
+	$(".sm-lb-row").click(function(){
+		
+		var eventselector = ".sm-events-u" + ($(this).attr('id').split('u'))[1];
+		
+		if ($(this).hasClass("sm-user-expanded")){
+		
+			$(eventselector).slideUp("fast");
+			$(this).removeClass("sm-user-expanded");
+			$(this).children(".sm-lb-expanduser").css("border","1px solid blue");
+			
+		}else{
+			
+			$(eventselector).slideDown("fast");
+			$(this).addClass("sm-user-expanded");
+			$(this).children(".sm-lb-expanduser").css("border","1px solid black");
+		}
+		
+	});	
+	
+	
+	$(".sm-lb-event-row").click(function(){
+		
+		var data = $(this).attr('id').split(/['u''e']+/);
+		var teamselector = ".sm-surfers-foru" + data[2] + "e" + data[3];
+		
+		if ($(this).hasClass("sm-team-expanded")){
+			
+			$(teamselector).slideUp("fast");
+			$(this).removeClass("sm-team-expanded");
+			$(this).children(".sm-lb-expandevent").css("border","1px solid blue");
+			
+		}else{
+			
+			$(teamselector).slideDown("fast");
+			$(this).addClass("sm-team-expanded");
+			$(this).children(".sm-lb-expandevent").css("border","1px solid black");
+			
+		}
+		
+		
+	});	
+	
+	
 });	

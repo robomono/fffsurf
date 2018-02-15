@@ -468,18 +468,18 @@ class FSStandings{
 		
 		foreach($standings[$event_id] as $uid=>$v1){ 
 			
-			$display.= "<div class='grid-x sm-lb-row'>
-										<div class='cell small-1 sm-lb-chng'>".		$changes[$uid]						."</div>
-										<div class='cell small-6 sm-lb-username'>".$users[$uid]['name']			."</div>
-										<div class='cell small-4 sm-lb-total'>".		number_format($v1['pts'])	."</div>
-										<div class='cell small-1 sm-lb-expanduser'>			+														</div>
+			$display.= "<div class='grid-x sm-lb-row' id='sm-lb-u".$uid."'>
+										<div class='cell small-1 sm-lb-chng'>".$changes[$uid]."</div>
+										<div class='cell small-6 sm-lb-username'>".$users[$uid]['name']."</div>
+										<div class='cell small-4 sm-lb-total'>".number_format($v1['pts'])."</div>
+										<div class='cell small-1 sm-lb-expanduser'> + </div>
 									</div>
 									";
 			
 			for($e=1;$e<=11;$e++){
 				if($e<=$event_id){
 					
-					$display.= "<div class='grid-x sm-lb-event-row'>
+					$display.= "<div class='grid-x sm-lb-event-row sm-events-u".$uid."' id='sm-evt-u".$uid."e".$e."'>
 												<div class='cell small-8 sm-lb-eventname'>".$events[$e]['name']."</div>
 												<div class='cell small-3 sm-lb-eventscore'>".number_format($standings[$e][$uid]['evt'])."</div>
 												<div class='cell small-1 sm-lb-expandevent'> + </div>
@@ -487,7 +487,7 @@ class FSStandings{
 				
 					foreach($picks[$uid][$e] as $sid=>$sco){
 							
-						$display.= "<div class='grid-x sm-lb-surfers-row'>
+						$display.= "<div class='grid-x sm-lb-surfers-row sm-surfers-foru".$uid."e".$e."'>
 													<div class='cell small-8 sm-lb-surfer'>".$surfers[$sid]['name']."</div>
 													<div class='cell small-3 sm-lb-score'>".number_format($sco)."</div>
 													<div class='cell small-1'> </div>
