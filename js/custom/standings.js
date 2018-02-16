@@ -272,7 +272,7 @@ $( document ).ready(function() {
 //SMALL SCREEN LEADERBOARD NAVIGATION
 $( document ).ready(function() {
 	
-	$(".sm-lb-event-row").hide();
+	$(".sm-lb-eventscontainer").hide();
 	$(".sm-lb-surfers-row").hide();
 	
 	$(".sm-lb-row").click(function(){
@@ -283,13 +283,17 @@ $( document ).ready(function() {
 		
 			$(eventselector).slideUp("fast");
 			$(this).removeClass("sm-user-expanded");
-			$(this).children(".sm-lb-expanduser").css("border","1px solid blue");
+			
+			$(this).children(".sm-lb-expanduser").find(".closeduserrow").show("fast");
+			$(this).children(".sm-lb-expanduser").find(".openeduserrow").hide("fast");
 			
 		}else{
 			
 			$(eventselector).slideDown("fast");
 			$(this).addClass("sm-user-expanded");
-			$(this).children(".sm-lb-expanduser").css("border","1px solid black");
+			
+			$(this).children(".sm-lb-expanduser").find(".closeduserrow").hide("fast");
+			$(this).children(".sm-lb-expanduser").find(".openeduserrow").show("fast");
 		}
 		
 	});	
@@ -304,13 +308,17 @@ $( document ).ready(function() {
 			
 			$(teamselector).slideUp("fast");
 			$(this).removeClass("sm-team-expanded");
-			$(this).children(".sm-lb-expandevent").css("border","1px solid blue");
+			
+			$(this).children(".sm-lb-expandevent").find(".closedeventrow").show("fast");
+			$(this).children(".sm-lb-expandevent").find(".openedeventrow").hide("fast");
 			
 		}else{
 			
 			$(teamselector).slideDown("fast");
 			$(this).addClass("sm-team-expanded");
-			$(this).children(".sm-lb-expandevent").css("border","1px solid black");
+			
+			$(this).children(".sm-lb-expandevent").find(".closedeventrow").hide("fast");
+			$(this).children(".sm-lb-expandevent").find(".openedeventrow").show("fast");
 			
 		}
 		

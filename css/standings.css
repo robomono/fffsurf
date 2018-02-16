@@ -145,6 +145,23 @@
 .leaderboard-username{
 	
 }
+
+.lb-user-team-lg{
+	font-size:10pt;
+}
+
+.lb-user-name-lg{
+	float:left;
+	font-size:8pt;
+}
+
+.lb-user-team-md{
+	font-size:8pt;
+}
+
+.lb-user-team-sm{
+	font-size:10pt;
+}
 	
 .ranking{
 	padding-right:2px;
@@ -262,7 +279,9 @@
 /*-----SMALL SCREEN---*/
 
 .sm-lb-row{
-	border:1px solid red;
+	background-color:#ddd;
+	border-bottom:1px solid white;
+	cursor:pointer;
 }
 
 .sm-lb-chng{
@@ -271,13 +290,11 @@
 	padding-right:2px;
 	font-size:8pt;
 	text-align:center;
-	border:1px solid #ccc;
 }
 
 .sm-lb-username{
 	height:50px;
 	padding-top:13px;
-	border:1px solid #ccc;
 }
 
 .sm-lb-total{
@@ -285,49 +302,45 @@
 	padding-top:13px;
 	padding-right:15px;
 	text-align:right;
-	border:1px solid #ccc;
 }
 
 .sm-lb-expanduser{
 	height:50px;
 	padding-top:12px;
 	text-align:center;
-	border:1px solid #ccc;
 }
 
 .sm-lb-event-row{
-	border:3px solid #eee;
+	background-color:#eee;
+	border-bottom:1px solid white;
+	cursor:pointer;
 }
 	
 .sm-lb-eventname{
 	height:50px;
-	border:1px solid #eee;
 	padding-left:15px;
 	padding-top:12px;
 }
 	
 .sm-lb-eventscore{
 	height:50px;
-	border:1px solid #eee;
 	padding-top:12px;
 	text-align:right;
+	padding-right:15px;
 }
 	
 .sm-lb-expandevent{
 	height:50px;
-	border:1px solid #eee;
 	padding-top:12px;
 	text-align:center;
 }
 
 .sm-lb-surfers-row{
-	border:1px solid blue;
-	
+	border-bottom:1px solid #ddd;
 }
 
 .sm-lb-surfer{
 	height:50px;
-	border:1px solid #ccc;
 	padding-right:10px;
 	padding-top:12px;
 	text-align:right;
@@ -335,9 +348,9 @@
 	
 .sm-lb-score{
 	height:50px;
-	border:1px solid #ccc;
 	padding-top:12px;
 	text-align:right;
+	padding-right:15px;
 }
 
 

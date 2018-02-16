@@ -96,7 +96,7 @@ class FSStandings{
 		if (!$this->db_connection->connect_errno) {
 
 			//---GET ALL PICKS PER USER IN EVENT
-			$sql = "SELECT t.user_id,t.after_event,t.event_total,t.agg_total,t.rank,l.name,l.team
+			$sql = "SELECT t.user_id,t.after_event,t.event_total,t.agg_total,t.rank,l.name,l.team,l.short
 					FROM league_totals t
 					LEFT JOIN league_control AS l 
 					ON t.user_id = l.user_id
@@ -112,7 +112,7 @@ class FSStandings{
 				$ranking[$row['after_event']][$row['user_id']]['evt'] = $row['event_total'];
 				$users[$row['user_id']]['name'] = $row['name'];
 				$users[$row['user_id']]['team'] = $row['team'];
-				
+				$users[$row['user_id']]['short'] = $row['short'];
 			}
 		}
 		
@@ -241,8 +241,8 @@ class FSStandings{
 		$display.= "<div class='grid-x align-center eventleaderboardheader'><div class='small-12 cell'>EVENT RESULTS</div></div>";
 		//end of event leaderboard header
 		
-		
-		$display.= "<div class='grid-container standingstable'>";
+//-----------------BUILD FOR LARGE AND MEDIUM SCREENS		
+		$display.= "<div class='grid-container hide-for-small-only standingstable'>";
 		
 		foreach($totals as $uid=>$total){
 			$display.= "<div class='grid-x standingsrow eventrowu".$uid."'>"; //start row
@@ -252,7 +252,7 @@ class FSStandings{
 			//end build small points
 			
 			//----------------build big display results
-			$display.= "<div class='cell large-10 medium-10 hide-for-small-only standingsresults'>";
+			$display.= "<div class='cell large-10 medium-10 standingsresults'>";
 			$display.= "<div class='grid-x'>";
 			foreach($picks[$uid][$event_id] as $sid=>$pts){
 				$display.= "<div class='cell large-auto medium-auto standingssurfer pts$pts'>
@@ -275,6 +275,21 @@ class FSStandings{
 		
 		
 		$display.= "</div>";//ends grid-container standingstable
+		
+//-----------------END BUILD FOR LARGE AND MEDIUM SCREENS	
+
+
+
+//-----------------BUILD FOR SMALL SCREENS
+
+		$display.= "<div class='grid-container show-for-small-only sm-standingstable'>";
+		
+		
+		
+		$display.= "</div>";//ends grid-container standingstable
+
+//-----------------END BUILD FOR SMALL SCREENS
+
 		
 		return $display;
 		
@@ -369,7 +384,10 @@ class FSStandings{
 				$display.= "<div class='cell medium-2 leaderboard-username' id='lbnu".$uid."'>
 											<div class='grid-x align-center align-middle'>
 												<div class='cell large-1 medium-2 ranking'>".$changes[$uid]."</div>
-												<div class='cell large-11 medium-10'>".$users[$uid]['name']."</div>
+												<div class='cell large-11 medium-10'>
+																				<div class='show-for-large lb-user-team-lg'>".strtoupper($users[$uid]['team'])."</div>
+																				<div class='show-for-medium-only lb-user-team-md'>".strtoupper($users[$uid]['team'])."</div>
+												</div>
 											</div>
 										</div>";
 				
@@ -470,19 +488,29 @@ class FSStandings{
 			
 			$display.= "<div class='grid-x sm-lb-row' id='sm-lb-u".$uid."'>
 										<div class='cell small-1 sm-lb-chng'>".$changes[$uid]."</div>
-										<div class='cell small-6 sm-lb-username'>".$users[$uid]['name']."</div>
+										<div class='cell small-6 sm-lb-username'>
+																		<div class='lb-user-team-sm'>".strtoupper($users[$uid]['team'])."</div>
+										</div>
 										<div class='cell small-4 sm-lb-total'>".number_format($v1['pts'])."</div>
-										<div class='cell small-1 sm-lb-expanduser'> + </div>
+										<div class='cell small-1 sm-lb-expanduser'> 
+																	<i class='material-icons closeduserrow'>chevron_left</i>
+																	<i class='material-icons openeduserrow' style='display:none'>expand_more</i> 
+										</div>
 									</div>
 									";
-			
+									
+			$display.="<div class='sm-lb-eventscontainer sm-events-u".$uid."'>";
+				
 			for($e=1;$e<=11;$e++){
 				if($e<=$event_id){
 					
-					$display.= "<div class='grid-x sm-lb-event-row sm-events-u".$uid."' id='sm-evt-u".$uid."e".$e."'>
+					$display.= "<div class='grid-x sm-lb-event-row' id='sm-evt-u".$uid."e".$e."'>
 												<div class='cell small-8 sm-lb-eventname'>".$events[$e]['name']."</div>
 												<div class='cell small-3 sm-lb-eventscore'>".number_format($standings[$e][$uid]['evt'])."</div>
-												<div class='cell small-1 sm-lb-expandevent'> + </div>
+												<div class='cell small-1 sm-lb-expandevent'>
+																<i class='material-icons closedeventrow'>chevron_left</i>
+																<i class='material-icons openedeventrow' style='display:none'>expand_more</i> 
+												</div>
 											</div>";
 				
 					foreach($picks[$uid][$e] as $sid=>$sco){
@@ -493,16 +521,14 @@ class FSStandings{
 													<div class='cell small-1'> </div>
 												</div>";
 							
-					}
+					}//end for each picks
 					
-				}
-			}
+				}//end if event is lower than event id
+			}//end for each event
 			
-									
-		}
-		
-		
-		
+			$display.="</div>"; //ends events container for user
+										
+		}//ends for each user in standings
 		
 		$display.= "</div>";//ends small leaguetable contianer
 		//----------------------END SMALL LEADERBOARD
