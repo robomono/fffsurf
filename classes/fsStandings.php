@@ -284,6 +284,7 @@ class FSStandings{
 
 		$display.= "<div class='grid-container show-for-small-only sm-standingstable'>";
 		
+		$display.= "<div class='grid-x sm-standingsrow sm-eventrowu".$uid."'>"; //start row
 		
 		
 		$display.= "</div>";//ends grid-container standingstable
