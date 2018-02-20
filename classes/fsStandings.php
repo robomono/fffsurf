@@ -17,6 +17,230 @@ class FSStandings{
 		
 	}
 	
+	private function calculatepoints($round,$count){
+		
+		$points = $count['points'];
+		$scored = $count['scored'];
+		$wins = $count['wins'];
+		$losses = $count['losses'];
+		$unsurfed = $count['unsurfed'];
+		
+//		$toreturn.= " -------- " .$points ." -- </br>";
+//		$toreturn.= " -------- scor - " .$scored ."</br>";	
+//		$toreturn.= " -------- wins - " .$wins ."</br>";	
+//		$toreturn.= " -------- lose - " .$losses ."</br>";
+//		$toreturn.= " -------- uns - " .$unsurfed ."</br>";
+		
+		$bestpossible = $wins + $unsurfed;
+		$worstpossible = $losses + $unsurfed;
+		
+		if($round==2){$roundpoints = 500;}
+		if($round==3){$roundpoints = 1750;}
+		if($round==5){$roundpoints = 4000;}
+		if($round==6){$roundpoints = 5200;}
+		if($round==7){$roundpoints = 6500;}
+		if($round==8){$roundpoints = 10000;}
+		
+		//-------------QF-----QF-----SF-----SF-----F-------W--
+		$best[1][6] = 5200 + 5200 + 6500 + 6500 + 8000 + 10000;
+		//-------------QF-----SF-----SF-----F-------W--
+		$best[1][5] = 5200 + 6500 + 6500 + 8000 + 10000;
+		//-------------QF-----SF-----SF-----F-------W--
+		$best[1][4] = 6500 + 6500 + 8000 + 10000;
+		//--------------SF-----F-------W--
+		$best[1][3] = 6500 + 8000 + 10000;
+		//--------------F-------W--
+		$best[1][2] = 8000 + 10000;
+		//--------------W--
+		$best[1][1] = 10000;
+		
+		//-------------RD2--
+		$worst[1][1] = 500;
+		//-------------RD2---RD2--
+		$worst[1][2] = 500 + 500;
+		//-------------RD2---RD2---RD2--
+		$worst[1][3] = 500 + 500 + 500;
+		//-------------RD2---RD2---RD2---RD2
+		$worst[1][4] = 500 + 500 + 500 + 500;
+		//-------------RD2---RD2---RD2---RD2---RD2
+		$worst[1][5] = 500 + 500 + 500 + 500 + 500;
+		//-------------RD2---RD2---RD2---RD2---RD2---RD2
+		$worst[1][6] = 500 + 500 + 500 + 500 + 500 + 500;
+		
+		//-------------QF-----QF-----SF-----SF-----F-------W--
+		$best[2][6] = 5200 + 5200 + 6500 + 6500 + 8000 + 10000;
+		//-------------QF-----SF-----SF-----F-------W--
+		$best[2][5] = 5200 + 6500 + 6500 + 8000 + 10000;
+		//-------------QF-----SF-----SF-----F-------W--
+		$best[2][4] = 6500 + 6500 + 8000 + 10000;
+		//--------------SF-----F-------W--
+		$best[2][3] = 6500 + 8000 + 10000;
+		//--------------F-------W--
+		$best[2][2] = 8000 + 10000;
+		//--------------W--
+		$best[2][1] = 10000;
+		
+		//-------------RD2--
+		$worst[2][1] = 500;
+		//-------------RD2---RD2--
+		$worst[2][2] = 500 + 500;
+		//-------------RD2---RD2---RD2--
+		$worst[2][3] = 500 + 500 + 500;
+		//-------------RD2---RD2---RD2---RD2
+		$worst[2][4] = 500 + 500 + 500 + 500;
+		//-------------RD2---RD2---RD2---RD2---RD2
+		$worst[2][5] = 500 + 500 + 500 + 500 + 500;
+		//-------------RD2---RD2---RD2---RD2---RD2---RD2
+		$worst[2][6] = 500 + 500 + 500 + 500 + 500 + 500;
+		
+		//-------------QF-----QF-----SF-----SF-----F-------W--
+		$best[3][6] = 5200 + 5200 + 6500 + 6500 + 8000 + 10000;
+		//-------------QF-----SF-----SF-----F-------W--
+		$best[3][5] = 5200 + 6500 + 6500 + 8000 + 10000;
+		//-------------QF-----SF-----SF-----F-------W--
+		$best[3][4] = 6500 + 6500 + 8000 + 10000;
+		//--------------SF-----F-------W--
+		$best[3][3] = 6500 + 8000 + 10000;
+		//--------------F-------W--
+		$best[3][2] = 8000 + 10000;
+		//--------------W--
+		$best[3][1] = 10000;
+		
+		//--------------RD3--
+		$worst[3][1] = 1750;
+		//--------------RD3----RD3--
+		$worst[3][2] = 1750 + 1750;
+		//--------------RD3----RD3----RD3--
+		$worst[3][3] = 1750 + 1750 + 1750;
+		//--------------RD3----RD3----RD3----RD3
+		$worst[3][4] = 1750 + 1750 + 1750 + 1750;
+		//-------------RD3----RD3-----RD3----RD3----RD3
+		$worst[3][5] = 1750 + 1750 + 1750 + 1750 + 1750;
+		//-------------RD3-----RD3----RD3----RD3----RD3---RD3
+		$worst[3][6] = 1750 + 1750 + 1750 + 1750 + 1750 + 1750;
+		
+		//-------------QF-----QF-----SF-----SF-----F-------W--
+		$best[4][6] = 5200 + 5200 + 6500 + 6500 + 8000 + 10000;
+		//-------------QF-----SF-----SF-----F-------W--
+		$best[4][5] = 5200 + 6500 + 6500 + 8000 + 10000;
+		//-------------QF-----SF-----SF-----F-------W--
+		$best[4][4] = 6500 + 6500 + 8000 + 10000;
+		//--------------SF-----F-------W--
+		$best[4][3] = 6500 + 8000 + 10000;
+		//--------------F-------W--
+		$best[4][2] = 8000 + 10000;
+		//--------------W--
+		$best[4][1] = 10000;
+		
+		//--------------RD5--
+		$worst[4][1] = 4000;
+		//--------------RD5----RD5--
+		$worst[4][2] = 4000 + 4000;
+		//--------------RD5----RD5----RD5--
+		$worst[4][3] = 4000 + 4000 + 4000;
+		//--------------RD5----RD5----RD5----RD5
+		$worst[4][4] = 4000 + 4000 + 4000 + 4000;
+		//-------------RD5-----RD5----RD5----RD5----QF
+		$worst[4][5] = 4000 + 4000 + 4000 + 4000 + 6500;
+		//-------------RD5-----RD5----RD5----RD5----QF-----QF
+		$worst[4][6] = 4000 + 4000 + 4000 + 4000 + 6500 + 6500;
+		
+		//-------------QF----QF-----SF-----SF-----F-------W--
+		$best[5][6] = 5200 + 5200 + 6500 + 6500 + 8000 + 10000;
+		//-------------QF-----SF-----SF-----F-------W--
+		$best[5][5] = 5200 + 6500 + 6500 + 8000 + 10000;
+		//-------------SF-----SF-----F-------W--
+		$best[5][4] = 6500 + 6500 + 8000 + 10000;
+		//--------------SF-----F-------W--
+		$best[5][3] = 6500 + 8000 + 10000;
+		//--------------F-------W--
+		$best[5][2] = 8000 + 10000;
+		//--------------W--
+		$best[5][1] = 10000;
+		
+		//--------------RD5--
+		$worst[5][1] = 4000;
+		//--------------RD5----RD5--
+		$worst[5][2] = 4000 + 4000;
+		//--------------RD5----RD5----RD5--
+		$worst[5][3] = 4000 + 4000 + 4000;
+		//--------------RD5----RD5----RD5----RD5
+		$worst[5][4] = 4000 + 4000 + 4000 + 4000;
+		//-------------RD5-----RD5----RD5----RD5----QF
+		$worst[5][5] = 4000 + 4000 + 4000 + 4000 + 6500;
+		//-------------RD5-----RD5----RD5----RD5----QF-----QF
+		$worst[5][6] = 4000 + 4000 + 4000 + 4000 + 6500 + 6500;
+		
+		//-------------QF-----QF-----SF-----SF-----F-------W--
+		$best[6][6] = 5200 + 5200 + 6500 + 6500 + 8000 + 10000;
+		//-------------QF-----SF-----SF-----F-------W--
+		$best[6][5] = 5200 + 6500 + 6500 + 8000 + 10000;
+		//-------------SF-----SF-----SF-----F-------W--
+		$best[6][4] = 6500 + 6500 + 8000 + 10000;
+		//--------------SF-----F-------W--
+		$best[6][3] = 6500 + 8000 + 10000;
+		//--------------F-------W--
+		$best[6][2] = 8000 + 10000;
+		//--------------W--
+		$best[6][1] = 10000;
+		
+		//---------------QF----QF------QF----QF-----SF-----SF
+		$worst[6][6] = 5200 + 5200 + 5200 + 5200 + 6500 + 6500;
+		//---------------QF----QF------QF----QF-----SF---
+		$worst[6][5] = 5200 + 5200 + 5200 + 5200 + 6500;
+		//---------------QF----QF------QF----QF---
+		$worst[6][4] = 5200 + 5200 + 5200 + 5200;
+		//---------------QF----QF------QF--
+		$worst[6][3] = 5200 + 5200 + 5200;
+		//---------------QF----QF--
+		$worst[6][3] = 5200 + 5200;
+		//---------------QF----QF--
+		$worst[6][3] = 5200;
+		
+		//-------------SF-----SF-----SF-----F-------W--
+		$best[7][4] = 6500 + 6500 + 8000 + 10000;
+		//--------------SF-----F-------W--
+		$best[7][3] = 6500 + 8000 + 10000;
+		//--------------F-------W--
+		$best[7][2] = 8000 + 10000;
+		//--------------W--
+		$best[7][1] = 10000;
+		
+		//--------------SF--
+		$worst[7][1] = 6500;
+		//--------------SF------SF--
+		$worst[7][2] = 6500 + 6500;
+		//--------------SF------SF----F--
+		$worst[7][3] = 6500 + 6500 + 8000;
+		//--------------SF------SF----F-------W---
+		$worst[7][4] = 6500 + 6500 + 8000 + 10000;
+		
+		//-------------2-------1----
+		$best[8][2] = 8000 + 10000;
+		//--------------1--
+		$best[8][1] = 10000;
+		
+		//--------------2---
+		$worst[8][1] = 8000;
+		//--------------2-------1---
+		$worst[8][2] = 8000 + 10000;
+		
+		
+		
+		
+		$bestscore = $points + $best[$round][$bestpossible] + ($losses*$roundpoints);
+		$worstscore = $points + $worst[$round][$wins] + ($worstpossible*$roundpoints);
+		
+//		$toreturn.= "Best Possible: " .$bestscore ."</br>";
+//		$toreturn.= "Worst Possible: " .$worstscore ."</br></br>";
+		
+		$toreturn['best'] = $bestscore;
+		$toreturn['worst'] = $worstscore;
+		
+		return $toreturn;
+		
+	}
+	
 	private function getEventScores($event_id, $league_id){
 		
 		$this->db_connection = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
@@ -65,7 +289,7 @@ class FSStandings{
 					$picks[$uid][$eid][$pos]['pts'] = $scores[$sid][$eid]['pts'];
 					$picks[$uid][$eid][$pos]['res'] = $scores[$sid][$eid]['res'];
 					
-					if($eid==$event_id && $pos<=7){
+					if($eid==$event_id && $pos<=5){
 						$totals[$uid]+= $scores[$sid][$event_id]['pts'];
 					}
 					
@@ -73,12 +297,139 @@ class FSStandings{
 			}
 		}		
 		
-		arsort($totals);
+		arsort($totals);//sort highest to lowest
+		$livetotals = $totals;asort($livetotals);//sort lowest to highest
 		//end apply scores to picks and sort
 
 		$toreturn['picks'] = $picks;
 		$toreturn['totals'] = $totals;
+		$toreturn['livetotals'] = $livetotals;
 			
+		return $toreturn;
+		
+	}
+	
+	private function getCurrentRound($event_id,$picks,$totals){
+		
+		$this->db_connection = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
+		if (!$this->db_connection->set_charset("utf8")) {
+			$this->errors[] = $this->db_connection->error;
+		}
+		
+		//get all heats from current event
+		if (!$this->db_connection->connect_errno) {
+
+			$sql = "SELECT h.round,h.heat,h.player,h.surfer_id,h.result,h.jersey,e.nowsurfing
+					FROM heats as h
+					LEFT JOIN events as e
+					ON h.event_id = e.id
+					WHERE e.id=$event_id AND h.event_id=$event_id";
+			
+			$result = $this->db_connection->query($sql);
+			
+			while($row = mysqli_fetch_array($result)){
+				
+				$roundandheat = $row['nowsurfing'];
+				
+				$heats[$row['round']][$row['heat']][$row['player']]['sid'] = $row['surfer_id'];
+				$heats[$row['round']][$row['heat']][$row['player']]['res'] = $row['result'];
+				$heats[$row['round']][$row['heat']][$row['player']]['jer'] = $row['jersey'];
+				
+			}
+		}
+		
+		//get current round and heat
+		$pieces = explode(".", $roundandheat);
+		$thisround = $pieces[0];
+		$thisheat = $pieces[1];
+		
+		
+		$toreturn['allheats'] = $heats;
+		$toreturn['currentround'] = $thisround;
+		$toreturn['currentheat'] = $thisheat;
+		
+		return $toreturn;
+		
+	}
+	
+	private function calculateSurfersAndPoints($event_id,$heats,$thisround,$picks){
+		
+		//make array of surfers still to surf and surfers that are done with the heat
+		foreach($heats[$thisround] as $heat=>$v1){
+			foreach($v1 as $k2=>$v2){
+				if($v2['res']>0){
+					$surfed[] = $v2['sid'];
+				}else{
+					$tosurf[$heat][] = $v2['sid'];
+				}
+			}
+		}
+		
+		//go through each users picks and count losses and wins based on surfed and tosurf surfers
+		foreach($picks as $uid=>$v1){
+			foreach($v1[$event_id] as $pid=>$v2){
+				if($pid<6){//pick must be under 6 (starting lineup)
+					$sid = $v2['sid'];
+					if($v2['pts']>0){
+						//if points are more than 0 surfer lost and has been awarded points
+						$count[$uid]['scored'] +=1;
+						$count[$uid]['points'] += $v2['pts'];
+						$sorted[$uid]['scored'][] = $sid;
+					}else{
+						//points are 0 or less
+						if (in_array($sid, $surfed)) {
+							//no points but has surfed this round, meaning surfer won
+							$count[$uid]['wins'] +=1;
+							$sorted[$uid]['wins'][] = $sid;
+						}else{
+							//add this surfer to array of unsurfed picks
+							$sorted[$uid]['unsurfed'][] = $sid;
+							$count[$uid]['unsurfed'] += 1; 
+						}
+						
+					}
+				}
+			}
+		}
+		
+		//find if any user has two or more surfers in the same heat and count/discount to wins
+		foreach($heats[$thisround] as $heat=>$h1){	
+			
+			if($thisround==1 || $thisround==3){$thisheat = array($h1[1]['sid'],$h1[2]['sid'],$h1[3]['sid']);}
+			else{$thisheat = array($h1[1]['sid'],$h1[2]['sid']);}
+			
+			foreach($picks as $uid=>$v1){
+				//create array thisheat with all surfers in this heat
+					
+				//intersect heats. if count is more than 1 then user has two or more picks surfing against each other
+				if(count(array_intersect($thisheat, $sorted[$uid]['unsurfed']))==2){
+					$count[$uid]['wins'] +=1;
+					$count[$uid]['losses'] +=1;
+					$count[$uid]['unsurfed']-=2;
+				}
+				else if(count(array_intersect($thisheat, $sorted[$uid]['unsurfed']))==3){
+					$count[$uid]['wins'] +=1;
+					$count[$uid]['losses'] +=2;
+					$count[$uid]['unsurfed'] -=3;
+				}
+			}	
+		}
+		
+		
+		foreach($picks as $uid=>$v1){
+			$possible = $this->calculatepoints($thisround,$count[$uid]);	
+			$count[$uid]['best'] = $possible['best'];
+			$count[$uid]['worst'] = $possible['worst'];
+		}
+		
+		//count[$uid] - [wins] - [losses] - [unsurfed] - [scored] - [points] - [best] - [worst]
+		//sorted[$uid] - [scored] - [wins] - [unsurfed]
+		
+		$toreturn['sorted'] = $sorted;
+		$toreturn['count'] = $count;
+		
+		
 		return $toreturn;
 		
 	}
@@ -157,8 +508,8 @@ class FSStandings{
 			//live event
 			$navmenu='
 				<div class="grid-x align-center navmenu activeeventnav">
-					<div class="cell large-4 small-4">Live</div>
-					<div class="cell large-4 small-4">Team</div>
+					<div class="cell large-4 small-4"><a href="live.php?eid='.$event_id.'">Live</a></div>
+					<div class="cell large-4 small-4"><a href="teams.php?eid='.$event_id.'">Team</a></div>
 					<div class="cell large-4 small-4 selected">Standings</div>
 				</div>
 				';
@@ -199,6 +550,28 @@ class FSStandings{
 		
 		return $newarray;
 		
+	}
+	
+	private function sortLivePicks($count){
+		
+//		foreach($picks as $uid=>$v1){
+//			$toreturn.="</br><b>$uid</b></br>";
+//			$toreturn.="--- W: " .$count[$uid]['wins'] ."</br>";
+//			$toreturn.="--- L: " .($count[$uid]['losses'] + $count[$uid]['scored']) ."</br>";
+//			$toreturn.="--- U: " .$count[$uid]['unsurfed'] ."</br>";
+//			$toreturn.="--- BS: " .$count[$uid]['best'] ."</br>";
+//			$toreturn.="--- WS: " .$count[$uid]['worst'] ."</br>";
+//		}
+		
+		//sort more wins + less losses on top, more losses + less wins on bottom //adds factors (not actual points) as tiebrakers
+		foreach($count as $uid=>$v){
+			$bestscores[$uid] =  $count[$uid]['best'] + (($count[$uid]['wins'])*2) + $count[$uid]['unsurfed'] - (($count[$uid]['losses'])*2);
+			$toreturn.="$uid - ".$count[$uid]['best']." </br>";
+		}
+		
+		arsort($bestscores);
+		
+		return $bestscores;
 	}
 	
 	private function getLeaderboardChanges($event_id,$standings){
@@ -284,13 +657,50 @@ class FSStandings{
 
 		$display.= "<div class='grid-container show-for-small-only sm-standingstable'>";
 		
-		$display.= "<div class='grid-x sm-standingsrow sm-eventrowu".$uid."'>"; //start row
+		foreach($totals as $uid=>$total){
+			//build row with username and total event score
+			$display.= "<div class='grid-x sm-standingsrow sm-eventrowu".$uid."'>
+							<div class='cell small-8 sm-standings-username'>".strtoupper($users[$uid]['team'])."</div>
+							<div class='cell small-4 sm-standings-total'>".number_format($total)."</div>
+						</div>";
+			
+			//separate row with surfer-by-surfer score
+			$display.= "<div class='grid-x sm-surfersrow sm-teamrowu".$uid."'>";			
+			foreach($picks[$uid][$event_id] as $sid=>$pts){
+						
+				$display.="<div class='cell small-2 sm-standingssurfer pts$pts'>							
+								<div class='sm-standings-surferpoints'>".$pts."</div>
+								<div class='sm-standings-surfername'>".$surfers[$sid]['aka']."</div>
+							</div>";
+					
+			}
+			$display.= "</div>";
+				
+		}
 		
 		
+			
 		$display.= "</div>";//ends grid-container standingstable
 
 //-----------------END BUILD FOR SMALL SCREENS
 
+		
+		return $display;
+		
+	}
+	
+	private function displayRunningEventStandings($event_id,$surfers,$users,$picks,$totals,$scorerange){
+		
+		foreach($totals as $uid=>$total){
+				
+			//$display.="<b>$uid - ".$users[$uid]['team']."</b></br>";
+			
+			
+			
+				
+		}
+		
+		
 		
 		return $display;
 		
@@ -583,37 +993,60 @@ class FSStandings{
 			
 			
 		}
+		elseif($event_status==3){
+			
+			//running event
+			
+			//get detailed scores for each surfer/team
+			$scoresdata = $this->getEventScores($event_id, $league_id);
+			
+			$picks = $scoresdata['picks'];
+			$totals = $scoresdata['livetotals'];
+			
+			//get all rounds and heats from current event plus current round and heat
+			$eventround = $this->getCurrentRound($event_id,$picks,$totals);
+			
+			$allheats = $eventround['allheats'];
+			
+			$thisround = $eventround['currentround'];
+			$thisheat  =  $eventround['currentheat'];
+			
+			
+			//get possible scores
+			$surfersandpoints= $this->calculateSurfersAndPoints($event_id,$allheats,$thisround,$picks);
+
+			$count = $surfersandpoints['count'];//count[$uid] - [wins] - [losses] - [unsurfed] - [scored] - [points] - [best] - [worst]		
+			$sorted = $surfersandpoints['sorted'];//sorted[$uid] - [scored] - [wins] - [unsurfed]
+			
+			//sort scores by current standings (more wins less losses to more losses less wins)
+			$order = $this->sortLivePicks($count);
+			
+			//next----display standings
+			
+//----------EVENT STANDINGS DATA ENDS HERE			
+			
+			//get standings from this event/last event
+//			$overall = $this->getOverallStandings($event_id, $league_id);
+			
+//			$standings  = $overall['ranking'];
+//			$users	 	= $overall['users'];	
+						
+			//get leaderboard changes
+//			$changes = $this->getLeaderboardChanges($event_id,$standings);					
+			
+			//produce displayable standings
+//			$display .= $this->displayRunningEventStandings($event_id,$surfers,$users,$sortedpicks['desc'],$totals,$scorerange);
+			
+			//produce league leaderboard
+//			$display .= $this->displayLeagueStandings($event_id,$surfers,$users,$standings,$sortedpicks['desc'],$changes);
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		foreach($totals as $uid=>$total){
-			$toreturn .= $uid ." -- " .$total ."</br>";
 		}
 		
 		
-		foreach ($sortedpicks as $uid=>$v1){
-			foreach ($v1 as $sid=>$pts){
-				$toreturn .= $uid ." - " .$sid ." - " .$pts ."</br>";
-			}
-		}
 		
 		
 		
-		foreach($picks as $uid=>$v1){
-			foreach($v1 as $pos=>$v2){
-				$toreturn .= $uid ." - " .$pos ." - ";
-				$toreturn .= $v2['sid'] ." - " .$v2['res'] ." - " .$v2['pts'] ."</br>";
-			}
-		}
+		
 		
 		$navigation = $this->getNav($event_id,$event_status);
 		

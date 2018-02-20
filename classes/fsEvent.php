@@ -95,11 +95,11 @@ class FSEvent{
 		if (!$this->db_connection->connect_errno) {
 
 			//---GET ROUND
-			$sql = "SELECT p.user_id,p.pick_id,p.status,p.active,p.wc,u.user_name,u.user_team 
+			$sql = "SELECT p.user_id,p.pick_id,p.status,p.active,p.wc,u.name,u.team,u.short 
 					FROM league_picks p
-					LEFT JOIN users AS u
-					ON p.user_id = u.id
-					WHERE p.event=$event_id AND p.league_id=$league_id AND p.active<=7
+					LEFT JOIN league_control AS u
+					ON p.user_id = u.user_id
+					WHERE p.event=$event_id AND p.league_id=$league_id AND u.league_id=$league_id AND p.active<=7
 					ORDER BY p.pick_id";
 
 			$result = $this->db_connection->query($sql);
@@ -108,9 +108,10 @@ class FSEvent{
 				$picks[$row['pick_id']][] = $row['user_id'];
 				$pick_header[$row['pick_id']] .= " has-".$row['user_id'];
 				
-				$users[$row['user_id']]['name'] = $row['user_name'];
-				$users[$row['user_id']]['short'] = explode(" ",$row['user_name'])[0];
-				$users[$row['user_id']]['team'] = $row['user_team'];
+				$users[$row['user_id']]['name'] = $row['name'];
+				$users[$row['user_id']]['short'] = strtoupper($row['short']);
+				$users[$row['user_id']]['shortname'] = explode(" ",$row['name'])[0];
+				$users[$row['user_id']]['team'] = $row['team'];
 			}
 			//---END GET ROUND
 		}

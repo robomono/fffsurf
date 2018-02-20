@@ -82,6 +82,63 @@
 	background-color:#ddd;
 }
 
+
+.sm-standingstable{
+	
+	margin-bottom:30px;
+	
+}
+
+
+.sm-eventrowu{
+	
+	border:1px solid black;
+	
+}
+
+.sm-standings-username{
+	
+	padding:10px;
+	padding-top:20px;
+	border:1px solid red;
+
+}
+
+.sm-standings-total{
+	
+	font-size:15pt;
+	text-align:right;
+	padding:15px;
+	border:1px solid red;
+
+}
+
+
+
+.sm-standingssurfer{
+	
+	padding:5px;
+	text-align:center;
+	
+}
+
+.sm-standings-surferpoints{
+	
+	margin-top:7px;
+	
+}
+
+.sm-standings-surfername{	
+	margin-top:7px;
+	font-size:6pt;
+	font-weight:900;
+	margin-bottom:7px;
+}
+
+
+
+
+
 /*-------------------EVENT LEADERBOARD----------------------*/
 .eventleaderboardheader{
 	font-size:12pt;

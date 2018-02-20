@@ -88,11 +88,11 @@ class FSTeam{
 		if (!$this->db_connection->connect_errno) {
 
 			//---GET ROUND
-			$sql = "SELECT p.user_id,p.pick_id,p.status,p.active,p.wc,u.user_name,u.user_team 
+			$sql = "SELECT p.user_id,p.pick_id,p.status,p.active,p.wc,u.name,u.team,u.short
 					FROM league_picks p
-					LEFT JOIN users AS u
-					ON p.user_id = u.id
-					WHERE p.event=$event_id AND p.league_id=$league_id AND u.id =$user_id
+					LEFT JOIN league_control AS u
+					ON p.user_id = u.user_id
+					WHERE p.event=$event_id AND p.league_id=$league_id AND u.user_id = $user_id
 					ORDER BY p.active";
 
 			$result = $this->db_connection->query($sql);
@@ -100,9 +100,10 @@ class FSTeam{
 			while($row = mysqli_fetch_array($result)){
 				$picks[$row['user_id']][$row['active']] = $row['pick_id'];
 				
-				$users[$row['user_id']]['name'] = $row['user_name'];
-				$users[$row['user_id']]['short'] = explode(" ",$row['user_name'])[0];
-				$users[$row['user_id']]['team'] = $row['user_team'];
+				$users[$row['user_id']]['name'] = $row['name'];
+				$users[$row['user_id']]['shortname'] = explode(" ",$row['name'])[0];	//what user wants to set as name
+				$users[$row['user_id']]['short'] = $row['short'];						//what user wants displayed on limited space
+				$users[$row['user_id']]['team'] = $row['team'];
 			}
 			//---END GET ROUND
 		}
@@ -228,10 +229,9 @@ class FSTeam{
 					
 					<div class='large-1 medium-2 small-2 cell teamsurferpos'>$pos</div>
 					
-					<div class='large-3 medium-5 cell hide-for-small-only teamsurfername'>".$surfers[$sid]['name']."</div>
-					<div class='small-2 cell show-for-small-only teamsurfername'>".$surfers[$sid]['aka']."</div>
+					<div class='large-3 medium-5 small-6 cell teamsurfername'>".$surfers[$sid]['name']."</div>
 					
-					<div class='large-2 medium-2 small-2 cell teamsurferscore'>".$scores[$sid]['sco']."</div>
+					<div class='large-2 medium-2 small-4 cell teamsurferscore'>".number_format($scores[$sid]['sco'])."</div>
 					
 				</div>
 			";
@@ -239,8 +239,8 @@ class FSTeam{
 		}
 		
 		$toreturn.= "<div class='grid-x align-center startingscore'>
-									<div class='large-4 medium-7 small-4 cell' style='text-align:right;padding-right:20px;'>Total</div>
-									<div class='small-2 cell'>$startingscore</div>
+									<div class='large-5 medium-7 small-8 cell scoretitle'>Total</div>
+									<div class='large-1 small-4 medium-2 cell scorenumber'>".number_format($startingscore)."</div>
 								</div>";
 		
 		foreach($benchpicks as $sid=>$sco){
@@ -253,10 +253,9 @@ class FSTeam{
 					
 					<div class='large-1 medium-2 small-2 cell teamsurferpos'>$pos</div>
 					
-					<div class='large-3 medium-5 cell hide-for-small-only teamsurfername'>".$surfers[$sid]['name']."</div>
-					<div class='small-2 cell show-for-small-only teamsurfername'>".$surfers[$sid]['aka']."</div>
+					<div class='large-3 medium-5 small-6 cell teamsurfername'>".$surfers[$sid]['name']."</div>
 					
-					<div class='large-2 medium-2 small-2 cell teamsurferscore'>".$scores[$sid]['sco']."</div>
+					<div class='large-2 medium-2 small-4 cell teamsurferscore'>".number_format($scores[$sid]['sco'])."</div>
 					
 				</div>
 			";
@@ -272,18 +271,18 @@ class FSTeam{
 					
 					<div class='large-1 medium-2 small-2 cell teamsurferpos'> -- </div>
 					
-					<div class='large-3 medium-5 cell hide-for-small-only teamsurfername'>".$surfers[$sid]['name']."</div>
-					<div class='small-2 cell show-for-small-only teamsurfername'>".$surfers[$sid]['aka']."</div>
+					<div class='large-3 medium-5 small-6 cell teamsurfername'>".$surfers[$sid]['name']."</div>
 					
-					<div class='large-2 medium-2 small-2 cell teamsurferscore'>".$scores[$sid]['sco']."</div>
+					<div class='large-2 medium-2 small-4 cell teamsurferscore'>".number_format($scores[$sid]['sco'])."</div>
 					
 				</div>
 			";
 		}
 		
 		$toreturn.= "<div class='grid-x align-center bestscore'>
-									<div class='large-4 medium-7 small-4 cell' style='text-align:right;padding-right:20px;border-left:3px solid #ffd699;'>Team Best</div>
-									<div class='small-2 cell'>$bestscore</div>
+									<div class='large-1 medium-2 small-2 cell highlightscores highlight-team-best'> <i class='material-icons'>remove_red_eye</i> </div>
+									<div class='large-4 medium-5 small-6 cell scoretitle'>Team Best</div>
+									<div class='large-1 medium-2 small-4 cell scorenumber'>".number_format($bestscore)."</div>
 								</div>
 								
 								<div class='grid-x align-center availablestitle'>
@@ -304,10 +303,9 @@ class FSTeam{
 					
 						<div class='large-1 medium-2 small-2 cell teamsurferpos'>$pos</div>
 					
-						<div class='large-3 medium-5 cell hide-for-small-only teamsurfername'>".$surfers[$sid]['name']."</div>
-						<div class='small-2 cell show-for-small-only teamsurfername'>".$surfers[$sid]['aka']."</div>
+						<div class='large-3 medium-5 small-6 cell teamsurfername'>".$surfers[$sid]['name']."</div>
 					
-						<div class='large-2 medium-2 small-2 cell teamsurferscore'>".$scores[$sid]['sco']."</div>
+						<div class='large-2 medium-2 small-4 cell teamsurferscore'>".number_format($scores[$sid]['sco'])."</div>
 					
 					</div>
 				";
@@ -315,8 +313,9 @@ class FSTeam{
 		}
 		//print_r($availscorer);
 		$toreturn.= "<div class='grid-x align-center bestavailscore'>
-			<div class='large-4 medium-7 small-4 cell' style='text-align:right;padding-right:20px;'>Avail Best</div>
-			<div class='small-2 cell'>$availtotal</div>
+			<div class='large-1 medium-2 small-2 cell highlightscores highlight-best-available'> <i class='material-icons'>remove_red_eye</i> </div>
+			<div class='large-4 medium-5 small-6 cell scoretitle'> Avail Best</div>
+			<div class='large-1 medium-2 small-4 cell scorenumber'>".number_format($availtotal)."</div>
 		</div>";
 		
 		return $toreturn;

@@ -1,4 +1,6 @@
 
+/*--------STARTING LINEUP-----------------------*/
+
 .teamname{
 	font-weight:900;
 	text-align:center;
@@ -58,17 +60,37 @@
 }
 
 .teamsurferscore{
+	text-align:right;
 	font-weight:300;
 	padding-top:13px;padding-bottom:13px;
+	padding-right:30px;
 	border-bottom: 1px solid #d9d9d9;
 }
 
 .startingscore .cell{
 	font-weight:900;
-	text-align:left;
-	padding-left:0px;padding-right:0px;padding-top:17px;padding-bottom:17px;
+	padding-top:17px;padding-bottom:17px;
 	margin-bottom:15px;	
 	background-color:#f2f2f2;	
+}
+
+.highlightscores{
+	text-align:center;
+}
+
+.highlightscores .material-icons{
+	padding-top:2px;
+	font-size:11pt;
+}
+
+.scoretitle{
+	text-align:right;
+	padding-right:30px;
+}
+
+.scorenumber{
+	text-align:right;
+	padding-right:30px;
 }
 
 .availablestitle{
@@ -79,20 +101,24 @@
 	border-top: 3px solid #f2f2f2;	
 }
 
+.bestscore{}
+
 .bestscore .cell{
 	font-weight:900;
-	text-align:left;
-	padding-left:0px;padding-right:0px;padding-top:17px;padding-bottom:17px;
+	padding-top:17px;padding-bottom:17px;
 	margin-bottom:15px;	
 	background-color:#f2f2f2;	
 }
 
 .bestavailscore .cell{
 	font-weight:900;
-	text-align:left;
-	padding-left:0px;padding-right:0px;padding-top:17px;padding-bottom:17px;
+	padding-top:17px;padding-bottom:17px;
 	margin-bottom:15px;	
 	background-color:#f2f2f2;	
+}
+
+.highlight-team-best{
+	border-left:3px solid #ffd699;
 }
 
 .pos1{}
