@@ -376,6 +376,7 @@ class FSStandings{
 						$count[$uid]['scored'] +=1;
 						$count[$uid]['points'] += $v2['pts'];
 						$sorted[$uid]['scored'][] = $sid;
+						$sorted[$uid]['points'][$sid] = $v2['pts'];
 					}else{
 						//points are 0 or less
 						if (in_array($sid, $surfed)) {
@@ -689,15 +690,30 @@ class FSStandings{
 		
 	}
 	
-	private function displayRunningEventStandings($event_id,$surfers,$users,$picks,$totals,$scorerange){
+	private function displayRunningEventStandings($event_id,$surfers,$users,$order,$count,$sorted){
 		
-		foreach($totals as $uid=>$total){
+		
+		
+		foreach($order as $uid=>$useless){
 				
-			//$display.="<b>$uid - ".$users[$uid]['team']."</b></br>";
+			$display.="<b>$uid - ".$users[$uid]['name']."</b></br>";
 			
+			foreach($sorted[$uid]['wins'] as $k=>$v){
+				$display.="--- W --- $v - ".$surfers[$v]['name']."</br>";
+			}
 			
+			foreach($sorted[$uid]['unsurfed'] as $k=>$v){
+				$display.="--- U --- $v - ".$surfers[$v]['name']."</br>";
+			}
 			
-				
+			foreach($sorted[$uid]['scored'] as $k=>$v){
+				$display.= "--- L --- $v - ".$surfers[$v]['name']." - ";
+				$display.= $sorted[$uid]['points'][$v] ."</br>";
+			}
+			
+			$display.= "----------------------------------------------<b>" .number_format($count[$uid]['points'])."</b></br>";
+			$display.= "----------------------------------------BP: " .number_format($count[$uid]['best'])."</br>";
+			$display.= "----------------------------------------WP: " .number_format($count[$uid]['worst'])."</br></br>";
 		}
 		
 		
@@ -1026,16 +1042,16 @@ class FSStandings{
 //----------EVENT STANDINGS DATA ENDS HERE			
 			
 			//get standings from this event/last event
-//			$overall = $this->getOverallStandings($event_id, $league_id);
+			$overall = $this->getOverallStandings($event_id, $league_id);
 			
-//			$standings  = $overall['ranking'];
-//			$users	 	= $overall['users'];	
+			$standings  = $overall['ranking'];
+			$users	 	= $overall['users'];	
 						
 			//get leaderboard changes
 //			$changes = $this->getLeaderboardChanges($event_id,$standings);					
 			
 			//produce displayable standings
-//			$display .= $this->displayRunningEventStandings($event_id,$surfers,$users,$sortedpicks['desc'],$totals,$scorerange);
+			$display .= $this->displayRunningEventStandings($event_id,$surfers,$users,$order,$count,$sorted);
 			
 			//produce league leaderboard
 //			$display .= $this->displayLeagueStandings($event_id,$surfers,$users,$standings,$sortedpicks['desc'],$changes);
