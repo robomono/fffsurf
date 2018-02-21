@@ -410,6 +410,15 @@
 	padding-right:15px;
 }
 
+/*---------------EVENT STANDINGS LIVE-------*/
+
+.liveunsurfed{
+	background-color:#ccc;
+}
+
+.livewon{
+	background-color:#c6ffc9;
+}
 
 
 

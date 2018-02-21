@@ -392,6 +392,7 @@ class FSStandings{
 					}
 				}
 			}
+			asort($sorted[$uid]['points']);
 		}
 		
 		//find if any user has two or more surfers in the same heat and count/discount to wins
@@ -622,10 +623,6 @@ class FSStandings{
 			$display.= "<div class='grid-x standingsrow eventrowu".$uid."'>"; //start row
 			$display.= "<div class='cell large-2 medium-2 small-3 standingsuser'>" .$users[$uid]['team'] ."</div>"; //team name
 			
-			//build small points here
-			//end build small points
-			
-			//----------------build big display results
 			$display.= "<div class='cell large-10 medium-10 standingsresults'>";
 			$display.= "<div class='grid-x'>";
 			foreach($picks[$uid][$event_id] as $sid=>$pts){
@@ -641,7 +638,6 @@ class FSStandings{
 			}
 			$display.= "<div class='cell large-auto medium-auto standingsscores'>$total</div>";
 			$display.= "</div></div>";//ends grid-x	 //ends standingsresults
-			//----------------end build big display results
 
 			$display.= "</div>";//ends standings row
 		}
@@ -692,29 +688,71 @@ class FSStandings{
 	
 	private function displayRunningEventStandings($event_id,$surfers,$users,$order,$count,$sorted){
 		
+		//display event leaderboard header
+		$display.= "<div class='grid-x align-center eventleaderboardheader'><div class='small-12 cell'>EVENT RESULTS</div></div>";
+		//end of event leaderboard header
 		
+		//-----------------BUILD FOR LARGE AND MEDIUM SCREENS		
+		$display.= "<div class='grid-container hide-for-small-only standingstable'>";
 		
 		foreach($order as $uid=>$useless){
-				
-			$display.="<b>$uid - ".$users[$uid]['name']."</b></br>";
 			
-			foreach($sorted[$uid]['wins'] as $k=>$v){
-				$display.="--- W --- $v - ".$surfers[$v]['name']."</br>";
+			$display.= "<div class='grid-x standingsrow eventrowu".$uid."'>"; //start row
+			$display.= "<div class='cell large-2 medium-2 small-3 standingsuser'>" .$users[$uid]['team'] ."</div>"; //team name
+			
+			$display.= "<div class='cell large-10 medium-10 standingsresults'>";
+			$display.= "<div class='grid-x'>";
+			
+			foreach($sorted[$uid]['points'] as $sid=>$pts){
+				//display scored and points - ATTN THIS FOREACH WORKS DIFFERENTLY BC OF POINTS
+				$display.= "<div class='cell large-auto medium-auto standingssurfer pts".$pts."'>
+								<div class='outsurfer'>
+									<span data-tooltip aria-haspopup='true' class='has-tip' title='".$surfers[$sid]['name']."'>
+										" .$surfers[$sid]['aka'] ."
+									</span>
+								</div>
+								<div class='outpoints'>".$pts."</div>
+							</div>";
 			}
 			
-			foreach($sorted[$uid]['unsurfed'] as $k=>$v){
-				$display.="--- U --- $v - ".$surfers[$v]['name']."</br>";
+			foreach($sorted[$uid]['wins'] as $k=>$sid){
+				//display wins
+				$display.= "<div class='cell large-auto medium-auto standingssurfer livewon'>
+								<div class='outsurfer'>
+									<span data-tooltip aria-haspopup='true' class='has-tip' title='".$surfers[$sid]['name']."'>
+										" .$surfers[$sid]['aka'] ."
+									</span>
+								</div>
+							</div>";
 			}
 			
-			foreach($sorted[$uid]['scored'] as $k=>$v){
-				$display.= "--- L --- $v - ".$surfers[$v]['name']." - ";
-				$display.= $sorted[$uid]['points'][$v] ."</br>";
+			foreach($sorted[$uid]['unsurfed'] as $k=>$sid){
+				//display unsurfed
+				$display.= "<div class='cell large-auto medium-auto standingssurfer liveunsurfed'>
+								<div class='outsurfer'>
+									<span data-tooltip aria-haspopup='true' class='has-tip' title='".$surfers[$sid]['name']."'>
+										" .$surfers[$sid]['aka'] ."
+									</span>
+								</div>
+							</div>";
 			}
 			
-			$display.= "----------------------------------------------<b>" .number_format($count[$uid]['points'])."</b></br>";
-			$display.= "----------------------------------------BP: " .number_format($count[$uid]['best'])."</br>";
-			$display.= "----------------------------------------WP: " .number_format($count[$uid]['worst'])."</br></br>";
+			
+			
+			$display.= "<div class='cell large-auto medium-auto standingsscores'>
+							".number_format($count[$uid]['best'])."
+							".number_format($count[$uid]['points'])."
+							".number_format($count[$uid]['worst'])."
+						</div>";
+			$display.= "</div></div>";//ends grid-x	 //ends standingsresults
+
+			$display.= "</div>";//ends standings row
+			
 		}
+		
+		$display.= "</div>";		
+		
+		//-----------------END BUILD FOR LARGE AND MEDIUM SCREENS					
 		
 		
 		
