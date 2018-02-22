@@ -421,6 +421,54 @@
 }
 
 
+.lg-livetotal{
+	border:1px solid black;
+}
+
+.lg-livepredictions{
+	border:1px solid black;
+}
+
+.lg-bestscore{
+	font-size:8pt;
+	font-weight:900;
+	color:green;
+}
+
+.lg-worstscore{
+	font-weight:900;
+	font-size:8pt;
+	color:red;
+}
+
+.livescores{
+	background-color:#eee;
+	border-bottom:1px solid white;
+}
+
+.bestscore{
+	margin-top:5px;
+	font-weight:900;
+	font-size:6pt;
+	color:green;
+}
+
+.livetotal{
+	font-weight:900;
+	font-size:10pt;
+}
+
+.worstscore{
+	font-weight:900;
+	font-size:6pt;
+	color:red;
+}
+
+
+
+
+
+
 
 
 	

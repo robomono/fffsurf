@@ -703,6 +703,10 @@ class FSStandings{
 			$display.= "<div class='cell large-10 medium-10 standingsresults'>";
 			$display.= "<div class='grid-x'>";
 			
+			
+			
+			
+			
 			foreach($sorted[$uid]['points'] as $sid=>$pts){
 				//display scored and points - ATTN THIS FOREACH WORKS DIFFERENTLY BC OF POINTS
 				$display.= "<div class='cell large-auto medium-auto standingssurfer pts".$pts."'>
@@ -739,11 +743,14 @@ class FSStandings{
 			
 			
 			
-			$display.= "<div class='cell large-auto medium-auto standingsscores'>
-							".number_format($count[$uid]['best'])."
-							".number_format($count[$uid]['points'])."
-							".number_format($count[$uid]['worst'])."
-						</div>";
+			
+			$display.= "<div class='cell large-auto medium-auto livescores'>
+										<div class='bestscore'>".number_format($count[$uid]['best'])."</div>
+										<div class='livetotal'>".number_format($count[$uid]['points'])."</div>
+										<div class='worstscore'>".number_format($count[$uid]['worst'])."</div>
+								</div>";
+						
+						
 			$display.= "</div></div>";//ends grid-x	 //ends standingsresults
 
 			$display.= "</div>";//ends standings row
