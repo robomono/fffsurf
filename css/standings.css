@@ -1,5 +1,17 @@
-.standingstable{
+/*+++++++++++++++++++++++++++++++EVENT RESULTS+++++++++++++++++++++++++++++++*/
+
+.eventleaderboardheader{
+	font-size:12pt;
 	text-align:center;
+	border:1px solid #ccc;
+	padding-top:15px;
+	padding-bottom:15px;
+}
+
+/*-------------EVENT IS OVER - LARGE SCREENS --------------------*/
+
+.standingstable{
+	
 }
 
 .standingsrow{
@@ -13,23 +25,17 @@
 
 .standingsuser{
 	line-height:55px;
-	border:1px solid #ccc;
-}
-
-.smallstandingsresults{
-	padding:0px;
-	line-height:55px;
-	font-size:9pt;
-	font-weight:900;
+	border-bottom:1px solid #ccc;
 }
 
 .standingsresults{
 	padding:0px;
+	text-align:center;
 }
 
 .standingssurfer{
 	background-color:#ddd;
-}	
+}
 
 .standingssurfer span{
 	margin-top:15px;
@@ -47,11 +53,6 @@
 .pts10000{background-color:#f4d041;}/*won the event*/
 .standingsinj{background-color:black;color:#404040;}/*injured*/
 
-.smallstandingsresults .totalwins{background-color:#d4f9a7;color:#36402B;}
-.smallstandingsresults .notsurfed{background-color:#ddd;color:#404040;}
-.smallstandingsresults .totalrel{background-color:#C5D2FF;color:#313440;}
-.smallstandingsresults .totalloss{background-color:#f45b41;color:#401811;}
-
 .outsurfer{
 	margin-top:-5px;
 	font-size:11pt;
@@ -61,99 +62,123 @@
 	font-size:6pt;
 }
 
-.potentialscores{
-	font-size:9pt;
-	background-color:#ccc;
-}
-
-.currentscore{
-	font-weight:900;
-}
-
-.show-for-large .potentialbest{
-	margin-top:10px;
-}
-
-.show-for-large .potentialworst{
-}
-
 .standingsscores{
 	line-height:55px;
+	font-weight:900;
 	background-color:#ddd;
 }
 
+/*-------------EVENT IS OVER - SMALL SCREENS --------------------*/
 
 .sm-standingstable{
 	
-	margin-bottom:30px;
-	
 }
 
-
-.sm-eventrowu{
-	
-	border:1px solid black;
-	
+.sm-standingsrow{
+	margin-top:15px;
 }
 
-.sm-standings-username{
-	
-	padding:10px;
-	padding-top:20px;
-	border:1px solid red;
-
+.sm-standingsuser{
+	font-size:11pt;
+	padding-left:10px;
 }
 
 .sm-standings-total{
-	
-	font-size:15pt;
+	font-size:11pt;
 	text-align:right;
-	padding:15px;
-	border:1px solid red;
-
+	padding-right:10px;
 }
 
-
+.sm-surfersrow{
+	
+}
 
 .sm-standingssurfer{
-	
-	padding:5px;
+	height:50px;
 	text-align:center;
-	
+	border-bottom:1px solid white;
+}
+
+.sm-standings-surfername{
+	font-size:8pt;
 }
 
 .sm-standings-surferpoints{
-	
-	margin-top:7px;
-	
+	font-size:8pt;
 }
 
-.sm-standings-surfername{	
-	margin-top:7px;
-	font-size:6pt;
+/*-------------EVENT IS LIVE - LARGE SCREENS --------------------*/
+.liveunsurfed{
+	background-color:#ccc;
+}
+
+.livewon{
+	background-color:#c6ffc9;
+}
+
+
+.lg-livetotal{
+	border:1px solid black;
+}
+
+.lg-livepredictions{
+	border:1px solid black;
+}
+
+.lg-bestscore{
+	font-size:8pt;
 	font-weight:900;
-	margin-bottom:7px;
+	color:green;
+}
+
+.lg-worstscore{
+	font-weight:900;
+	font-size:8pt;
+	color:red;
+}
+
+.livescores{
+	background-color:#eee;
+	border-bottom:1px solid white;
+}
+
+.bestscore{
+	margin-top:5px;
+	font-weight:900;
+	font-size:6pt;
+	color:green;
+}
+
+.livetotal{
+	font-weight:900;
+	font-size:10pt;
+}
+
+.worstscore{
+	font-weight:900;
+	font-size:6pt;
+	color:red;
 }
 
 
+/*-------------EVENT IS LIVE - SMALL SCREENS --------------------*/
 
-
-
-/*-------------------EVENT LEADERBOARD----------------------*/
-.eventleaderboardheader{
-	font-size:12pt;
+.sm-standings-livescores{
 	text-align:center;
-	border:1px solid #ccc;
-	padding-top:15px;
-	padding-bottom:15px;
-}
-
-.highlighted-eventrow{
-	border:3px solid black;
+	font-size:9pt;
+	font-weight:900;
+	border:1px solid blue;
 }
 
 
-/*-------------------OVERALL LEADERBOARD--------------------*/
+.sm-livetotal{font-size:12pt;border:1px solid black;}
+.sm-bestscore{color:green;padding-top:2pt;border:1px solid green;}
+.sm-worstscore{color:red;padding-top:2pt;border:1px solid red;}
+
+
+/*+++++++++++++++++++++++++++++++EVENT LEADERBOARD+++++++++++++++++++++++++++++++*/
+
+/*-------------EVENT IS OVER - LEADERBOARD - LARGE SCREENS --------------------*/
 
 /*title of the leaderboard*/
 .leaguestandingsheader{
@@ -333,7 +358,8 @@
 	text-align:right;
 }
 
-/*-----SMALL SCREEN---*/
+
+/*-------------EVENT IS OVER - LEADERBOARD - SMALL SCREENS --------------------*/
 
 .sm-lb-row{
 	background-color:#ddd;
@@ -410,65 +436,5 @@
 	padding-right:15px;
 }
 
-/*---------------EVENT STANDINGS LIVE-------*/
-
-.liveunsurfed{
-	background-color:#ccc;
-}
-
-.livewon{
-	background-color:#c6ffc9;
-}
 
 
-.lg-livetotal{
-	border:1px solid black;
-}
-
-.lg-livepredictions{
-	border:1px solid black;
-}
-
-.lg-bestscore{
-	font-size:8pt;
-	font-weight:900;
-	color:green;
-}
-
-.lg-worstscore{
-	font-weight:900;
-	font-size:8pt;
-	color:red;
-}
-
-.livescores{
-	background-color:#eee;
-	border-bottom:1px solid white;
-}
-
-.bestscore{
-	margin-top:5px;
-	font-weight:900;
-	font-size:6pt;
-	color:green;
-}
-
-.livetotal{
-	font-weight:900;
-	font-size:10pt;
-}
-
-.worstscore{
-	font-weight:900;
-	font-size:6pt;
-	color:red;
-}
-
-
-
-
-
-
-
-
-	
