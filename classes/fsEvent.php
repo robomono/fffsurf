@@ -57,7 +57,8 @@ class FSEvent{
 				$event[$row['round']][$row['heat']][$row['player']]['jer'] = $row['jersey'];
 				
 				//records last registered round and heat for surfer
-				$nextheat[$row['surfer_id']] = $row['round'].".".$row['heat'];
+				$nextheat['round'][$row['surfer_id']] = $row['round'];
+				$nextheat['heat'][$row['surfer_id']] = $row['heat'];
 				
 				//records w/l/r/ww/u per round
 				if($row['round']==1 || $row['round']==3){

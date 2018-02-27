@@ -37,3 +37,24 @@ $(".allrounds").on( "mouseover",".bestavailscore", function() {
 
 	
 });
+
+
+//FOR LIVE EVENTS
+$( document ).ready(function() {
+	
+	//hide all matches showing surfers next rivals or who surfer lost against
+	$(".surfermatch").hide();
+	
+	$(".livelost").click(function(){
+		
+		var thissurfer = ($(this).attr('id').split('is-'))[1];
+		var thisexpand = ".for-" + thissurfer;
+		var thismatch = ".match-" + thissurfer;
+		
+		$(thismatch).slideDown("fast");
+		$(thisexpand).children(".closeduserrow").hide("fast");
+		$(thisexpand).children(".openeduserrow").show("fast");
+			
+	});
+	
+});

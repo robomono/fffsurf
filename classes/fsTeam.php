@@ -16,6 +16,87 @@ class FSTeam{
 	}
 	
 	
+	private function getFutureEventTeam($user_id,$event_id,$league_id){
+		
+		$this->db_connection = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
+		if (!$this->db_connection->set_charset("utf8")) {
+			$this->errors[] = $this->db_connection->error;
+		}
+
+		if (!$this->db_connection->connect_errno) {
+
+			//---GET ALL SURFERS IN ROUND 1 AKA ALL SURFERS IN EVENT
+			$sql = "SELECT pick_id,status,active,wc FROM league_picks WHERE user_id=$user_id AND event=$event_id";
+
+			$result = $this->db_connection->query($sql);
+			
+			if($result->num_rows==0){
+				//no team found
+				$teamresult = 0;
+			}
+			else if($result->num_rows>0){
+				//team exists
+				$teamresult = 1;
+				while($row = mysqli_fetch_array($result)){
+					$team[$row['active']] = $row['pick_id'];
+					
+					$teamsurfer[$row['pick_id']]['position'] = $row['active'];
+					$teamsurfer[$row['pick_id']]['status'] = $row['status'];
+					$teamsurfer[$row['pick_id']]['wc'] = $row['wc'];
+										
+				}
+				
+			}
+			
+			
+			if($teamresult==0){
+				
+				$lastevent = $event_id-1;
+				
+				$sql = "SELECT pick_id,status,active,wc FROM league_picks WHERE user_id=$user_id AND event=$lastevent AND wc=0";
+				
+				$result = $this->db_connection->query($sql);
+				
+				while($row = mysqli_fetch_array($result)){
+					$team[] = $row['pick_id'];
+					
+					$teamsurfer[$row['pick_id']]['position'] = $row['active'];
+					$teamsurfer[$row['pick_id']]['status'] = $row['status'];
+					$teamsurfer[$row['pick_id']]['wc'] = $row['wc'];
+					
+				}
+				
+				$query = "INSERT INTO league_picks (user_id,league_id,event,pick_id,active) VALUES ($user_id,$league_id,$event_id,?,?)";
+				$stmt = $this->db_connection->prepare($query);
+				$stmt ->bind_param("ii",$pick_id,$active);
+				
+				$this->db_connection->query("START TRANSACTION");
+				
+				foreach ($team as $key => $item) {
+					
+					$active 	= $key;
+					$pick_id 	= $item;
+					$stmt->execute();
+
+				}
+				
+				$stmt->close();
+				$this->db_connection->query("COMMIT");
+				
+			}
+			
+		}
+		
+		
+		$toreturn['team'] = $team;
+		$toreturn['surfer'] = $teamsurfer;
+		
+		
+		return $toreturn;
+		
+	}
+	
 	private function getAvailableScorers($user_id,$event_id,$league_id,$scores){
 		
 		$this->db_connection = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
@@ -321,7 +402,7 @@ class FSTeam{
 		return $toreturn;
 	}
 	
-	private function calculateLiveTeam($user_id,$eventdata,$surfers,$pickdata,$scores){
+	private function calculateLiveTeam($user_id,$eventdata,$surfers,$pickdata){
 		
 		$userpicks = $pickdata['picks']; //all of user picks
 		$scores = $eventdata['score'];	//scores per sid
@@ -365,11 +446,11 @@ class FSTeam{
 				}elseif($roundresult[$sid][$liveround]==0){
 					
 					if($k<=7){
-						$startunsurfed[$sid] = $nextheat[$sid];
+						$startunsurfed[$sid] = $nextheat['heat'][$sid];
 					}elseif($k>7 && $k<99){
-						$benchunsurfed[$sid] = $nextheat[$sid];
+						$benchunsurfed[$sid] = $nextheat['heat'][$sid];
 					}elseif($k>=100){
-						$outunsurfed[$sid] = $nextheat[$sid];
+						$outunsurfed[$sid] = $nextheat['heat'][$sid];
 					}	
 					
 				}
@@ -378,33 +459,11 @@ class FSTeam{
 			
 		}
 		
-		asort($startlost);
-		asort($benchlost);
+		arsort($startlost);
+		arsort($benchlost);
 		
-		arsort($startunsurfed);
-		arsort($benchunsurfed);
-		
-		
-		
-		foreach($startwon as $sid=>$v){
-//			$toreturn.= "$sid - $v </br>";
-		}
-		foreach($startunsurfed as $sid=>$v){
-//			$toreturn.= "$sid - $v </br>";
-		}
-		foreach($startlost as $sid=>$v){
-//			$toreturn.= "$sid - $v </br>";
-		}
-		
-		foreach($benchwon as $sid=>$v){
-//			$toreturn.= "-- $sid - $v </br>";
-		}
-		foreach($benchunsurfed as $sid=>$v){
-//			$toreturn.= "-- $sid - $v </br>";
-		}
-		foreach($benchlost as $sid=>$v){
-//			$toreturn.= "-- $sid - $v </br>";
-		}
+		asort($startunsurfed);
+		asort($benchunsurfed);
 		
 		
 		//display lineups
@@ -417,74 +476,138 @@ class FSTeam{
 		
 		foreach($startwon as $sid=>$v){
 			
-			$toreturn.="<div class='grid-x align-center startingsurfer pos$pos is-$sid'>
+			$toreturn.="<div class='grid-x align-center startingsurfer livewon is-$sid'>
 			
 						<div class='large-1 medium-2 small-2 cell teamsurferpos'>$pos</div>
 					
 						<div class='large-3 medium-5 small-6 cell teamsurfername'>".$surfers[$sid]['name']."</div>
 					
-						<div class='large-2 medium-2 small-4 cell teamsurferscore'>".number_format($scores[$sid]['sco'])."</div>
+						<div class='large-2 medium-2 small-4 cell teamsurferscore'>  </div>
 					
 					</div>";
+					
 			
 		}
 		
-		
-		foreach($startingpicks as $sid=>$sco){
+		foreach($startunsurfed as $sid=>$v){
 			
-			$pos = $scores[$sid]['pos'];
+			$r = $nextheat['round'][$sid];
+			$h = $nextheat['heat'][$sid];
 			
-			if(isset($scores[$sid])){
-				
-				$toreturn .= "
-					<div class='grid-x align-center startingsurfer pos$pos is-$sid'>
+			$toreturn.="<div class='grid-x align-center startingsurfer liveunsurfed is-$sid'>
 			
 						<div class='large-1 medium-2 small-2 cell teamsurferpos'>$pos</div>
 					
 						<div class='large-3 medium-5 small-6 cell teamsurfername'>".$surfers[$sid]['name']."</div>
 					
-						<div class='large-2 medium-2 small-4 cell teamsurferscore'>".number_format($scores[$sid]['sco'])."</div>
+						<div class='large-2 medium-2 small-4 cell teamsurferscore'>H".$nextheat['heat'][$sid]." </div>
 					
 					</div>";
-				
-			}else{
-				
-				$toreturn .= "
-					<div class='grid-x align-center startingsurfer pos$pos is-$sid'>
 			
-						<div class='large-1 medium-2 small-2 cell teamsurferpos'>$pos</div>
-					
-						<div class='large-3 medium-5 small-6 cell teamsurfername'>".$surfers[$sid]['name']."</div>
-					
-						<div class='large-2 medium-2 small-4 cell teamsurferscore'>".$eventdata['roundresults'][$sid][$liveround]."</div>
-					
+			//show surfer match (who this surfer will surf against this round)
+			$toreturn.="<div class='grid-x align-center surfermatch for-$sid'>
+							<div class='cell large-6 medium-9 small-12 unsurfedmatch'>
+							<div class='roundandheat'>Heat $h</div>
+							<div class='roundversus'>
+								".$surfers[$sid]['name']."
+							</div>";
+							
+							
+			foreach($eventdata['rounds'][$r][$h] as $k1=>$v1){		
+				if($v1['sid']!=$sid){$toreturn.="
+					<div class='roundversus'>
+						vs ".$surfers[$v1['sid']]['name']."
 					</div>";
+				}
+			}		
+						
+			$toreturn.="</div></div>";
 				
-			}
-
 		}
+		
+		foreach($startlost as $sid=>$v){
+			
+			$r = $nextheat['round'][$sid];
+			$h = $nextheat['heat'][$sid];
+			
+			$toreturn.="<div class='grid-x align-center startingsurfer livelost pos".$scores[$sid]['rnk']." is-$sid'>
+			
+						<div class='large-1 medium-2 small-2 cell teamsurferpos'>".$scores[$sid]['rnk']."</div>
+					
+						<div class='large-3 medium-5 small-6 cell teamsurfername'>".$surfers[$sid]['name']."</div>
+					
+						<div class='large-2 medium-2 small-4 cell teamsurferscore'>".number_format($scores[$sid]['pts'])."</div>
+						
+					</div>";
+			
+			//show surfer match (who this surfer will surf against this round)
+			$toreturn.="<div class='grid-x align-center surfermatch for-$sid'>
+							<div class='cell large-6 medium-9 small-12 unsurfedmatch'>
+							<div class='roundandheat'>Round $r Heat $h</div>";
+			
+			
+			foreach($eventdata['rounds'][$r][$h] as $k1=>$v1){		
+				if($v1['sid']!=$sid){$toreturn.="
+					<div class='roundversus'>
+						".$surfers[$v1['sid']]['name']."
+					</div>";
+				}
+			}		
+			
+			$toreturn.="<div class='roundversus'>def ".$surfers[$sid]['name']."</div>";
+			$toreturn.="</div></div>";
+			
+		}
+		
 		
 		$toreturn.= "<div class='grid-x align-center startingscore'>
 									<div class='large-5 medium-7 small-8 cell scoretitle'>Total</div>
 									<div class='large-1 small-4 medium-2 cell scorenumber'>".number_format($startingscore)."</div>
 								</div>";
-		
-		foreach($benchpicks as $sid=>$sco){
-			$pos = $scores[$sid]['pos'];
-			
-			$toreturn .= "
-					
-					<div class='grid-x align-center benchedsurfer pos$pos is-$sid'>
-					
+								
+								
+		foreach($benchwon as $sid=>$v){
+
+			$toreturn.="<div class='grid-x align-center startingsurfer livewon is-$sid'>
+
 						<div class='large-1 medium-2 small-2 cell teamsurferpos'>$pos</div>
-					
-						<div class='large-3 medium-5 small-6 cell teamsurfername'>".$surfers[$sid]['name']."</div>
-					
-						<div class='large-2 medium-2 small-4 cell teamsurferscore'>".number_format($scores[$sid]['sco'])."</div>
-					
-				</div>
-			";
+
+						 <div class='large-3 medium-5 small-6 cell teamsurfername'>".$surfers[$sid]['name']."</div>
+
+						<div class='large-2 medium-2 small-4 cell teamsurferscore'>  </div>
+
+					</div>";
+
 		}
+
+		foreach($benchunsurfed as $sid=>$v){
+
+			$toreturn.="<div class='grid-x align-center startingsurfer liveunsurfed is-$sid'>
+
+						<div class='large-1 medium-2 small-2 cell teamsurferpos'>$pos</div>
+
+						<div class='large-3 medium-5 small-6 cell teamsurfername'>".$surfers[$sid]['name']."</div>
+
+						<div class='large-2 medium-2 small-4 cell teamsurferscore'>H".$nextheat['heat'][$sid]." </div>
+
+					</div>";
+
+		}
+
+		foreach($benchlost as $sid=>$v){
+
+			$toreturn.="<div class='grid-x align-center startingsurfer livelost pos".$scores[$sid]['rnk']." is-$sid'>
+
+						<div class='large-1 medium-2 small-2 cell teamsurferpos'>".$scores[$sid]['rnk']."</div>
+
+						<div class='large-3 medium-5 small-6 cell teamsurfername'>".$surfers[$sid]['name']."</div>
+
+						<div class='large-2 medium-2 small-4 cell teamsurferscore'>".number_format($scores[$sid]['pts'])."</div>
+
+					</div>";
+
+		}
+		
 		
 		$toreturn.= "<div class='grid-x align-center startingscore'>
 									<div class='large-5 medium-7 small-8 cell scoretitle'>Bench Total</div>
@@ -567,7 +690,7 @@ class FSTeam{
 	
 	public function getTeam($event_id,$user_id){
 		
-		$user_id = 104; //<------------------------------eventually remove and use session id
+		$user_id = 108; //<------------------------------eventually remove and use session id
 		$league_id = 1; //<------------------------------CHANGE LEAGUE ID
 		
 		$fsevent = new FSEvent();
@@ -601,11 +724,38 @@ class FSTeam{
 			
 			$thisteam = $this->calculateLiveTeam($user_id,$eventdata,$surfers,$pickdata);
 			
+			$navmenu = $this->getNavMenu($event_id,$event_status);
 			
 			$display['team'] = $thisteam;
+			$display['nav'] = $navmenu;
+		}
+		else if($event_status == 2){
+			
+			//waivers approved
 			
 		}
-		
+		else if($event_status == 1){
+			
+			//open teams
+			$futureteam = $this->getFutureEventTeam($user_id,$event_id,$league_id);
+			
+			foreach($futureteam['team'] as $k1=>$v1){
+				
+				$show.="$k1 - $v1 </br>";
+				
+			}
+			
+			$display['team'] = $show;
+			
+			
+		}
+		else if($event_status == 0){
+			
+			//future event
+			
+			$display['team'] = "Event Window:";
+			
+		}
 		
 		
 		//TO DO return "Data: $toreturn";
