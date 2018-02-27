@@ -8,7 +8,7 @@
 	padding-bottom:15px;
 }
 
-/*-------------EVENT IS OVER - LARGE SCREENS --------------------*/
+/*-------------EVENT IS OVER - EVENT RESULTS - LARGE SCREENS --------------------*/
 
 .standingstable{
 	
@@ -68,7 +68,7 @@
 	background-color:#ddd;
 }
 
-/*-------------EVENT IS OVER - SMALL SCREENS --------------------*/
+/*-------------EVENT IS OVER - EVENT RESULTS - SMALL SCREENS --------------------*/
 
 .sm-standingstable{
 	
@@ -76,21 +76,25 @@
 
 .sm-standingsrow{
 	margin-top:15px;
+	padding-top:5px;
+	background-color:#f2f2f2;
 }
 
 .sm-standingsuser{
 	font-size:11pt;
+	padding-top:7px;
 	padding-left:10px;
 }
 
 .sm-standings-total{
-	font-size:11pt;
+	font-size:12pt;
+	font-weight:900;
 	text-align:right;
 	padding-right:10px;
+	padding-top:4px;
 }
 
 .sm-surfersrow{
-	
 }
 
 .sm-standingssurfer{
@@ -100,19 +104,21 @@
 }
 
 .sm-standings-surfername{
-	font-size:8pt;
+	font-size:10pt;
 }
 
 .sm-standings-surferpoints{
 	font-size:8pt;
 }
 
-/*-------------EVENT IS LIVE - LARGE SCREENS --------------------*/
+/*-------------EVENT IS LIVE - EVENT RESULTS - LARGE SCREENS --------------------*/
 .liveunsurfed{
+	padding-top:8px;
 	background-color:#ccc;
 }
 
 .livewon{
+	padding-top:8px;
 	background-color:#c6ffc9;
 }
 
@@ -161,20 +167,29 @@
 }
 
 
-/*-------------EVENT IS LIVE - SMALL SCREENS --------------------*/
+/*-------------EVENT IS LIVE - EVENT RESULTS - SMALL SCREENS --------------------*/
 
 .sm-standings-livescores{
 	text-align:center;
 	font-size:9pt;
 	font-weight:900;
-	border:1px solid blue;
 }
 
+.sm-livetotal{font-size:12pt;padding-top:4px;text-align:right;}
+.sm-bestscore{color:green;font-size:8pt;text-align:right;padding-right:10px;}
+.sm-worstscore{color:red;font-size:8pt;text-align:right;padding-right:10px;}
 
-.sm-livetotal{font-size:12pt;border:1px solid black;}
-.sm-bestscore{color:green;padding-top:2pt;border:1px solid green;}
-.sm-worstscore{color:red;padding-top:2pt;border:1px solid red;}
+.sm-livestandings-surfername{
+	font-size:10pt;
+}
 
+.sm-livestandings-surferpoints{
+	font-size:10pt;
+}
+
+.sm-livelost{padding-top:6px;}
+.sm-livewon{padding-top:10px;background-color:#c6ffc9;}
+.sm-liveunsurfed{padding-top:10px;background-color:#ccc;}
 
 /*+++++++++++++++++++++++++++++++EVENT LEADERBOARD+++++++++++++++++++++++++++++++*/
 

@@ -15,6 +15,20 @@ class FSEvent{
 	
 	public function getEventStatus($event_id){
 		
+		$points[2] = 500;
+		$points[3] = 1750;
+		$points[5] = 4000;
+		$points[6] = 5200;
+		$points[7] = 6500;
+		$points[8] = 8000;
+		
+		$rank[2] = 25;
+		$rank[3] = 13;
+		$rank[5] = 9;
+		$rank[6] = 5;
+		$rank[7] = 3;
+		$rank[8] = 2;
+		
 		$this->db_connection = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
 		if (!$this->db_connection->set_charset("utf8")) {
@@ -24,7 +38,7 @@ class FSEvent{
 		if (!$this->db_connection->connect_errno) {
 
 			//---GET ROUND
-			$sql = "SELECT e.name, e.status, h.round, h.heat, h.player, h.surfer_id, h.result, h.jersey
+			$sql = "SELECT e.name,e.status,e.nowsurfing, h.round, h.heat, h.player, h.surfer_id, h.result, h.jersey
 					FROM events AS e
 					LEFT JOIN heats AS h
 					ON e.id = h.event_id
@@ -33,26 +47,65 @@ class FSEvent{
 
 			$result = $this->db_connection->query($sql);
 			
-			$liveflag=0;
-			
 			while($row = mysqli_fetch_array($result)){
 				$eventstatus = $row['status'];
 				$eventname = $row['name'];
+				$currentroundandheat = $row['nowsurfing'];
 				
 				$event[$row['round']][$row['heat']][$row['player']]['sid'] = $row['surfer_id'];
-				$event[$row['round']][$row['heat']][$row['player']]['sco'] = $row['result'];
+				$event[$row['round']][$row['heat']][$row['player']]['rnk'] = $row['result'];
 				$event[$row['round']][$row['heat']][$row['player']]['jer'] = $row['jersey'];
+				
+				//records last registered round and heat for surfer
+				$nextheat[$row['surfer_id']] = $row['round'].".".$row['heat'];
+				
+				//records w/l/r/ww/u per round
+				if($row['round']==1 || $row['round']==3){
+					if($row['result']==1){
+						$roundresults[$row['surfer_id']][$row['round']] = 12;
+						$roundresults[$row['surfer_id']][($row['round']+1)] = 11;
+					}
+					else if($row['result']==2 || $row['result']==3){
+						$roundresults[$row['surfer_id']][$row['round']] = 22;
+					}else if($row['result']==0){
+						$roundresults[$row['surfer_id']][$row['round']] = 0;
+					}
+				}
+				else if($row['round']!=1 && $row['round']!=3){
+					if($row['result']==1){
+						$roundresults[$row['surfer_id']][$row['round']] = 12;
+					}
+					else if($row['result']==2){
+						$roundresults[$row['surfer_id']][$row['round']] = 33;
+					}else if($row['result']==0){
+						$roundresults[$row['surfer_id']][$row['round']] = 0;
+					}
+				}
+				
+				//records point score if surfer scored 2
+				if(($row['round']!=1 && $row['round']!=4) && $row['result']==2){
+					$score[$row['surfer_id']]['pts'] = $points[$row['round']];
+					$score[$row['surfer_id']]['rnk'] = $rank[$row['round']];
+				}
+				else if($row['round']==8 && $row['result']==1){
+					$score[$row['surfer_id']]['pts'] = 10000;
+					$score[$row['surfer_id']]['rnk'] = 1;
+				}
 
 			}
 			//---END GET ROUND
 			
-			$return['status'] = $eventstatus;
-			$return['name'] = $eventname;
-			$return['rounds'] = $event;
+			$return['status'] = $eventstatus;					//event status
+			$return['name'] = $eventname;							//name
+			$return['current'] = $currentroundandheat;//current (or last registered) round and heat
+			$return['rounds'] = $event;								//allrounds
+			$return['nextheat'] = $nextheat;					//next heat per surfer
+			$return['score'] = $score;								//score per surfer
+			$return['roundresults'] = $roundresults;	//result per surfer per round
 			
-			return $return;
-
 		}//connection errors
+		
+		return $return;
 		
 	}
 	

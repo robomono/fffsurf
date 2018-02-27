@@ -785,8 +785,8 @@ class FSStandings{
 					$display.= "<div class='grid-x sm-surfersrow sm-teamrowu".$uid."'>";			
 					foreach($sorted[$uid]['points'] as $sid=>$pts){
 						//display scored and points - ATTN THIS FOREACH WORKS DIFFERENTLY BC OF POINTS
-						$display.= "<div class='cell small-2 sm-standingssurfer livelost pts".$pts."'>
-										<div class='sm-standings-surfername'>
+						$display.= "<div class='cell small-2 sm-standingssurfer sm-livelost pts".$pts."'>
+										<div class='sm-livestandings-surfername'>
 											<span data-tooltip aria-haspopup='true' class='has-tip' title='".$surfers[$sid]['name']."'>
 												" .$surfers[$sid]['aka'] ."
 											</span>
@@ -797,8 +797,8 @@ class FSStandings{
 				
 					foreach($sorted[$uid]['unsurfed'] as $k=>$sid){
 						//display unsurfed
-						$display.= "<div class='cell small-2 sm-standingssurfer liveunsurfed'>
-										<div class='sm-standings-surfername'>
+						$display.= "<div class='cell small-2 sm-standingssurfer sm-liveunsurfed'>
+										<div class='sm-livestandings-surfername'>
 											<span data-tooltip aria-haspopup='true' class='has-tip' title='".$surfers[$sid]['name']."'>
 												" .$surfers[$sid]['aka'] ."
 											</span>
@@ -808,8 +808,8 @@ class FSStandings{
 				
 					foreach($sorted[$uid]['wins'] as $k=>$sid){
 						//display wins
-						$display.= "<div class='cell small-2 sm-standingssurfer livewon'>
-										<div class='sm-standings-surfername'>
+						$display.= "<div class='cell small-2 sm-standingssurfer sm-livewon'>
+										<div class='sm-livestandings-surfername'>
 											<span data-tooltip aria-haspopup='true' class='has-tip' title='".$surfers[$sid]['name']."'>
 												" .$surfers[$sid]['aka'] ."
 											</span>
