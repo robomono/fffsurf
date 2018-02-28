@@ -168,5 +168,112 @@
 
 
 
+/*--------------------EDITABLE TEAM--------------------*/
+.instructions .cell{
+	background-color:black;
+	margin-bottom:10px;
+	padding:15px;
+	font-size:9pt;
+	color:white;
+	text-align:center;
+}
+
+.instructions .material-icons{
+	padding-top:3px;
+	font-size:10pt;
+}
+
+#sortable1 { list-style-type: none;margin:0px;}
+#sortable2 { list-style-type: none;margin:0px;}
+
+#sortable1 li:hover {cursor:pointer;}
+#sortable2 li:hover {cursor:pointer;}
+
+.ui-state-highlight { height: 58px; }
+
+
+.icon-move{
+	
+}
+
+.teamsurfer{
+	
+}
+
+.movinghandle{
+	height:57px;
+	padding-top:18px;
+	text-align:center;
+}
+
+.teamsurfername{
+	padding:15px;
+	font-weight:900;
+}
+
+.isactive{
+	
+}
+
+.isbench{
+	
+}
+
+.isactive .movinghandle{
+	background-color:#E1E6FA;
+	color:#183152;
+	border-bottom: 1px solid white;
+}
+
+.isactive .teamsurfername{
+	background-color:#E1E6FA;
+	color:#183152;
+	border-bottom: 1px solid white;
+}
+
+.isbench .movinghandle{
+	background-color:#194759;
+	color:#BFDCF5;
+	border-bottom: 1px solid white;
+}
+
+.isbench .teamsurfername{
+	background-color:#194759;
+	color:#BFDCF5;
+	border-bottom: 1px solid white;
+}
+
+.isinactive{
+	background-color:#eee;
+	color:#bbb;
+	border-bottom: 1px solid white;
+}
+
+
+
+.forbiddenmove{
+	background-color:red;
+	color:white;
+}
+
+.teamchangebuttons{
+	text-align:center;
+	margin-top:10px;
+	margin-bottom:30px;
+}
+
+.savechanges a{
+	padding:15px;
+	width:150px;
+	background-color:green;
+}
+
+.cancelchanges a{
+	padding:15px;
+	width:150px;
+	background-color:red;
+}
+
+
 
 

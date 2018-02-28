@@ -49,11 +49,16 @@
 	
 	<div class="allrounds"> </div>
 	
+ 	<div class="tracker"> </div>
+	<div class="serialized"> </div>
+	<div class="messages"> </div>
 
     <script src="js/vendor/jquery.js"></script>
     <script src="js/vendor/what-input.js"></script>
     <script src="js/vendor/foundation.js"></script>
     <script src="js/app.js"></script>
+	
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"> </script>
 	
 	<script src="js/custom/menu.js"></script>
 	<script src="js/custom/team.js"></script>

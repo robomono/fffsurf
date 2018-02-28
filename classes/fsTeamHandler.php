@@ -18,6 +18,22 @@ if (isset($_POST) && is_array($_POST)) {
 	}
 	
 	
+	//update team lineup after user presses on "Save" lineup button
+	if($action == "updateTeamChanges"){
+		
+		//comma separated list of ids in the order they are displayed (order in which user set them up)
+		$allids 	= $_POST["allids"];
+		
+		$fsteam = new FSTeam();
+		$return = $fsteam->updateTeam($event_id,$allids);
+
+		//echo json_encode($return);
+		//print_r($return['test']);
+		
+		echo json_encode($return);
+	}
+	
+	
 	
 }
 	

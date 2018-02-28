@@ -15,6 +15,86 @@ class FSTeam{
 		include "fsEvent.php";
 	}
 	
+	public function updateTeam($event_id,$allids){
+		
+		$user_id = 108; //<------------------------------eventually remove and use session id
+		$league_id = 1; //<------------------------------CHANGE LEAGUE ID
+		
+		//explode $allids to have array each with string posXsidXXXX
+		$exploded_ids = explode(",",$allids);
+		
+		//further separate exploded_ids to create array with sid, lastpos, newpos
+		foreach($exploded_ids as $k=>$id){	
+			$changes[$k]['sid'] = explode("sid",$id)[1];
+			$changes[$k]['lastpos'] = substr( explode("sid",$id)[0], 3 );//trims the first 3 chars "pos" in exploded array
+		}
+		
+		$this->db_connection = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
+		if (!$this->db_connection->set_charset("utf8")) {
+			$this->errors[] = $this->db_connection->error;
+		}
+
+		if (!$this->db_connection->connect_errno) {
+
+			$query = "UPDATE league_picks SET active=? 
+								WHERE user_id=$user_id 
+								AND league_id=$league_id 
+								AND event=$event_id 
+								AND pick_id=? 
+								AND active=?;";
+								
+			$stmt = $this->db_connection->prepare($query);
+			$stmt ->bind_param("iii",$newpos,$pid,$lastpos);
+	
+			$this->db_connection->query("START TRANSACTION");
+	
+			foreach ($changes as $k => $v) {				
+				$newpos	 		= $k;
+				$pid 				= $v['sid'];
+				$lastpos		= $v['lastpos'];
+				$stmt->execute();
+			}
+		
+			$stmt->close();
+			$this->db_connection->query("COMMIT");
+			
+		}
+		
+		
+		return "success";
+		
+	}
+	
+	private function getUserData($user_id,$league_id){
+		
+		$this->db_connection = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
+		if (!$this->db_connection->set_charset("utf8")) {
+			$this->errors[] = $this->db_connection->error;
+		}
+
+		if (!$this->db_connection->connect_errno) {
+
+			//---GET ROUND
+			$sql = "SELECT name,team,short
+					FROM league_control
+					WHERE user_id=$user_id AND league_id=$league_id";
+
+			$result = $this->db_connection->query($sql);
+			
+			while($row = mysqli_fetch_array($result)){
+				$user['id'] = $user_id;
+				$user['name'] = $row['name'];
+				$user['team'] = $row['team'];
+				$user['short'] = $row['short'];
+			}
+			//---END GET ROUND
+		}
+		
+		return $user;
+		
+	}
 	
 	private function getFutureEventTeam($user_id,$event_id,$league_id){
 		
@@ -27,7 +107,7 @@ class FSTeam{
 		if (!$this->db_connection->connect_errno) {
 
 			//---GET ALL SURFERS IN ROUND 1 AKA ALL SURFERS IN EVENT
-			$sql = "SELECT pick_id,status,active,wc FROM league_picks WHERE user_id=$user_id AND event=$event_id";
+			$sql = "SELECT pick_id,status,active,wc FROM league_picks WHERE user_id=$user_id AND event=9 ORDER BY active";
 
 			$result = $this->db_connection->query($sql);
 			
@@ -54,7 +134,7 @@ class FSTeam{
 				
 				$lastevent = $event_id-1;
 				
-				$sql = "SELECT pick_id,status,active,wc FROM league_picks WHERE user_id=$user_id AND event=$lastevent AND wc=0";
+				$sql = "SELECT pick_id,status,active,wc FROM league_picks WHERE user_id=$user_id AND event=$lastevent AND wc=0 ORDER BY active";
 				
 				$result = $this->db_connection->query($sql);
 				
@@ -633,6 +713,79 @@ class FSTeam{
 		return $toreturn;
 	}
 	
+	private function displayEditableTeam($user,$event_id,$league_id,$surfers,$moveableteam){
+		
+		$user_id = $user['id'];
+		$username = $user['name'];
+		$userteam = $user['team'];
+		
+		//DISPLAY TEAM NAME AND USER
+		$toreturn.= "
+			<div class='grid-x align-center teamheader'>						
+				<div class='small-12 cell teamname'>".$userteam."</div>
+				<div class='small-12 cell teamuser'>".$username."</div>
+			</div>";
+		//END DISPLAY TEAM NAME AND USER
+		
+		//DISPLAY MOVE INSTRUCTIONS
+		$toreturn.= "
+			<div class='grid-x align-center align-middle instructions'>						
+				<div class='large-6 medium-9 small-12 step1 cell'>
+					<i>Hold and drag <i class='material-icons'>menu</i> to move surfer to a new position.</i>
+				</div>
+				<div class='large-6 medium-9 small-12 step2 cell'>
+					<i>Press the Save button to save lineup changes</i>
+				</div>
+			</div>";
+		//END DISPLAY INSTRUCTIONS
+		
+		//DISPLAY MAIN TEAM
+		$toreturn.="<ul id='sortable1' class='connectedSortable'>";
+		
+			foreach($moveableteam['team'] as $pos=>$sid){
+				if($pos<=5){
+					$toreturn.= "
+						<li class='movable-surfer' id='pos".$pos."sid".$sid."'>
+				 			<div class='grid-x align-center align-middle teamsurfer isactive'>
+				 				<div class='large-1 medium-1 small-2 cell movinghandle'> <i class='material-icons icon-move'>menu</i> </div>
+				 				<div class='large-5 medium-8 small-10 cell teamsurfername'>".$surfers[$sid]['name']."</div>
+				 			</div>
+		 			</li>";
+				}
+			}
+		
+			$toreturn.= "</ul>";
+			//END DISPLAY MAIN TEAM
+			
+			//DISPLAY BENCHED TEAM
+			$toreturn.="<ul id='sortable2' class='connectedSortable'>";
+			
+			foreach($moveableteam['team'] as $pos=>$sid){
+				if($pos>5 && $pos<=99){
+					$toreturn.= "
+						<li class='movable-surfer' id='pos".$pos."sid".$sid."'>
+				 			<div class='grid-x align-center align-middle teamsurfer isbench'>
+				 				<div class='large-1 medium-1 small-2 cell movinghandle'> <i class='material-icons icon-move'>menu</i> </div>
+				 				<div class='large-5 medium-8 small-10 cell teamsurfername'>".$surfers[$sid]['name']."</div>
+				 			</div>
+				 		</li>";
+				}
+			}
+			
+			$toreturn.= "</ul>";
+			//END DISPLAY BENCHED TEAM
+			
+			//DISPLAY CHANGES BUTTONS
+			$toreturn.= "<div class='grid-x align-center align-middle teamchangebuttons'>";
+			$toreturn.= "<div class='large-2 medium-3 small-5 cell cancelchanges'> <a class='button'>Revert</a> </div>";
+			$toreturn.= "<div class='large-2 medium-3 small-5 cell savechanges'> <a class='button'>Save</a> </div>";
+			$toreturn.= "</div>";
+			//END DISPLAY CHANGES BUTTON
+		
+		return $toreturn;
+		
+	}
+	
 	private function getNavMenu($event_id,$event_status){
 		
 		if($event_status==0){
@@ -648,8 +801,8 @@ class FSTeam{
 			$navmenu='
 				<div class="grid-x align-center navmenu idleeventnav">
 					<div class="cell large-4 small-4 selected">Team</div>
-					<div class="cell large-4 small-4">Waivers</div>
-					<div class="cell large-4 small-4">Leaderboard</div>
+					<div class="cell large-4 small-4"><a href="waivers.php?eid='.$event_id.'">Waivers</a></div>
+					<div class="cell large-4 small-4"><a href="standings.php?eid='.$event_id.'">Leaderboard</a></div>
 				</div>
 			';
 			
@@ -737,16 +890,16 @@ class FSTeam{
 		else if($event_status == 1){
 			
 			//open teams
+			$user = $this->getUserData($user_id,$league_id);
+			
 			$futureteam = $this->getFutureEventTeam($user_id,$event_id,$league_id);
 			
-			foreach($futureteam['team'] as $k1=>$v1){
-				
-				$show.="$k1 - $v1 </br>";
-				
-			}
+			$moveableteam = $this->displayEditableTeam($user,$event_id,$league_id,$surfers,$futureteam);
 			
-			$display['team'] = $show;
+			$navmenu = $this->getNavMenu($event_id,$event_status);
 			
+			$display['team'] = $moveableteam;
+			$display['nav'] = $navmenu;
 			
 		}
 		else if($event_status == 0){
@@ -754,7 +907,7 @@ class FSTeam{
 			//future event
 			
 			$display['team'] = "Event Window:";
-			
+			$display['nav'] = $navmenu;
 		}
 		
 		
