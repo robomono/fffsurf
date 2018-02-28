@@ -121,7 +121,7 @@ class FSEvent{
 		if (!$this->db_connection->connect_errno) {
 
 			//---GET ROUND
-			$sql = "SELECT id,name,img,aka FROM surfers";
+			$sql = "SELECT id,name,img,aka,wildcard,for_event FROM surfers";
 
 			$result = $this->db_connection->query($sql);
 		
@@ -129,7 +129,8 @@ class FSEvent{
 				$surfers[$row['id']]['name'] = $row['name'];
 				$surfers[$row['id']]['aka'] = $row['aka'];
 				$surfers[$row['id']]['img'] = $row['img'];
-				
+				$surfers[$row['id']]['wc'] = $row['wildcard'];
+				$surfers[$row['id']]['for_event'] = $row['for_event'];
 			}
 			//---END GET ROUND
 		}
