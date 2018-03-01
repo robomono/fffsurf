@@ -1,279 +1,40 @@
-
-/*--------STARTING LINEUP-----------------------*/
-
-.teamname{
-	font-weight:900;
-	text-align:center;
-	font-size:25pt;
-	background-color:#ddd;
-}
-
-.teamuser{
-	font-weight:300;
-	text-align:center;
-	font-size:15pt;
-	background-color:#ddd;
-	margin-bottom:10px;
-}
-
-.startingsurfer {
-	
-}
-
-.benchedsurfer{
-	margin-bottom: 1px;
-}
-
-.benchedsurfer .cell{
-	
-}
-
-.outsurfer{
-	
-}
-
-.outsurfer .cell{
-	
-}
-
-.bestscorer .teamsurferpos{
-	border-left:3px solid #ffd699;
-}
-
-.bestavailscorer{
-	
-}
-
-.teamsurfername{
-	font-weight:900;
-	text-align:left;
-	padding-left:10px;padding-right:0px;padding-top:13px;padding-bottom:13px;
-	border-bottom: 1px solid #d9d9d9;
-}
-
-.teamsurferpos{
-	font-weight:900;
-	text-align:center;
-	font-size:8pt;
-	padding-top:17px;padding-bottom:13px;
-	border-bottom: 1px solid #d9d9d9;
-}
-
-.teamsurferscore{
-	text-align:right;
-	font-weight:300;
-	padding-top:13px;padding-bottom:13px;
-	padding-right:30px;
-	border-bottom: 1px solid #d9d9d9;
-}
-
-.startingscore .cell{
-	font-weight:900;
-	padding-top:17px;padding-bottom:17px;
-	margin-bottom:15px;	
-	background-color:#f2f2f2;	
-}
-
-.highlightscores{
-	text-align:center;
-}
-
-.highlightscores .material-icons{
-	padding-top:2px;
-	font-size:11pt;
-}
-
-.scoretitle{
-	text-align:right;
-	padding-right:30px;
-}
-
-.scorenumber{
-	text-align:right;
-	padding-right:30px;
-}
-
-.availablestitle{
-	font-weight:900;
-	font-size:10pt;
-	text-align:left;
-	padding-left:0px;padding-right:0px;padding-top:17px;padding-bottom:17px;
-	border-top: 3px solid #f2f2f2;	
-}
-
-.bestscore{}
-
-.bestscore .cell{
-	font-weight:900;
-	padding-top:17px;padding-bottom:17px;
-	margin-bottom:15px;	
-	background-color:#f2f2f2;	
-}
-
-.bestavailscore .cell{
-	font-weight:900;
-	padding-top:17px;padding-bottom:17px;
-	margin-bottom:15px;	
-	background-color:#f2f2f2;	
-}
-
-.highlight-team-best{
-	border-left:3px solid #ffd699;
-}
-
-.pos1{}
-.pos2{}
-.pos3{}
-.pos5{}
-.pos9{}
-.pos13{}
-.pos25{}
-	
-	
-/*----------------------------- LIVE TEAM -----------------*/
-.livewon .teamsurferpos{border-left:5px solid #c6ffc9;}
-
-.liveunsurfed .teamsurferpos{border-left:5px solid #ccc;}
-
-.pos1 .teamsurferpos{border-left:5px solid #f4d041;}
-.pos2 .teamsurferpos{border-left:5px solid #f4d041;}
-.pos3 .teamsurferpos{border-left:5px solid #f4b841;}
-.pos5 .teamsurferpos{border-left:5px solid #f4b541;}
-.pos9 .teamsurferpos{border-left:5px solid #f49541;}
-.pos13 .teamsurferpos{border-left:5px solid #f47a42;}
-.pos25 .teamsurferpos{border-left:5px solid #f45b41;}
-
-
-
-.unsurfedmatch{
-	background-color:#f2f2f2;
+.tablecell{
+	padding:3px;
+	width:2%;
+	border-right:1px solid #f2f2f2;
 	border-bottom:1px solid #ccc;
-}
-
-.roundandheat{
-	padding:5px;
-	text-align:center;
-	font-size:10pt;
-}
-
-.roundversus{
-	padding:8px;
-	text-align:center;
-	font-weight:900;
-	font-size:10pt;
-}
-
-.score{border:1px solid black;}
-.expandmatch{}
-
-
-
-/*--------------------EDITABLE TEAM--------------------*/
-.instructions .cell{
-	background-color:black;
-	margin-bottom:10px;
-	padding:15px;
-	font-size:9pt;
-	color:white;
 	text-align:center;
 }
 
-.instructions .material-icons{
-	padding-top:3px;
-	font-size:10pt;
+.group1{background-color:#ffff99;}
+.group2{background-color:#ffcc99;}
+.group3{background-color:#ffcccc;}
+.group4{background-color:#ffccff;}
+
+.gap1{
+	width:20%;
+	border:1px solid #f2f2f2;
+	border-bottom:1px solid #ccc;
+	text-align:right;
 }
 
-#sortable1 { list-style-type: none;margin:0px;}
-#sortable2 { list-style-type: none;margin:0px;}
+.gap2{
+	width:24%;
+	border:1px solid #f2f2f2;
+	border-bottom:1px solid #ccc;
+	text-align:right;
+}
 
-#sortable1 li:hover {cursor:pointer;}
-#sortable2 li:hover {cursor:pointer;}
+.gap3{
+	width:24%;
+	border:1px solid #f2f2f2;
+	border-bottom:1px solid #ccc;
+	text-align:right;
+}
 
-.ui-state-highlight { height: 58px; }
-
-
-.icon-move{
+.leagueremaining{
+	padding-left:20px;
+	padding-right:20px;
+	border:1px solid #ccc;
 	
 }
-
-.teamsurfer{
-	
-}
-
-.movinghandle{
-	height:57px;
-	padding-top:18px;
-	text-align:center;
-}
-
-.teamsurfername{
-	padding:15px;
-	font-weight:900;
-}
-
-.isactive{
-	
-}
-
-.isbench{
-	
-}
-
-.isactive .movinghandle{
-	background-color:#E1E6FA;
-	color:#183152;
-	border-bottom: 1px solid white;
-}
-
-.isactive .teamsurfername{
-	background-color:#E1E6FA;
-	color:#183152;
-	border-bottom: 1px solid white;
-}
-
-.isbench .movinghandle{
-	background-color:#194759;
-	color:#BFDCF5;
-	border-bottom: 1px solid white;
-}
-
-.isbench .teamsurfername{
-	background-color:#194759;
-	color:#BFDCF5;
-	border-bottom: 1px solid white;
-}
-
-.isinactive{
-	background-color:#eee;
-	color:#bbb;
-	border-bottom: 1px solid white;
-}
-
-
-
-.forbiddenmove{
-	background-color:red;
-	color:white;
-}
-
-.teamchangebuttons{
-	text-align:center;
-	margin-top:10px;
-	margin-bottom:30px;
-}
-
-.savechanges a{
-	padding:15px;
-	width:150px;
-	background-color:green;
-}
-
-.cancelchanges a{
-	padding:15px;
-	width:150px;
-	background-color:red;
-}
-
-
-
-

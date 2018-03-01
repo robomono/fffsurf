@@ -16,7 +16,7 @@ class FSWaivers{
 	}
 	
 	
-	private function getPastLeaguePicks($event_id,$league_id,$surfers){
+	private function getPastLeaguePicks($user_id,$event_id,$league_id,$surfers){
 		
 		$lastevent = $event_id - 1;
 		
@@ -32,81 +32,75 @@ class FSWaivers{
 
 			//---GET ALL PICKS PER USER IN EVENT
 			$sql = "SELECT user_id,event,pick_id,active 
-					FROM league_picks WHERE league_id=$league_id AND event=$lastevent AND wc=0";
+					FROM league_picks WHERE league_id=$league_id AND (event=$lastevent OR event=$event_id) ORDER BY active";
 			
 			$result = $this->db_connection->query($sql);
 			
 			while($row = mysqli_fetch_array($result)){
-				
+				$picks[$row['user_id']][$row['event']][$row['active']] = $row['pick_id'];
 				$users[$row['user_id']] = 1;	//create array with one entry per user for league count
-				$picked[$row['pick_id']] += 1;	//count number of teams in which each pick is a member of
-
-				
 			}
 		}
 		//end get all picks
 		
-		$leaguesize = 9;
+		$leaguesize = count($users);
 		
-		if($leaguesize==2)						{ $top5 = 1; $next6to10 = 1; $next11to22 = 1; $next23to34 = 1; }
-		elseif($leaguesize==3)					{ $top5 = 1; $next6to10 = 1; $next11to22 = 1; $next23to34 = 2; }
+		if($leaguesize==2)							{ $top5 = 1; $next6to10 = 1; $next11to22 = 1; $next23to34 = 1; }
+		elseif($leaguesize==3)					{ $top5 = 1; $next6to10 = 1; $next11to22 = 1; $next23to34 = 1; }
 		elseif($leaguesize==4)					{ $top5 = 1; $next6to10 = 1; $next11to22 = 1; $next23to34 = 2; }
 		elseif($leaguesize==5)					{ $top5 = 1; $next6to10 = 1; $next11to22 = 2; $next23to34 = 2; }
-		elseif($leaguesize==6)					{ $top5 = 1; $next6to10 = 1; $next11to22 = 2; $next23to34 = 3; }
+		elseif($leaguesize==6)					{ $top5 = 1; $next6to10 = 1; $next11to22 = 2; $next23to34 = 2; }
 		elseif($leaguesize==7)					{ $top5 = 1; $next6to10 = 1; $next11to22 = 2; $next23to34 = 3; }
 		elseif($leaguesize==8)					{ $top5 = 1; $next6to10 = 1; $next11to22 = 2; $next23to34 = 4; }
 		elseif($leaguesize==9)					{ $top5 = 1; $next6to10 = 1; $next11to22 = 2; $next23to34 = 4; }
-		elseif($leaguesize==10)					{ $top5 = 1; $next6to10 = 2; $next11to22 = 3; $next23to34 = 4; }
+		elseif($leaguesize==10)					{ $top5 = 1; $next6to10 = 1; $next11to22 = 3; $next23to34 = 4; }
+		elseif($leaguesize==11)					{ $top5 = 1; $next6to10 = 2; $next11to22 = 4; $next23to34 = 4; }
+		elseif($leaguesize==12)					{ $top5 = 2; $next6to10 = 2; $next11to22 = 4; $next23to34 = 4; }
+		elseif($leaguesize==13)					{ $top5 = 2; $next6to10 = 2; $next11to22 = 4; $next23to34 = 5; }
+		elseif($leaguesize==14)					{ $top5 = 2; $next6to10 = 2; $next11to22 = 4; $next23to34 = 5; }
+		elseif($leaguesize==15)					{ $top5 = 2; $next6to10 = 2; $next11to22 = 5; $next23to34 = 5; }
+		elseif($leaguesize==16)					{ $top5 = 2; $next6to10 = 2; $next11to22 = 5; $next23to34 = 6; }
+		elseif($leaguesize==17)					{ $top5 = 2; $next6to10 = 2; $next11to22 = 5; $next23to34 = 6; }
+		elseif($leaguesize==18)					{ $top5 = 2; $next6to10 = 2; $next11to22 = 5; $next23to34 = 7; }
+		elseif($leaguesize==19)					{ $top5 = 2; $next6to10 = 3; $next11to22 = 6; $next23to34 = 7; }
+		elseif($leaguesize==20)					{ $top5 = 3; $next6to10 = 3; $next11to22 = 6; $next23to34 = 7; }
 		
 		//the multipliers below should add to 34
-		$top5total = $top5 *5;
-		$next6to10total = $next6to10 *5;
-		$next11to22total = $next11to22 *12;
-		$next23to34total = $next23to34 *12; //10 qualified through QS + 2 WSL wildcards
+//		$top5total = $top5 *5;
+//		$next6to10total = $next6to10 *5;
+//		$next11to22total = $next11to22 *12;
+//		$next23to34total = $next23to34 *12; //10 qualified through QS + 2 WSL wildcards
 		
-		
-		$totalneeded = $leaguesize * 8;
-		
-		$display.="<div class='grid-x align-center align-middle' style='font-size:15pt'>
-					<div class='large-6 medium-6 small-8 cell'>";
-		
-		
-		$display.= "League Size: $leaguesize </br> Total Needed: $totalneeded </br></br>";
-		
-		$display.= "R1 - R5 --- $top5 surfer</br> 
-					Top 5 Total: $top5total </br> 
-					Remaining: " .($totalneeded - $top5total) ."</br></br>";
-		
-		$display.= "R6 - R10 --- $next6to10 surfer</br>
-					Next 10 Total: $next6to10total </br> 
-					Remaining: " .($totalneeded - $top5total - $next6to10total) ."</br></br>";
-		
-		$display.= "R11 - R22 --- $next11to22 surfer</br>
-					Next 10 Total: $next11to22total  </br>
-					Remaining: " .($totalneeded - $top5total - $next10total - $next11to22total) ."</br></br>";
-					
-		$display.= "R23 - R34 --- $next23to34 surfer</br>
-					Next 10 Total: $next23to34total  </br>
-					Remaining: " .($totalneeded - $top5total - $next10total - $next11to22total - $next23to34total) ."</br></br>";
-		
-		
+		//calculate remaining surfers
 		foreach($surfers as $sid=>$v){
-			$display.="$sid - ".$surfers[$sid]['name'] ." - " .$surfers[$sid]['wc'] ."</br>";
-			if($sid<=1005){
-				$surfers[$sid]['available'] = $top5;
-				$surfers[$sid]['available'] = $surfers[$sid]['available'] - $surfercount[$sid];
-			}elseif($sid>1015){
-				$surfers[$sid]['available'] = $lowerhalf;
-				$surfers[$sid]['available'] = $surfers[$sid]['available'] - $surfercount[$sid];
-			}elseif($sid<=1015 && $sid>1005){
-				$surfers[$sid]['available'] = $next10;
-				$surfers[$sid]['available'] = $surfers[$sid]['available'] - $surfercount[$sid];
+			if($v['wc']==0){
+				
+				if($sid>1000 && $sid<=1005){
+					$surfers[$sid]['available'] = $top5;
+					$surfers[$sid]['available'] = $surfers[$sid]['available'] - $picked[$sid];
+				}elseif($sid>1005 && $sid<=1010){
+					$surfers[$sid]['available'] = $next6to10;
+					$surfers[$sid]['available'] = $surfers[$sid]['available'] - $picked[$sid];
+				}elseif($sid>1010 && $sid<=1022){
+					$surfers[$sid]['available'] = $next11to22;
+					$surfers[$sid]['available'] = $surfers[$sid]['available'] - $picked[$sid];
+				}elseif($sid>1022){
+					$surfers[$sid]['available'] = $next23to34;
+					$surfers[$sid]['available'] = $surfers[$sid]['available'] - $picked[$sid];
+				}
+				
 			}
 		}
 		
 		
+		foreach($users as $uid=>$v){
+			
+			$display.= "$uid </br>";
+			$display.= "---- " .sizeof($picks[$uid][$lastevent]) ."</br>";
+			$display.= "---- " .sizeof($picks[$uid][$event_id]) ."</br>";
+			
+		}
 		
-		$display.="</div></div>";
 		
 		return $display;
 		
@@ -125,9 +119,11 @@ class FSWaivers{
 		
 		if($event_status == 1){
 			
-			$waivers = $this->getPastLeaguePicks($event_id,$league_id,$surfers);
+			$surfers = $this->getPastLeaguePicks($user_id,$event_id,$league_id,$surfers);
  			
-			$display = $waivers;
+			
+			
+			$display = $surfers;
 			
 		}
 		else{
