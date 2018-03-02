@@ -176,7 +176,7 @@ class FSWaivers{
 		
 		foreach($surfers as $sid=>$v){
 			if($v['available']>0){
-				$waivers[$sid] = $v['available'];
+				$availables[$sid] = $v['available'];
 				$display.="$sid - " .$v['aka'] ." - " .$v['available'] ."</br>";
 			}
 		}
@@ -195,7 +195,7 @@ class FSWaivers{
 		
 		
 		$toreturn['topwildcards'] = $topwildcards;
-		$toreturn['waivers'] = $waivers;
+		$toreturn['waivers'] = $availables;
 		$toreturn['bottomwildcards'] = $bottomwildcards;
 		
 		return $toreturn;
@@ -209,9 +209,89 @@ class FSWaivers{
 		$bottomwildcards = $ready['bottomwildcards'];
 		
 		
-		$display.= sizeof($topwildcards) ."<br>";
-		$display.= sizeof($waivers) ."<br>";
-		$display.= sizeof($bottomwildcards) ."<br>";
+		//------SHOW INJURY REPLACEMENTS FOR USERS TEAM
+		if(sizeof($topwildcards)>0){
+			
+			$display.="<div class='grid-x'><div class='large-6 medium-9 small-12 cell'><b>Team Injury Replacements</b></div></div>
+								<div class='grid-x'>";
+			
+			foreach($topwildcards as $wid=>$inj){
+				
+				$display.="<div class='large-4 medium-5 small-8 cell'>
+											".$surfers[$wid]['name']." replacing ".$surfers[$inj]['name']."
+										</div>
+										
+									<div class='large-2 medium-4 small-4 cell'>
+											<a class='button pickinstantir' id='sid$sid'> Add ".$surfers[$wid]['aka']."</a>
+									</div>";
+				
+			}
+			
+			$display.= "</div>";
+			
+		}
+		//--------END INJURY REPLACEMENTS FOR USERS TEAM
+		
+		//------SHOW GENERAL WAIVERS
+		if(sizeof($waivers)>0){
+			
+			$display.="<div class='grid-x'><div class='large-12 medium-9 small-12 cell'><b>Waivers</b></div></div>
+								<div class='grid-x'>";
+			
+			foreach($waivers as $wid=>$v){
+				
+				$display.="<div class='large-4 medium-5 small-8 cell'>".$surfers[$wid]['name']."</div>
+									<div class='large-2 medium-4 small-4 cell'>
+											<a class='button requestwv' id='sid$sid'> Request ".$surfers[$wid]['aka']."</a>
+									</div>";
+				
+			}
+			
+			$display.= "</div>";
+			
+		}
+		//------END GENERAL WAIVERS
+		
+		//------SHOW WILDCARDS
+		if(sizeof($bottomwildcards[1])>0){
+			
+			$display.="<div class='grid-x'><div class='large-12 medium-9 small-12 cell'><b>Wildcards</b></div></div>
+								<div class='grid-x'>";
+			
+			foreach($bottomwildcards[1] as $k=>$wid){
+				
+				$display.="<div class='large-4 medium-5 small-8 cell'>".$surfers[$wid]['name']."</div>							
+									<div class='large-2 medium-4 small-4 cell'>
+											<a class='button requestwc' id='sid$sid'> Request ".$surfers[$wid]['aka']."</a>
+									</div>";
+			}
+			
+			
+			$display.= "</div>";
+		}
+		//------END WILDCARDS
+		
+		//------SHOW OTHER INJURY REPLACEMENTS
+		if(sizeof($bottomwildcards[2])>0){
+			
+			$display.="<div class='grid-x'><div class='large-12 medium-9 small-12 cell'><b>Injury Replacements</b></div></div>
+								<div class='grid-x'>";
+			
+			foreach($bottomwildcards[2] as $wid=>$inj){
+				
+				$display.="<div class='large-4 medium-5 small-8 cell'>
+											".$surfers[$wid]['name']." replacing ".$surfers[$inj]['name']."
+										</div>
+										
+										<div class='large-2 medium-4 small-4 cell'>
+												<a class='button requestotherir' id='sid$sid'> Request ".$surfers[$wid]['aka']."</a>
+										</div>";
+			}
+			
+			
+			$display.= "</div>";
+		}
+		//------END OTHER INJURY REPLACEMENTS
 		
 		return $display;
 		
